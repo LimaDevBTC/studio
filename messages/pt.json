@@ -1,0 +1,353 @@
+
+{
+  "LoginPage": {
+    "title": "Login",
+    "description": "Digite seu e-mail abaixo para fazer login em sua conta",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "m@exemplo.com",
+    "passwordLabel": "Senha",
+    "forgotPassword": "Esqueceu sua senha?",
+    "loginButton": "Login",
+    "loadingButton": "Entrando...",
+    "orContinueWith": "Ou continue com",
+    "googleButton": "Login com Google",
+    "noAccount": "Não tem uma conta?",
+    "signUp": "Cadastre-se"
+  },
+  "SignupPage": {
+    "title": "Cadastre-se",
+    "description": "Digite suas informações para criar uma conta",
+    "fullNameLabel": "Nome completo",
+    "fullNamePlaceholder": "Satoshi Nakamoto",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "m@exemplo.com",
+    "passwordLabel": "Senha",
+    "createAccountButton": "Criar uma conta",
+    "loadingButton": "Criando conta...",
+    "orContinueWith": "Ou continue com",
+    "googleButton": "Cadastre-se com o Google",
+    "hasAccount": "Já tem uma conta?",
+    "login": "Login"
+  },
+  "HomePage": {
+    "goToDashboard": "Ir para o Painel",
+    "login": "Login",
+    "getStarted": "Começar",
+    "heroTitle": "Desvende o Futuro das Finanças com a MQM CRYPTO",
+    "heroSubtitle": "Seu principal destino para educação cripto de alta qualidade. Domine blockchain, DeFi e trading com nossos cursos ministrados por especialistas.",
+    "startFreeTrial": "Comece seu Teste Gratuito",
+    "featuresTitle": "Por que escolher a MQM CRYPTO?",
+    "featuresSubtitle": "Oferecemos um ambiente de aprendizado abrangente, seguro e envolvente, projetado para o seu sucesso no mundo cripto.",
+    "feature1Title": "Cursos Ministrados por Especialistas",
+    "feature1Desc": "Aprenda com veteranos da indústria com anos de experiência no espaço cripto.",
+    "feature2Title": "Plataforma Segura",
+    "feature2Desc": "Seus dados e progresso estão seguros com nossas robustas medidas de segurança.",
+    "feature3Title": "Acompanhe seu Progresso",
+    "feature3Desc": "Mantenha-se motivado acompanhando a conclusão de seus cursos e suas conquistas.",
+    "coursesTitle": "Explore Nossos Cursos",
+    "coursesSubtitle": "De introduções amigáveis para iniciantes a análises técnicas avançadas, temos um curso para você.",
+    "course1Title": "Bitcoin para Iniciantes",
+    "course1Desc": "Entenda os fundamentos da primeira e mais famosa criptomoeda.",
+    "course2Title": "DeFi Explicado",
+    "course2Desc": "Mergulhe no mundo das finanças descentralizadas e explore seu potencial.",
+    "course3Title": "Estratégias Avançadas de Trading",
+    "course3Desc": "Domine os gráficos e aprenda estratégias para otimizar suas negociações.",
+    "learnMore": "Saiba Mais →",
+    "pricingTitle": "Pronto para Começar a Aprender?",
+    "pricingSubtitle": "Junte-se a milhares de alunos em sua jornada para a maestria em cripto.",
+    "viewSubscriptions": "Ver Planos de Assinatura",
+    "footerRights": "© 2024 MQM CRYPTO. Todos os direitos reservados.",
+    "footerTerms": "Termos de Serviço",
+    "footerPrivacy": "Privacidade"
+  },
+  "LocaleSwitcher": {
+    "label": "Mudar idioma",
+    "en": "English",
+    "es": "Español",
+    "pt": "Português"
+  },
+  "DashboardLayout": {
+    "navDashboard": "Painel",
+    "navMyCourses": "Meus Cursos",
+    "navSubscription": "Assinatura",
+    "userMenuProfile": "Perfil",
+    "userMenuSettings": "Configurações",
+    "userMenuLogout": "Sair"
+  },
+  "DashboardPage": {
+    "welcome": "Bem-vindo de volta, {name}!",
+    "subtitle": "Aqui está um resumo da sua jornada de aprendizado.",
+    "continueWatching": "Continuar Assistindo",
+    "progressComplete": "{progress}% completo",
+    "resumeCourse": "Retomar Curso",
+    "mySubscription": "Minha Assinatura",
+    "subscriptionDesc": "Você está no plano Anual Premium.",
+    "subscriptionRenewal": "Seu plano será renovado em 10 de julho de 2025.",
+    "manageSubscription": "Gerenciar Assinatura",
+    "recommendedForYou": "Recomendado para Você",
+    "viewCourse": "Ver Curso"
+  },
+
+  "SubscriptionPage": {
+    "title": "Assinatura e Transações",
+    "subtitle": "Gerencie seu plano de assinatura e acompanhe o histórico de suas transações de pagamento via criptomoedas.",
+    "monthlyPlan": {
+      "name": "Mensal",
+      "pricePeriod": "/mês",
+      "description": "Perfeito para começar e aprender o básico.",
+      "feature1": "Acesso a todos os cursos para iniciantes",
+      "feature2": "Suporte da comunidade",
+      "feature3": "Cancele a qualquer momento"
+    },
+    "yearlyPlan": {
+      "name": "Anual",
+      "pricePeriod": "/ano",
+      "description": "Desbloqueie tudo com nosso plano de melhor valor.",
+      "feature1": "Acesso a todos os cursos",
+      "feature2": "Suporte prioritário",
+      "feature3": "Conteúdo e webinars exclusivos",
+      "feature4": "Acesso antecipado a novos cursos",
+      "recommendedButton": "Recomendado"
+    },
+    "defaultButton": "Escolher Plano",
+    "loadingButton": "Processando..."
+  },
+  "ProfilePage": {
+    "title": "Meu Perfil",
+    "subtitle": "Veja e atualize os detalhes da sua conta.",
+    "backButton": "Voltar",
+    "card": {
+      "title": "Informações do Perfil",
+      "description": "Gerencie suas informações pessoais e preferências."
+    },
+    "form": {
+      "photoLabel": "Foto de Perfil",
+      "photoHint": "Tamanho recomendado: 200x200px",
+      "nameLabel": "Nome Completo",
+      "emailLabel": "Endereço de E-mail",
+      "saveButton": "Salvar Alterações",
+      "savingButton": "Salvando..."
+    },
+    "toast": {
+      "successTitle": "Perfil Atualizado",
+      "successDescription": "Suas informações foram salvas com sucesso.",
+      "errorTitle": "Falha na Atualização",
+      "errorDescription": "Não foi possível atualizar seu perfil. Por favor, tente novamente."
+    }
+  },
+   "SettingsPage": {
+    "title": "Configurações",
+    "subtitle": "Gerencie as configurações e preferências da sua conta.",
+    "backButton": "Voltar",
+     "appearance": {
+      "title": "Aparência",
+      "description": "Personalize a aparência da aplicação.",
+      "theme": {
+        "label": "Tema",
+        "description": "Alterne entre o modo claro e escuro."
+      },
+      "language": {
+        "label": "Idioma",
+        "description": "Escolha o seu idioma de preferência."
+      }
+    },
+    "notifications": {
+      "title": "Notificações",
+      "description": "Gerencie como você recebe notificações.",
+      "push": {
+        "label": "Notificações Push",
+        "description": "Ative ou desative as notificações push."
+      }
+    },
+    "account": {
+      "title": "Conta",
+      "description": "Gerencie as informações da sua conta.",
+      "password": {
+        "label": "Senha",
+        "description": "Altere sua senha.",
+        "button": "Enviar E-mail de Redefinição"
+      },
+      "delete": {
+        "title": "Excluir Conta",
+        "description": "Exclua permanentemente sua conta e todos os dados associados.",
+        "button": "Excluir Conta",
+        "warning": "Esta ação não pode ser desfeita."
+      }
+    },
+    "dialog": {
+      "title": "Você tem certeza absoluta?",
+      "description": "Isso excluirá permanentemente sua conta, cursos e todos os dados associados. Esta ação é irreversível.",
+      "cancel": "Cancelar",
+      "confirm": "Sim, Excluir Conta"
+    },
+    "toast": {
+      "passwordReset": {
+        "successTitle": "E-mail Enviado",
+        "successDescription": "Um link para redefinição de senha foi enviado para o seu e-mail.",
+        "errorTitle": "Erro",
+        "errorDescription": "Falha ao enviar e-mail de redefinição de senha."
+      },
+      "deleteAccount": {
+        "successTitle": "Conta Excluída",
+        "successDescription": "Sua conta foi excluída permanentemente.",
+        "errorTitle": "Erro",
+        "errorDescription": "Falha ao excluir a conta. Pode ser necessário fazer login novamente para concluir esta ação."
+      }
+    }
+  },
+  "AdminUsersPage": {
+    "title": "Usuários",
+    "subtitle": "Gerencie todos os usuários registrados.",
+    "exportButton": "Exportar",
+    "errorFetch": "Falha ao buscar usuários. Por favor, verifique o console para mais detalhes.",
+    "errorPermission": "Você não tem permissão para ver esta página.",
+    "errorLogin": "Você precisa estar logado para ver os usuários.",
+    "errorTitle": "Erro",
+    "noUsersFound": "Nenhum usuário encontrado.",
+    "adminBadge": "Admin",
+    "table": {
+      "name": "Nome",
+      "email": "Email",
+      "plan": "Plano",
+      "expires": "Validade",
+      "joined": "Data de Ingresso",
+      "actions": "Ações",
+      "menu": "Menu"
+    },
+    "manageAccess": "Gerenciar Acesso",
+    "viewDetails": "Ver Detalhes",
+    "suspendUser": "Suspender Usuário",
+    "dialog": {
+      "title": "Gerenciar Acesso de {name}",
+      "description": "Conceda ou revogue o acesso deste usuário. Esta ação atualizará imediatamente suas permissões.",
+      "currentPlan": "Plano Atual",
+      "actions": {
+        "title": "Ações",
+        "grant30Days": "Conceder 30 Dias",
+        "grant1Year": "Conceder 1 Ano",
+        "revoke": "Revogar Acesso"
+      },
+      "cancel": "Cancelar"
+    },
+    "toast": {
+        "updateSuccessTitle": "Acesso Atualizado!",
+        "updateSuccessDescription": {
+            "revoked": "O acesso de {name} foi alterado para 'Free Trial'."
+        },
+        "updateErrorTitle": "Erro ao Atualizar"
+    }
+  },
+  "CryptoPayment": {
+    "title": "Comprar {type}",
+    "courseInfo": "Informações do {type}",
+    "courseDescription": "{type} completo com todas as aulas e materiais",
+    "credits": "créditos",
+    "selectPayment": "Selecionar Método de Pagamento",
+    "select": "Selecionar",
+    "payWith": "Pagar com",
+    "changeMethod": "Alterar Método",
+    "sendToAddress": "Envie o pagamento para este endereço:",
+    "confirmPayment": "Já Fiz o Pagamento",
+    "processing": "Processando...",
+    "addressCopied": "Endereço Copiado!",
+    "addressCopiedDesc": "O endereço de pagamento foi copiado para sua área de transferência.",
+    "copyError": "Falha ao Copiar",
+    "copyErrorDesc": "Falha ao copiar endereço. Por favor, copie manualmente.",
+    "paymentSubmitted": "Pagamento Enviado!",
+    "paymentSubmittedDesc": "Sua confirmação de pagamento foi enviada. Verificaremos e concederemos acesso em breve.",
+    "submissionError": "Falha ao Enviar",
+    "submissionErrorDesc": "Falha ao enviar confirmação de pagamento. Por favor, tente novamente.",
+    "instructionsTitle": "Instruções de Pagamento",
+    "instruction1": "Envie o valor exato para o endereço acima",
+    "instruction2": "Use a rede correta (Solana para USDT, Bitcoin para BTC)",
+    "instruction3": "Clique em 'Já Fiz o Pagamento' após completar a transferência",
+    "notificationTitle": "Nova Confirmação de Pagamento",
+    "notificationMessage": "{userName} confirmou pagamento para {itemTitle} ({amount} {currency} na {network})"
+  },
+  "AdminNotifications": {
+    "title": "Central de Notificações e Transações",
+    "noNotifications": "Nenhuma notificação encontrada",
+    "paymentDetails": "Detalhes do Pagamento",
+    "transactionInfo": "Informações da Transação",
+    "user": "Usuário",
+    "course": "Curso",
+    "amount": "Valor",
+    "status": "Status",
+    "paymentAddress": "Endereço de Pagamento",
+    "viewDetails": "Ver Detalhes",
+    "approvePayment": "Aprovar Pagamento",
+    "rejectPayment": "Rejeitar Pagamento",
+    "paymentApproved": "Pagamento Aprovado!",
+    "paymentApprovedDesc": "O pagamento foi aprovado e o acesso foi liberado automaticamente.",
+    "paymentRejected": "Pagamento Rejeitado",
+    "paymentRejectedDesc": "O pagamento foi rejeitado.",
+    "approvalError": "Falha na Aprovação",
+    "approvalErrorDesc": "Falha ao aprovar pagamento. Por favor, tente novamente.",
+    "rejectionError": "Falha na Rejeição",
+    "rejectionErrorDesc": "Falha ao rejeitar pagamento. Por favor, tente novamente.",
+    "errorFetchingDetails": "Erro ao Buscar Detalhes",
+    "errorFetchingDetailsDesc": "Falha ao buscar detalhes da transação. Por favor, tente novamente."
+  },
+  "CourseAccess": {
+    "verifyingAccess": "Verificando acesso...",
+    "accessRestricted": "Acesso Restrito",
+    "courseRequiresPayment": "Este curso requer pagamento para ser acessado. Faça o pagamento para desbloquear todo o conteúdo.",
+    "buyCourse": "Comprar Curso",
+    "viewSubscriptionPlans": "Ver Planos de Assinatura"
+  },
+  "UserTransactions": {
+    "title": "Histórico de Transações",
+    "noTransactions": "Nenhuma transação encontrada",
+    "refresh": "Atualizar",
+    "refreshSuccess": "Transações Atualizadas!",
+    "refreshSuccessDesc": "As transações foram atualizadas com sucesso.",
+    "refreshError": "Erro ao Atualizar",
+    "refreshErrorDesc": "Falha ao atualizar transações. Por favor, tente novamente.",
+    "viewDetails": "Ver Detalhes",
+    "transactionDetails": "Detalhes da Transação",
+    "course": "Curso",
+    "amount": "Valor",
+    "network": "Rede",
+    "status": "Status",
+    "paymentAddress": "Endereço de Pagamento",
+    "createdAt": "Data de Criação",
+    "updatedAt": "Última Atualização",
+    "statusPendingDesc": "Aguardando aprovação do administrador",
+    "statusApprovedDesc": "Pagamento aprovado - Acesso concedido",
+    "statusRejectedDesc": "Pagamento rejeitado - Entre em contato"
+  },
+  "AdminTransactions": {
+    "totalTransactions": "Total de Transações",
+    "pending": "Pendentes",
+    "approved": "Aprovadas",
+    "rejected": "Rejeitadas",
+    "totalAmount": "Valor Total",
+    "filters": "Filtros",
+    "searchPlaceholder": "Buscar por usuário, curso ou endereço...",
+    "selectStatus": "Selecionar Status",
+    "allStatuses": "Todos os Status",
+    "selectNetwork": "Selecionar Rede",
+    "allNetworks": "Todas as Redes",
+    "solana": "Solana",
+    "bitcoin": "Bitcoin",
+    "transactions": "Transações",
+    "noTransactionsFound": "Nenhuma transação encontrada com os filtros aplicados",
+    "transactionDetails": "Detalhes da Transação",
+    "viewDetails": "Ver Detalhes",
+    "user": "Usuário",
+    "course": "Curso",
+    "amount": "Valor",
+    "status": "Status",
+    "paymentAddress": "Endereço de Pagamento",
+    "approvePayment": "Aprovar Pagamento",
+    "rejectPayment": "Rejeitar Pagamento",
+    "paymentApproved": "Pagamento Aprovado!",
+    "paymentApprovedDesc": "O pagamento foi aprovado e o acesso concedido.",
+    "paymentRejected": "Pagamento Rejeitado",
+    "paymentRejectedDesc": "O pagamento foi rejeitado.",
+    "approvalError": "Falha na Aprovação",
+    "approvalErrorDesc": "Falha ao aprovar pagamento. Por favor, tente novamente.",
+    "rejectionError": "Falha na Rejeição",
+    "rejectionErrorDesc": "Falha ao rejeitar pagamento. Por favor, tente novamente."
+  }
+}

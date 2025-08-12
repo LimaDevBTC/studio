@@ -1,0 +1,290 @@
+
+{
+  "LoginPage": {
+    "title": "Iniciar Sesión",
+    "description": "Ingrese su correo electrónico a continuación para iniciar sesión en su cuenta",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "m@example.com",
+    "passwordLabel": "Contraseña",
+    "forgotPassword": "¿Olvidó su contraseña?",
+    "loginButton": "Iniciar Sesión",
+    "loadingButton": "Iniciando sesión...",
+    "orContinueWith": "O continuar con",
+    "googleButton": "Iniciar sesión con Google",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUp": "Regístrate"
+  },
+  "SignupPage": {
+    "title": "Registrarse",
+    "description": "Ingrese su información para crear una cuenta",
+    "fullNameLabel": "Nombre completo",
+    "fullNamePlaceholder": "Satoshi Nakamoto",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "m@example.com",
+    "passwordLabel": "Contraseña",
+    "createAccountButton": "Crear una cuenta",
+    "loadingButton": "Creando cuenta...",
+    "orContinueWith": "O continuar con",
+    "googleButton": "Registrarse con Google",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "login": "Iniciar Sesión"
+  },
+  "HomePage": {
+    "goToDashboard": "Ir al Panel",
+    "login": "Iniciar Sesión",
+    "getStarted": "Comenzar",
+    "heroTitle": "Desbloquea el Futuro de las Finanzas con MQM CRYPTO",
+    "heroSubtitle": "Tu destino principal para la educación cripto de alta calidad. Domina blockchain, DeFi y trading con nuestros cursos dirigidos por expertos.",
+    "startFreeTrial": "Comienza tu Prueba Gratuita",
+    "featuresTitle": "¿Por qué elegir MQM CRYPTO?",
+    "featuresSubtitle": "Ofrecemos un entorno de aprendizaje completo, seguro y atractivo diseñado para tu éxito en el mundo cripto.",
+    "feature1Title": "Cursos dirigidos por expertos",
+    "feature1Desc": "Aprende de veteranos de la industria con años de experiencia en el espacio cripto.",
+    "feature2Title": "Plataforma Segura",
+    "feature2Desc": "Tus datos y progreso están seguros con nuestras sólidas medidas de seguridad.",
+    "feature3Title": "Sigue tu Progreso",
+    "feature3Desc": "Mantente motivado siguiendo la finalización de tus cursos y tus logros.",
+    "coursesTitle": "Explora Nuestros Cursos",
+    "coursesSubtitle": "Desde introducciones amigables para principiantes hasta análisis técnicos avanzados, tenemos un curso para ti.",
+    "course1Title": "Bitcoin para Principiantes",
+    "course1Desc": "Comprende los fundamentos de la primera y más famosa criptomoneda.",
+    "course2Title": "DeFi Explicado",
+    "course2Desc": "Sumérgete en el mundo de las finanzas descentralizadas y explora su potencial.",
+    "course3Title": "Estrategias de Trading Avanzadas",
+    "course3Desc": "Domina los gráficos y aprende estrategias para optimizar tu trading.",
+    "learnMore": "Aprende Más →",
+    "pricingTitle": "¿Listo para Empezar a Aprender?",
+    "pricingSubtitle": "Únete a miles de estudiantes en su viaje hacia la maestría cripto.",
+    "viewSubscriptions": "Ver Planes de Suscripción",
+    "footerRights": "© 2024 MQM CRYPTO. Todos los derechos reservados.",
+    "footerTerms": "Términos de Servicio",
+    "footerPrivacy": "Privacidad"
+  },
+  "LocaleSwitcher": {
+    "label": "Cambiar idioma",
+    "en": "English",
+    "es": "Español",
+    "pt": "Português"
+  },
+  "DashboardLayout": {
+    "navDashboard": "Panel",
+    "navMyCourses": "Mis Cursos",
+    "navSubscription": "Suscripción",
+    "userMenuProfile": "Perfil",
+    "userMenuSettings": "Configuración",
+    "userMenuLogout": "Cerrar sesión"
+  },
+  "DashboardPage": {
+    "welcome": "¡Bienvenido de nuevo, {name}!",
+    "subtitle": "Aquí tienes un resumen de tu viaje de aprendizaje.",
+    "continueWatching": "Continuar Viendo",
+    "progressComplete": "{progress}% completado",
+    "resumeCourse": "Reanudar Curso",
+    "mySubscription": "Mi Suscripción",
+    "subscriptionDesc": "Estás en el plan Anual Premium.",
+    "subscriptionRenewal": "Tu plan se renueva el 10 de julio de 2025.",
+    "manageSubscription": "Gestionar Suscripción",
+    "recommendedForYou": "Recomendado para Ti",
+    "viewCourse": "Ver Curso"
+  },
+
+  "SubscriptionPage": {
+    "title": "Elige Tu Plan",
+    "subtitle": "Selecciona el plan que mejor se adapte a tus objetivos de aprendizaje. Todos los planes incluyen una prueba gratuita de 7 días.",
+    "monthlyPlan": {
+      "name": "Mensual",
+      "pricePeriod": "/mes",
+      "description": "Perfecto para empezar y aprender lo básico.",
+      "feature1": "Acceso a todos los cursos para principiantes",
+      "feature2": "Soporte de la comunidad",
+      "feature3": "Cancela en cualquier momento"
+    },
+    "yearlyPlan": {
+      "name": "Anual",
+      "pricePeriod": "/año",
+      "description": "Desbloquea todo con nuestro plan de mejor valor.",
+      "feature1": "Acceso a todos los cursos",
+      "feature2": "Soporte prioritario",
+      "feature3": "Contenido y seminarios web exclusivos",
+      "feature4": "Acceso anticipado a nuevos cursos"
+    },
+    "defaultButton": "Elegir Plan",
+    "recommendedButton": "Comenzar Prueba de 7 Días",
+    "loadingButton": "Redirigiendo..."
+  },
+  "ProfilePage": {
+    "title": "Mi Perfil",
+    "subtitle": "Ve y actualiza los detalles de tu cuenta.",
+    "backButton": "Volver",
+    "card": {
+      "title": "Información del Perfil",
+      "description": "Gestiona tu información personal y tus preferencias."
+    },
+    "form": {
+      "photoLabel": "Foto de Perfil",
+      "photoHint": "Tamaño recomendado: 200x200px",
+      "nameLabel": "Nombre Completo",
+      "emailLabel": "Dirección de Correo Electrónico",
+      "saveButton": "Guardar Cambios",
+      "savingButton": "Guardando..."
+    },
+    "toast": {
+      "successTitle": "Perfil Actualizado",
+      "successDescription": "Tu información ha sido guardada exitosamente.",
+      "errorTitle": "Error al Actualizar",
+      "errorDescription": "No se pudo actualizar tu perfil. Por favor, inténtalo de nuevo."
+    }
+  },
+  "SettingsPage": {
+    "title": "Configuración",
+    "subtitle": "Gestiona la configuración y preferencias de tu cuenta.",
+    "backButton": "Volver",
+    "appearance": {
+      "title": "Apariencia",
+      "description": "Personaliza la apariencia de la aplicación.",
+      "theme": {
+        "label": "Tema",
+        "description": "Cambia entre modo claro y oscuro."
+      },
+      "language": {
+        "label": "Idioma",
+        "description": "Elige tu idioma preferido."
+      }
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "description": "Gestiona cómo recibes las notificaciones.",
+      "push": {
+        "label": "Notificaciones Push",
+        "description": "Activa o desactiva las notificaciones push."
+      }
+    },
+    "account": {
+      "title": "Cuenta",
+      "description": "Gestiona la información de tu cuenta.",
+      "password": {
+        "label": "Contraseña",
+        "description": "Cambia tu contraseña.",
+        "button": "Enviar Email de Restablecimiento"
+      },
+      "delete": {
+        "title": "Eliminar Cuenta",
+        "description": "Elimina permanentemente tu cuenta y todos los datos asociados.",
+        "button": "Eliminar Cuenta",
+        "warning": "Esta acción no se puede deshacer."
+      }
+    },
+    "dialog": {
+      "title": "¿Estás absolutamente seguro?",
+      "description": "Esto eliminará permanentemente tu cuenta, cursos y todos los datos asociados. Esta acción es irreversible.",
+      "cancel": "Cancelar",
+      "confirm": "Sí, Eliminar Cuenta"
+    },
+    "toast": {
+      "passwordReset": {
+        "successTitle": "Email Enviado",
+        "successDescription": "Se ha enviado un enlace para restablecer la contraseña a tu correo electrónico.",
+        "errorTitle": "Error",
+        "errorDescription": "No se pudo enviar el correo electrónico de restablecimiento de contraseña."
+      },
+      "deleteAccount": {
+        "successTitle": "Cuenta Eliminada",
+        "successDescription": "Tu cuenta ha sido eliminada permanentemente.",
+        "errorTitle": "Error",
+        "errorDescription": "No se pudo eliminar la cuenta. Es posible que necesites iniciar sesión de nuevo para completar esta acción."
+      }
+    }
+  },
+  "AdminUsersPage": {
+    "title": "Usuarios",
+    "subtitle": "Gestiona todos los usuarios registrados.",
+    "exportButton": "Exportar",
+    "errorFetch": "Error al cargar los usuarios. Por favor, comprueba la consola para más detalles.",
+    "errorPermission": "No tienes permiso para ver esta página.",
+    "errorLogin": "Debes iniciar sesión para ver los usuarios.",
+    "errorTitle": "Error",
+    "noUsersFound": "No se encontraron usuarios.",
+    "adminBadge": "Admin",
+    "table": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "plan": "Plan de Suscripción",
+      "expires": "Vencimiento",
+      "joined": "Fecha de Registro",
+      "actions": "Acciones",
+      "menu": "Menú"
+    },
+    "manageAccess": "Gestionar Acceso",
+    "viewDetails": "Ver Detalles",
+    "suspendUser": "Suspender Usuario",
+    "dialog": {
+      "title": "Gestionar Acceso de {name}",
+      "description": "Concede o revoca el acceso de este usuario. Esta acción actualizará inmediatamente sus permisos.",
+      "currentPlan": "Plan Actual",
+      "actions": {
+        "title": "Acciones",
+        "grant30Days": "Conceder 30 Días",
+        "grant1Year": "Conceder 1 Año",
+        "revoke": "Revocar Acceso"
+      },
+      "cancel": "Cancelar"
+    },
+    "toast": {
+      "updateSuccessTitle": "¡Acceso Actualizado!",
+      "updateSuccessDescription": {
+        "revoked": "El plan de {name} ha sido cambiado a 'Free Trial'."
+      },
+      "updateErrorTitle": "Error al Actualizar"
+    }
+  },
+  "CryptoPayment": {
+    "title": "Comprar Curso",
+    "courseInfo": "Información del Curso",
+    "courseDescription": "Curso completo con todas las lecciones y materiales",
+    "credits": "créditos",
+    "selectPayment": "Seleccionar Método de Pago",
+    "select": "Seleccionar",
+    "payWith": "Pagar con",
+    "changeMethod": "Cambiar Método",
+    "sendToAddress": "Envía el pago a esta dirección:",
+    "confirmPayment": "Ya Hice el Pago",
+    "processing": "Procesando...",
+    "addressCopied": "¡Dirección Copiada!",
+    "addressCopiedDesc": "La dirección de pago ha sido copiada a tu portapapeles.",
+    "copyError": "Error al Copiar",
+    "copyErrorDesc": "No se pudo copiar la dirección. Por favor, copia manualmente.",
+    "paymentSubmitted": "¡Pago Enviado!",
+    "paymentSubmittedDesc": "Tu confirmación de pago ha sido enviada. Verificaremos y otorgaremos acceso pronto.",
+    "submissionError": "Error al Enviar",
+    "submissionErrorDesc": "No se pudo enviar la confirmación de pago. Por favor, inténtalo de nuevo.",
+    "instructionsTitle": "Instrucciones de Pago",
+    "instruction1": "Envía el monto exacto a la dirección de arriba",
+    "instruction2": "Usa la red correcta (Solana para USDT, Bitcoin para BTC)",
+    "instruction3": "Haz clic en 'Ya Hice el Pago' después de completar la transferencia",
+    "notificationTitle": "Nueva Confirmación de Pago",
+    "notificationMessage": "{userName} ha confirmado el pago para {courseTitle} ({amount} {currency} en {network})"
+  },
+  "AdminNotifications": {
+    "title": "Notificaciones de Pago",
+    "noNotifications": "No hay notificaciones pendientes",
+    "paymentDetails": "Detalles del Pago",
+    "transactionInfo": "Información de la Transacción",
+    "user": "Usuario",
+    "course": "Curso",
+    "amount": "Monto",
+    "status": "Estado",
+    "paymentAddress": "Dirección de Pago",
+    "approvePayment": "Aprobar Pago",
+    "rejectPayment": "Rechazar Pago",
+    "paymentApproved": "¡Pago Aprobado!",
+    "paymentApprovedDesc": "El pago ha sido aprobado y se ha otorgado acceso.",
+    "paymentRejected": "Pago Rechazado",
+    "paymentRejectedDesc": "El pago ha sido rechazado.",
+    "approvalError": "Error al Aprobar",
+    "approvalErrorDesc": "No se pudo aprobar el pago. Por favor, inténtalo de nuevo.",
+    "rejectionError": "Error al Rechazar",
+    "rejectionErrorDesc": "No se pudo rechazar el pago. Por favor, inténtalo de nuevo.",
+    "errorFetchingDetails": "Error al Obtener Detalles",
+    "errorFetchingDetailsDesc": "No se pudieron obtener los detalles de la transacción. Por favor, inténtalo de nuevo."
+  }
+}
