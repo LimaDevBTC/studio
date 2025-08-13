@@ -20,6 +20,7 @@ interface Course {
   description: string;
   imageUrl: string;
   aiHint: string;
+  status?: string;
 }
 
 interface InProgressCourse extends Course {
@@ -74,19 +75,49 @@ export default function DashboardPage() {
             setInProgressCourses(coursesWithProgress.filter(c => c !== null) as InProgressCourse[]);
         }
 
-        // Fetch Recommended Courses
-        const recommendedQuery = query(collection(db, "courses"), where("status", "==", "Published"), limit(4));
-        const recommendedSnapshot = await getDocs(recommendedQuery);
-        const recommendedList = recommendedSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            title: data.title || "Untitled Course",
-            description: data.description || "No description available.",
-            imageUrl: data.imageUrl || "https://placehold.co/600x400.png",
-            aiHint: data.aiHint || "abstract",
-          };
-        });
+        // Fetch Recommended Courses (Published + Waitlist, excluding Draft and user's acquired courses)
+        // First, get Published courses
+        const publishedQuery = query(
+          collection(db, "courses"), 
+          where("status", "==", "Published"), 
+          limit(6)
+        );
+        const publishedSnapshot = await getDocs(publishedQuery);
+        
+        // Then, get Waitlist courses
+        const waitlistQuery = query(
+          collection(db, "courses"), 
+          where("status", "==", "Waitlist"), 
+          limit(6)
+        );
+        const waitlistSnapshot = await getDocs(waitlistQuery);
+        
+        // Get user's acquired courses to exclude them from recommendations
+        const userAccessQuery = query(
+          collection(db, "userCourseAccess"), 
+          where("userId", "==", user.uid), 
+          where("status", "==", "active")
+        );
+        const userAccessSnapshot = await getDocs(userAccessQuery);
+        const userAcquiredCourseIds = userAccessSnapshot.docs.map(doc => doc.data().courseId);
+        
+        // Combine and filter out acquired courses, then limit to 4
+        const allCourses = [
+          ...publishedSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, status: "Published" })),
+          ...waitlistSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, status: "Waitlist" }))
+        ];
+        
+        const recommendedList = allCourses
+          .filter(course => !userAcquiredCourseIds.includes(course.id))
+          .slice(0, 4)
+          .map(course => ({
+            id: course.id,
+            title: (course as any).title || "Untitled Course",
+            description: (course as any).description || "No description available.",
+            imageUrl: (course as any).imageUrl || "https://placehold.co/600x400.png",
+            aiHint: (course as any).aiHint || "abstract",
+            status: course.status,
+          }));
         setRecommendedCourses(recommendedList);
 
       } catch (error) {
@@ -137,7 +168,7 @@ export default function DashboardPage() {
                              <Progress value={course.progress} className="h-2 mt-1" />
                              <p className="text-xs text-muted-foreground mt-1">{t('progressComplete', {progress: course.progress})}</p>
                              <Button variant="link" size="sm" asChild className="p-0 h-auto mt-1">
-                                <Link href={`/dashboard/courses/${course.id}`}>{t('resumeCourse')}</Link>
+                                <Link href={`/dashboard/courses/${course.id}` as any}>{t('resumeCourse')}</Link>
                              </Button>
                            </div>
                          </div>
@@ -188,12 +219,19 @@ export default function DashboardPage() {
                                 <Image src={course.imageUrl} data-ai-hint={course.aiHint} alt={course.title} width={600} height={400} className="rounded-t-lg aspect-video object-cover" />
                             </CardHeader>
                             <CardContent className="flex-1 pt-6">
-                                <h3 className="font-bold text-lg">{course.title}</h3>
+                                <div className="flex items-center gap-2 mb-2">
+                                    <h3 className="font-bold text-lg">{course.title}</h3>
+                                    {course.status === "Waitlist" && (
+                                        <span className="px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded-full font-medium">
+                                            🚧 Lista de Espera
+                                        </span>
+                                    )}
+                                </div>
                                 <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{course.description}</p>
                             </CardContent>
                             <CardFooter>
                                 <Button asChild className="w-full">
-                                    <Link href={`/dashboard/courses/${course.id}`}>{t('viewCourse')}</Link>
+                                    <Link href={`/dashboard/courses/${course.id}` as any}>{t('viewCourse')}</Link>
                                 </Button>
                             </CardFooter>
                         </Card>

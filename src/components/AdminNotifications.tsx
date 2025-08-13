@@ -149,12 +149,15 @@ export default function AdminNotifications() {
       return;
     }
 
+    const approvedNotifications = notifs.filter(n => n.status === "approved");
+    const totalAmount = approvedNotifications.reduce((sum, n) => sum + (n.amount || 0), 0);
+    
     const stats: Stats = {
       total: notifs.length,
       pending: notifs.filter(n => n.status === "pending").length,
-      approved: notifs.filter(n => n.status === "approved").length,
+      approved: approvedNotifications.length,
       rejected: notifs.filter(n => n.status === "rejected").length,
-      totalAmount: notifs.reduce((sum, n) => sum + (n.amount || 0), 0)
+      totalAmount: totalAmount
     };
     setStats(stats);
   };
@@ -378,43 +381,7 @@ export default function AdminNotifications() {
     }
   };
 
-  const testSystem = async () => {
-    try {
-      console.log("🧪 TESTE DO SISTEMA - Verificando estrutura de dados...");
-      
-      // Verificar se há notificações
-      console.log("📊 Total de notificações:", notifications.length);
-      
-      // Verificar tipos de notificação
-      const types = notifications.map(n => n.type);
-      console.log("🏷️ Tipos de notificação encontrados:", [...new Set(types)]);
-      
-      // Verificar notificações aprovadas
-      const approvedNotifications = notifications.filter(n => n.status === 'approved');
-      console.log("✅ Notificações aprovadas:", approvedNotifications.length);
-      
-      // Verificar assinaturas existentes
-      try {
-        const allSubscriptionsSnapshot = await getDocs(collection(db, "userSubscriptions"));
-        console.log("💳 Total de assinaturas no sistema:", allSubscriptionsSnapshot.size);
-      } catch (error) {
-        console.error("❌ Erro ao verificar assinaturas:", error);
-      }
-      
-      toast({
-        title: "Teste do Sistema",
-        description: "Verifique o console para detalhes",
-      });
-      
-    } catch (error) {
-      console.error("❌ Erro no teste:", error);
-      toast({
-        title: "Erro no Teste",
-        description: "Verifique o console para detalhes",
-        variant: "destructive",
-      });
-    }
-  };
+
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -506,11 +473,14 @@ export default function AdminNotifications() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Valor Total</CardTitle>
+            <CardTitle className="text-sm font-medium">Valor Aprovado</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${stats.totalAmount.toFixed(2)}</div>
+            <p className="text-xs text-muted-foreground">
+              Apenas notificações aprovadas
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -599,14 +569,7 @@ export default function AdminNotifications() {
                 <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
                 Atualizar
               </Button>
-              <Button
-                onClick={testSystem}
-                variant="outline"
-                size="sm"
-                className="bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100"
-              >
-                🧪 Testar Sistema
-              </Button>
+
             </div>
           </div>
         </CardHeader>

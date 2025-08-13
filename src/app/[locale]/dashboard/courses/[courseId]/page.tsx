@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlayCircle, CheckCircle2, Lock, Loader2, ArrowLeft, ShoppingCart } from "lucide-react";
 import CryptoPaymentModal from "@/components/CryptoPaymentModal";
+import { WaitlistButton } from "@/components/WaitlistButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Accordion,
@@ -35,6 +36,7 @@ interface Course {
     aiHint: string;
     lessons: Lesson[];
     price: number;
+    status?: "Published" | "Draft" | "Waitlist";
 }
 
 export default function CourseOverviewPage() {
@@ -47,7 +49,8 @@ export default function CourseOverviewPage() {
     const params = useParams();
     const courseId = params.courseId as string;
 
-    const hasAccess = userData?.isAdmin || (userData?.plan && userData.plan !== "Free Trial") || (course && course.price === 0);
+    // hasAccess será calculado depois que o curso for carregado
+    const hasAccess = course ? (userData?.isAdmin || (userData?.plan && userData.plan !== "Free Trial") || course.price === 0) : false;
 
     useEffect(() => {
         const fetchCourseAndProgress = async () => {
@@ -72,6 +75,7 @@ export default function CourseOverviewPage() {
                         aiHint: courseData.aiHint,
                         lessons: lessonsList,
                         price: courseData.price || 0,
+                        status: courseData.status || "Published",
                     };
                     setCourse(fetchedCourse);
 
@@ -146,10 +150,32 @@ export default function CourseOverviewPage() {
                     <Card>
                         <CardContent className="p-6">
                             <h2 className="text-xl font-bold font-headline mb-4">Course Content</h2>
-                            {hasAccess ? (
+                            
+
+                            
+                            {course.status === "Waitlist" ? (
+                                <div className="space-y-3">
+                                    <div className="text-center">
+                                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-3">
+                                            <p className="text-sm text-orange-800 font-medium">
+                                                🚧 Este curso está em desenvolvimento
+                                            </p>
+                                            <p className="text-xs text-orange-700 mt-1">
+                                                Entre na lista de espera para ser notificado quando estiver disponível
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <WaitlistButton
+                                        courseId={course.id}
+                                        courseTitle={course.title}
+                                        coursePrice={course.price}
+                                    />
+                                </div>
+                            ) : hasAccess ? (
                                 firstLessonId ? (
                                     <Button asChild className="w-full">
-                                        <Link href={`/dashboard/courses/${course.id}/lesson/${firstLessonId}`}>
+                                        <Link href={`/dashboard/courses/${course.id}/lesson/${firstLessonId}` as any}>
                                             <PlayCircle className="mr-2 h-5 w-5"/> Start Course
                                         </Link>
                                     </Button>
@@ -192,7 +218,7 @@ export default function CourseOverviewPage() {
                                             {course.lessons.map(lesson => (
                                                 <li key={lesson.id}>
                                                      <Link 
-                                                        href={hasAccess ? `/dashboard/courses/${course.id}/lesson/${lesson.id}`: '#'} 
+                                                        href={hasAccess ? `/dashboard/courses/${course.id}/lesson/${lesson.id}` as any: '#'} 
                                                         className={`flex items-center justify-between p-3 rounded-md transition-colors ${
                                                             hasAccess 
                                                             ? 'hover:bg-muted/80 cursor-pointer'

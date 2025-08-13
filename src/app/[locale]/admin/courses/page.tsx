@@ -20,7 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 interface CourseData {
   id: string;
   title: string;
-  status: "Published" | "Draft";
+  status: "Published" | "Draft" | "Waitlist";
   lessons: number;
   createdAt: string;
 }
@@ -156,7 +156,11 @@ export default function AdminCoursesPage() {
                   <TableRow key={course.id}>
                     <TableCell className="font-medium">{course.title}</TableCell>
                     <TableCell>
-                      <Badge variant={course.status === "Published" ? "default" : "secondary"}>
+                      <Badge variant={
+                        course.status === "Published" ? "default" : 
+                        course.status === "Waitlist" ? "outline" : 
+                        "secondary"
+                      }>
                         {course.status}
                       </Badge>
                     </TableCell>

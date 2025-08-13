@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
+import { usePathname } from 'next/navigation';
 import {
   Bell,
   Home,
@@ -27,19 +28,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarTrigger,
-  SidebarInset,
-  SidebarFooter,
-  SidebarSeparator,
-} from "@/components/ui/sidebar";
 import { Logo } from "@/components/Logo";
 import { useAuth } from "@/hooks/use-auth";
 import { Link, useRouter } from '@/navigation';
@@ -52,6 +40,7 @@ export default function DashboardLayout({
 }) {
   const { user, userData, loading: authLoading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const t = useTranslations('DashboardLayout');
   
   const handleLogout = () => {
@@ -65,107 +54,98 @@ export default function DashboardLayout({
     if (!name) return 'U';
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   }
-  
+
   const navItems = [
-      { href: "/dashboard", icon: <Home />, label: t('navDashboard') },
-      { href: "/dashboard/courses", icon: <BookOpenCheck />, label: t('navMyCourses') },
-      { href: "/dashboard/subscription", icon: <CreditCard />, label: t('navSubscription') },
-      { href: "/dashboard/live", icon: <Clapperboard />, label: "Ao Vivo" },
+      { href: "/dashboard", icon: <Home className="h-4 w-4" />, label: t('navDashboard') },
+      { href: "/dashboard/courses", icon: <BookOpenCheck className="h-4 w-4" />, label: t('navMyCourses') },
+      { href: "/dashboard/subscription", icon: <CreditCard className="h-4 w-4" />, label: t('navSubscription') },
+      { href: "/dashboard/live", icon: <Clapperboard className="h-4 w-4" />, label: "Ao Vivo" },
+      { href: "/dashboard/account", icon: <UserIcon className="h-4 w-4" />, label: "Minha Conta" },
   ];
+  
 
   const isAdmin = userData?.isAdmin === true;
 
   return (
-      <SidebarProvider>
-        <div className="flex h-screen w-full">
-          <Sidebar collapsible="icon" className="border-r">
-            <SidebarHeader>
-              <Logo />
-            </SidebarHeader>
-            <SidebarContent>
-              <SidebarMenu>
-                {navItems.map((item) => (
-                  <SidebarMenuItem key={item.label}>
-                      <Link href={item.href}>
-                          <SidebarMenuButton tooltip={item.label}>
-                              {item.icon}
-                              <span>{item.label}</span>
-                          </SidebarMenuButton>
-                      </Link>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarContent>
-            <SidebarFooter className="mt-auto">
-                <SidebarSeparator />
-                <SidebarMenu>
-                    {authLoading ? (
-                      <SidebarMenuItem>
-                         <div className="p-2">
-                           <Skeleton className="h-8 w-full" />
-                         </div>
-                      </SidebarMenuItem>
-                    ) : isAdmin ? (
-                        <SidebarMenuItem>
-                             <Link href="/admin/dashboard">
-                                <SidebarMenuButton tooltip="Admin">
-                                    <Shield />
-                                    <span>Admin</span>
-                                </SidebarMenuButton>
-                            </Link>
-                        </SidebarMenuItem>
-                    ) : null}
-                </SidebarMenu>
-            </SidebarFooter>
-          </Sidebar>
-          <SidebarInset className="flex flex-col">
-            <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6 sticky top-0 z-30">
-              <SidebarTrigger className="hidden md:flex" />
-              <div className="w-full flex-1">
-                {/* Add search bar if needed */}
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <div className="hidden border-r bg-card md:block">
+        <div className="flex h-full max-h-screen flex-col gap-2">
+          <div className="flex h-16 items-center border-b px-4 lg:px-6">
+            <Logo />
+          </div>
+          <div className="flex-1 overflow-auto py-2">
+            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+              {navItems.map(item => {
+                const isActive = pathname.endsWith(item.href);
+
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      isActive 
+                        ? 'text-primary' 
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    {item.icon}
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+          <div className="mt-auto p-4">
+                        {isAdmin && (
+              <div className="grid items-start px-2 text-sm font-medium lg:px-4 mb-4 border-t pt-4">
+                <Link
+                  href={"/admin/dashboard" as any}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    pathname.endsWith("/admin/dashboard")
+                      ? 'text-primary' 
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
+                >
+                  <Shield className="h-4 w-4" />
+                  Admin
+                </Link>
               </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'user'} />
-                      <AvatarFallback>{getInitials(user?.displayName)}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user?.displayName || 'User'}</p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user?.email}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard/profile">
-                        <UserIcon className="mr-2 h-4 w-4" />
-                        {t('userMenuProfile')}
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard/settings">
-                        <Settings className="mr-2 h-4 w-4" />
-                        {t('userMenuSettings')}
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    {t('userMenuLogout')}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </header>
-            <main className="flex-1 p-4 lg:p-6">{children}</main>
-          </SidebarInset>
+            )}
+          </div>
         </div>
-      </SidebarProvider>
+      </div>
+      <div className="flex flex-col">
+        <header className="flex h-16 items-center gap-4 border-b bg-card px-4 lg:px-6">
+          <div className="w-full flex-1">
+            {/* Add search bar if needed */}
+          </div>
+          <div className="flex items-center gap-3">
+            {/* Link para Minha Conta */}
+            <Link href="/dashboard/account">
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'user'} />
+                  <AvatarFallback>{getInitials(user?.displayName)}</AvatarFallback>
+                </Avatar>
+              </Button>
+            </Link>
+            
+            {/* Botão de Logout */}
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Sair</span>
+            </Button>
+          </div>
+        </header>
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
+          {children}
+        </main>
+      </div>
+    </div>
   );
 }

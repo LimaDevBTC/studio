@@ -1,3 +1,5 @@
+"use client";
+
 import {useTranslations} from 'next-intl';
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -58,8 +60,6 @@ export default function Home() {
       <header className="px-4 lg:px-6 h-16 flex items-center">
         <Logo />
         <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
-          <LocaleSwitcher />
-          <ThemeToggle />
           <AuthStatus />
         </nav>
       </header>

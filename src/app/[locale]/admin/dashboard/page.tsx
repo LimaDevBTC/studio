@@ -16,9 +16,11 @@ import {
   Calendar,
   CheckCircle,
   Play,
-  AlertCircle
+  AlertCircle,
+  Clock
 } from "lucide-react";
 import AdminNotifications from "@/components/AdminNotifications";
+import { AdminWaitlist } from "@/components/AdminWaitlist";
 
 interface DashboardStats {
   totalRevenue: number;
@@ -43,7 +45,7 @@ export default function AdminDashboard() {
   const fetchDashboardStats = async () => {
     try {
       const statsPromises = [
-        getDocs(query(collection(db, "transactions"), where("status", "==", "approved"))),
+        getDocs(query(collection(db, "adminNotifications"), where("status", "==", "approved"))),
         getDocs(collection(db, "users")),
         getDocs(collection(db, "courses")),
         getDocs(query(collection(db, "adminNotifications"), where("status", "==", "pending")))
@@ -55,6 +57,8 @@ export default function AdminDashboard() {
         coursesSnapshot,
         pendingSnapshot
       ] = await Promise.all(statsPromises);
+
+
 
       // Calcular receita total
       let totalRevenue = 0;
@@ -94,7 +98,7 @@ export default function AdminDashboard() {
 
     // Listeners em tempo real
     const unsubscribeTransactions = onSnapshot(
-      collection(db, "transactions"),
+      collection(db, "adminNotifications"),
       () => fetchDashboardStats()
     );
 
@@ -411,6 +415,22 @@ export default function AdminDashboard() {
         </CardHeader>
         <CardContent>
           <AdminNotifications />
+        </CardContent>
+      </Card>
+
+      {/* Lista de Espera */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Clock className="h-5 w-5" />
+            Lista de Espera
+          </CardTitle>
+          <CardDescription>
+            Gerenciar listas de espera dos cursos e enviar emails em massa
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AdminWaitlist />
         </CardContent>
       </Card>
     </div>

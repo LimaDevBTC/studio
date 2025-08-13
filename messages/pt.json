@@ -349,5 +349,132 @@
     "approvalErrorDesc": "Falha ao aprovar pagamento. Por favor, tente novamente.",
     "rejectionError": "Falha na Rejeição",
     "rejectionErrorDesc": "Falha ao rejeitar pagamento. Por favor, tente novamente."
+  },
+  "AccountPage": {
+    "title": "Minha Conta",
+    "subtitle": "Gerencie seu perfil, configurações e preferências",
+    "personalProfile": {
+      "title": "Perfil Pessoal",
+      "description": "Suas informações pessoais e de contato",
+      "changePhoto": "Alterar Foto",
+      "photoHint": "JPG, PNG ou GIF. Máximo 2MB.",
+      "fullName": "Nome Completo",
+      "email": "Email",
+      "emailHint": "O email não pode ser alterado",
+      "editProfile": "Editar Perfil",
+      "save": "Salvar",
+      "cancel": "Cancelar"
+    },
+    "security": {
+      "title": "Segurança",
+      "description": "Gerencie sua senha e configurações de segurança",
+      "currentPassword": "Senha Atual",
+      "currentPasswordPlaceholder": "Digite sua senha atual",
+      "newPassword": "Nova Senha",
+      "newPasswordPlaceholder": "Digite a nova senha",
+      "confirmPassword": "Confirmar Nova Senha",
+      "confirmPasswordPlaceholder": "Confirme a nova senha",
+      "changePassword": "Alterar Senha"
+    },
+    "activity": {
+      "title": "Atividade",
+      "description": "Histórico de suas atividades na plataforma",
+      "coursesAccessed": "Cursos Acessados",
+      "coursesCount": "3 cursos",
+      "transactions": "Transações",
+      "transactionsCount": "5 pagamentos",
+      "viewFullHistory": "Ver Histórico Completo"
+    },
+    "settings": {
+      "title": "Configurações",
+      "description": "Preferências da plataforma",
+      "language": "Idioma",
+      "theme": "Tema",
+      "light": "Claro",
+      "dark": "Escuro",
+      "notifications": "Notificações",
+      "email": "Email",
+      "push": "Push"
+    },
+    "accountInfo": {
+      "title": "Informações da Conta",
+      "memberSince": "Membro desde:",
+      "lastLogin": "Último login:",
+      "status": "Status",
+      "active": "Ativo"
+    },
+    "toast": {
+      "profileUpdated": {
+        "title": "Perfil Atualizado!",
+        "description": "Suas informações foram salvas com sucesso."
+      },
+      "profileError": {
+        "title": "Erro",
+        "description": "Não foi possível atualizar o perfil."
+      },
+      "passwordChanged": {
+        "title": "Senha Alterada!",
+        "description": "Sua senha foi atualizada com sucesso."
+      },
+      "passwordError": {
+        "title": "Erro",
+        "description": "Não foi possível alterar a senha."
+      },
+      "passwordMismatch": {
+        "title": "Erro",
+        "description": "As senhas não coincidem."
+      }
+    }
+  },
+  "AdminWaitlist": {
+    "title": "Lista de Espera",
+    "subtitle": "Gerencie as listas de espera dos cursos",
+    "totalLeads": "Total de Leads",
+    "activeLeads": "Leads Ativos",
+    "courses": "Cursos",
+    "searchPlaceholder": "Buscar por nome do curso...",
+    "filterAllStatus": "Todos os Status",
+    "filterActive": "Ativo",
+    "filterNotified": "Notificado",
+    "filterConverted": "Convertido",
+    "filterUnsubscribed": "Cancelado",
+    "viewDetails": "Ver Detalhes",
+    "sendEmail": "Enviar Email",
+    "leadsInWaitlist": "leads na lista de espera",
+    "leadInWaitlist": "lead na lista de espera",
+    "noWaitlistFound": "Nenhuma lista de espera encontrada",
+    "noWaitlistFoundDesc": "Crie cursos com status \"Waitlist\" para começar",
+    "adjustFilters": "Tente ajustar os filtros de busca",
+    "detailsTitle": "Detalhes da Lista de Espera",
+    "detailsDesc": "Gerencie os usuários na lista de espera deste curso",
+    "user": "Usuário",
+    "email": "Email",
+    "joinDate": "Data de Entrada",
+    "status": "Status",
+    "actions": "Ações",
+    "statusUpdated": "Status Atualizado",
+    "statusUpdatedDesc": "Status do usuário foi alterado com sucesso",
+    "statusError": "Erro",
+    "statusErrorDesc": "Falha ao atualizar status",
+    "userRemoved": "Usuário Removido",
+    "userRemovedDesc": "Usuário foi removido da lista de espera",
+    "removeError": "Erro",
+    "removeErrorDesc": "Falha ao remover usuário",
+    "emailModalTitle": "Enviar Email em Massa",
+    "emailModalDesc": "Envie um email para todos os leads ativos do curso",
+    "recipients": "Destinatários",
+    "emailTemplate": "Template do Email",
+    "emailTemplatePlaceholder": "Digite o conteúdo do email aqui...",
+    "cancel": "Cancelar",
+    "sending": "Enviando...",
+    "sendEmail": "Enviar Email",
+    "emailsSent": "Emails Enviados!",
+    "emailsSentDesc": "emails foram enviados com sucesso",
+    "emailError": "Erro",
+    "emailErrorDesc": "Falha ao enviar emails",
+    "refresh": "Atualizar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "errorDesc": "Falha ao carregar listas de espera"
   }
 }

@@ -18,6 +18,7 @@ export const pathnames = {
   '/dashboard': '/dashboard',
   '/dashboard/profile': '/dashboard/profile',
   '/dashboard/settings': '/dashboard/settings',
+  '/dashboard/account': '/dashboard/account',
   '/dashboard/courses': '/dashboard/courses',
   '/dashboard/courses/[courseId]': '/dashboard/courses/[courseId]',
   '/dashboard/courses/[courseId]/lesson/[lessonId]': '/dashboard/courses/[courseId]/lesson/[lessonId]',

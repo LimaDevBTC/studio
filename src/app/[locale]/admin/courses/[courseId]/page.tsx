@@ -32,7 +32,7 @@ interface LessonData {
 interface CourseData {
   title: string;
   description: string;
-  status: "Draft" | "Published";
+  status: "Draft" | "Waitlist" | "Published";
   imageUrl: string;
   aiHint: string;
   price: number;
@@ -412,13 +412,14 @@ export default function AdminCourseEditPage() {
                         <Label htmlFor="status">Status</Label>
                         <Select
                         value={course.status}
-                        onValueChange={(value: "Draft" | "Published") => setCourse({ ...course, status: value as "Draft" | "Published" })}
+                        onValueChange={(value: "Draft" | "Waitlist" | "Published") => setCourse({ ...course, status: value as "Draft" | "Waitlist" | "Published" })}
                         >
                         <SelectTrigger id="status" className="w-[240px]">
                             <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="Draft">Draft</SelectItem>
+                            <SelectItem value="Waitlist">Waitlist</SelectItem>
                             <SelectItem value="Published">Published</SelectItem>
                         </SelectContent>
                         </Select>
