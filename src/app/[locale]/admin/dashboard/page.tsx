@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, query, getDocs, where, onSnapshot, addDoc, updateDoc, getDoc, doc } from "firebase/firestore";
+import { collection, query, getDocs, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,8 @@ import {
   DollarSign, 
   Users, 
   BookOpen, 
-  CreditCard, 
-  RefreshCw,
   TrendingUp,
-  Calendar,
-  CheckCircle,
-  Play,
+  RefreshCw,
   AlertCircle,
   Clock
 } from "lucide-react";
@@ -39,7 +35,6 @@ export default function AdminDashboard() {
     pendingPayments: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
 
   const fetchDashboardStats = async () => {
@@ -57,8 +52,6 @@ export default function AdminDashboard() {
         coursesSnapshot,
         pendingSnapshot
       ] = await Promise.all(statsPromises);
-
-
 
       // Calcular receita total
       let totalRevenue = 0;
@@ -87,7 +80,7 @@ export default function AdminDashboard() {
         pendingPayments: pendingSnapshot.size,
       });
     } catch (error) {
-      console.error("Error fetching dashboard stats:", error);
+      console.error("❌ Erro ao buscar estatísticas:", error);
     } finally {
       setLoading(false);
     }
@@ -117,146 +110,13 @@ export default function AdminDashboard() {
       () => fetchDashboardStats()
     );
 
-    const unsubscribeNotifications = onSnapshot(
-      collection(db, "adminNotifications"),
-      () => fetchDashboardStats()
-    );
-
     return () => {
       unsubscribeTransactions();
       unsubscribeUsers();
       unsubscribeCourses();
       unsubscribeSubscriptions();
-      unsubscribeNotifications();
     };
   }, []);
-
-  const processApprovedNotifications = async () => {
-    setIsProcessing(true);
-    try {
-      const approvedQuery = query(
-        collection(db, "adminNotifications"), 
-        where("status", "==", "approved")
-      );
-      const approvedSnapshot = await getDocs(approvedQuery);
-      
-      let processedCount = 0;
-      let errorsCount = 0;
-      
-      for (const notificationDoc of approvedSnapshot.docs) {
-        const notification = notificationDoc.data();
-        
-        try {
-          // Verificar se já existe assinatura para esta notificação
-          const existingQuery = query(
-            collection(db, "userSubscriptions"),
-            where("notificationId", "==", notificationDoc.id)
-          );
-          const existingSnapshot = await getDocs(existingQuery);
-          
-          if (!existingSnapshot.empty) {
-            continue;
-          }
-          
-          // Validar dados obrigatórios
-          if (!notification.userId) {
-            errorsCount++;
-            continue;
-          }
-          
-          // Buscar userEmail se não estiver na notificação
-          let userEmail = notification.userEmail;
-          if (!userEmail) {
-            try {
-              const userDocRef = doc(db, "users", notification.userId);
-              const userDoc = await getDoc(userDocRef);
-              if (userDoc.exists()) {
-                const userData = userDoc.data() as { email?: string };
-                userEmail = userData?.email;
-              } else {
-                errorsCount++;
-                continue;
-              }
-            } catch (error) {
-              errorsCount++;
-              continue;
-            }
-          }
-          
-          if (!userEmail) {
-            errorsCount++;
-            continue;
-          }
-          
-          // Determinar tipo de produto e dados
-          let subscriptionData: any = {
-            userId: notification.userId,
-            userEmail: userEmail,
-            status: "active",
-            createdAt: new Date(),
-            notificationId: notificationDoc.id,
-            transactionId: notification.transactionId
-          };
-          
-          if (notification.type === "subscription") {
-            subscriptionData = {
-              ...subscriptionData,
-              planId: "yearly",
-              planName: "Anual",
-              startDate: new Date(),
-              endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-              type: "subscription"
-            };
-          } else {
-            subscriptionData = {
-              ...subscriptionData,
-              courseId: notification.courseId || "unknown",
-              courseTitle: notification.courseTitle || "Curso",
-              type: "course"
-            };
-          }
-          
-          // Criar assinatura
-          await addDoc(collection(db, "userSubscriptions"), subscriptionData);
-          processedCount++;
-          
-        } catch (error: any) {
-          errorsCount++;
-        }
-      }
-      
-      // Mostrar resultado
-      if (processedCount > 0) {
-        toast({
-          title: "Processamento Concluído!",
-          description: `${processedCount} assinaturas criadas com sucesso.${errorsCount > 0 ? ` ${errorsCount} erros encontrados.` : ""}`,
-        });
-        
-        fetchDashboardStats();
-      } else if (errorsCount > 0) {
-        toast({
-          title: "Processamento Concluído",
-          description: `Nenhuma nova assinatura criada. ${errorsCount} erros encontrados.`,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Nada para Processar",
-          description: "Todas as notificações aprovadas já foram processadas.",
-        });
-      }
-      
-    } catch (error: any) {
-      console.error("❌ Erro geral no processamento:", error);
-      toast({
-        title: "Erro no Processamento",
-        description: "Falha ao processar notificações. Verifique o console.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -296,7 +156,7 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
-              Todas as transações aprovadas
+              Total de pagamentos aprovados
             </p>
           </CardContent>
         </Card>
@@ -322,7 +182,7 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalCourses}</div>
             <p className="text-xs text-muted-foreground">
-              Cursos disponíveis na plataforma
+              Total de cursos disponíveis
             </p>
           </CardContent>
         </Card>
@@ -330,50 +190,19 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Assinaturas Ativas</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.activeSubscriptions}</div>
             <p className="text-xs text-muted-foreground">
-              Usuários com acesso ativo
+              Assinaturas atualmente ativas
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Ações Administrativas */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5" />
-              Gerenciar Pagamentos
-            </CardTitle>
-            <CardDescription>
-              Processar notificações aprovadas e criar assinaturas automaticamente
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button 
-              onClick={processApprovedNotifications}
-              disabled={isProcessing}
-              className="w-full"
-            >
-              {isProcessing ? (
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Processando...
-                </div>
-              ) : (
-                <div className="flex items-center">
-                  <Play className="h-4 w-4 mr-2" />
-                  Processar Notificações
-                </div>
-              )}
-            </Button>
-          </CardContent>
-        </Card>
-
+      {/* Status da Plataforma */}
+      <div className="grid gap-4 md:grid-cols-1">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

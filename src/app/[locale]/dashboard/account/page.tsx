@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,16 @@ export default function AccountPage() {
   const { user, userData } = useAuth();
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
+  
+  // Debug: verificar se as traduções estão sendo carregadas
+  useEffect(() => {
+    console.log('Traduções carregadas:', {
+      title: t('title'),
+      subtitle: t('subtitle'),
+      personalProfileTitle: t('personalProfile.title'),
+      personalProfileDescription: t('personalProfile.description')
+    });
+  }, [t]);
   
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -321,6 +331,7 @@ export default function AccountPage() {
                   </div>
                 </div>
               </div>
+
             </CardContent>
           </Card>
 

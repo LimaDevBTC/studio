@@ -274,17 +274,145 @@
     "amount": "Amount",
     "status": "Status",
     "paymentAddress": "Payment Address",
+    "viewDetails": "View Details",
     "approvePayment": "Approve Payment",
     "rejectPayment": "Reject Payment",
     "paymentApproved": "Payment Approved!",
     "paymentApprovedDesc": "The payment has been approved and access granted.",
     "paymentRejected": "Payment Rejected",
-    "paymentRejectedDesc": "The payment has been rejected.",
+    "paymentRejectedDesc": "The payment was rejected.",
     "approvalError": "Approval Failed",
     "approvalErrorDesc": "Failed to approve payment. Please try again.",
     "rejectionError": "Rejection Failed",
     "rejectionErrorDesc": "Failed to reject payment. Please try again.",
     "errorFetchingDetails": "Error Fetching Details",
     "errorFetchingDetailsDesc": "Failed to fetch transaction details. Please try again."
+  },
+  "AccountPage": {
+    "title": "My Account",
+    "subtitle": "Manage your profile, settings and preferences",
+    "personalProfile": {
+      "title": "Personal Profile",
+      "description": "Your personal information and contact details",
+      "changePhoto": "Change Photo",
+      "photoHint": "JPG, PNG or GIF. Maximum 2MB.",
+      "fullName": "Full Name",
+      "email": "Email",
+      "emailHint": "Email cannot be changed",
+      "editProfile": "Edit Profile",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "security": {
+      "title": "Security",
+      "description": "Manage your password and security settings",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Enter your current password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm New Password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "changePassword": "Change Password"
+    },
+    "activity": {
+      "title": "Activity",
+      "description": "History of your activities on the platform",
+      "coursesAccessed": "Courses Accessed",
+      "coursesCount": "3 courses",
+      "transactions": "Transactions",
+      "transactionsCount": "5 payments",
+      "viewFullHistory": "View Full History"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Platform preferences",
+      "language": "Language",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "notifications": "Notifications",
+      "email": "Email",
+      "push": "Push"
+    },
+    "accountInfo": {
+      "title": "Account Information",
+      "memberSince": "Member since:",
+      "lastLogin": "Last login:",
+      "status": "Status",
+      "active": "Active"
+    },
+    "toast": {
+      "profileUpdated": {
+        "title": "Profile Updated!",
+        "description": "Your information has been saved successfully."
+      },
+      "profileError": {
+        "title": "Error",
+        "description": "Could not update profile."
+      },
+      "passwordChanged": {
+        "title": "Password Changed!",
+        "description": "Your password has been updated successfully."
+      },
+      "passwordError": {
+        "title": "Error",
+        "description": "Could not change password."
+      },
+      "passwordMismatch": {
+        "title": "Error",
+        "description": "Passwords do not match."
+      }
+    }
+  },
+  "AdminWaitlist": {
+    "title": "Waitlist",
+    "subtitle": "Manage course waitlists",
+    "totalLeads": "Total Leads",
+    "activeLeads": "Active Leads",
+    "courses": "Courses",
+    "searchPlaceholder": "Search by course name...",
+    "filterAllStatus": "All Statuses",
+    "filterActive": "Active",
+    "filterNotified": "Notified",
+    "filterConverted": "Converted",
+    "filterUnsubscribed": "Unsubscribed",
+    "viewDetails": "View Details",
+    "sendEmail": "Send Email",
+    "leadsInWaitlist": "leads in waitlist",
+    "leadInWaitlist": "lead in waitlist",
+    "noWaitlistFound": "No waitlist found",
+    "noWaitlistFoundDesc": "Create courses with \"Waitlist\" status to get started",
+    "adjustFilters": "Try adjusting search filters",
+    "detailsTitle": "Waitlist Details",
+    "detailsDesc": "Manage users in this course waitlist",
+    "user": "User",
+    "email": "Email",
+    "joinDate": "Join Date",
+    "status": "Status",
+    "actions": "Actions",
+    "statusUpdated": "Status Updated",
+    "statusUpdatedDesc": "User status was successfully updated",
+    "statusError": "Error",
+    "statusErrorDesc": "Failed to update status",
+    "userRemoved": "User Removed",
+    "userRemovedDesc": "User was removed from waitlist",
+    "removeError": "Error",
+    "removeErrorDesc": "Failed to remove user",
+    "emailModalTitle": "Send Mass Email",
+    "emailModalDesc": "Send an email to all active leads in the course",
+    "recipients": "Recipients",
+    "emailTemplate": "Email Template",
+    "emailTemplatePlaceholder": "Type email content here...",
+    "cancel": "Cancel",
+    "sending": "Sending...",
+    "sendEmail": "Send Email",
+    "emailsSent": "Emails Sent!",
+    "emailsSentDesc": "emails were sent successfully",
+    "emailError": "Error",
+    "emailErrorDesc": "Failed to send emails",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "error": "Error",
+    "errorDesc": "Failed to load waitlists"
   }
 }
