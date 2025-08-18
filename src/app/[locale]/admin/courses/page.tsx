@@ -108,7 +108,7 @@ export default function AdminCoursesPage() {
     <div>
        <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold font-headline">Courses</h1>
+                      <h1 className="text-3xl font-bold">Courses</h1>
           <p className="text-muted-foreground">Manage your educational content here.</p>
         </div>
         <Button asChild>

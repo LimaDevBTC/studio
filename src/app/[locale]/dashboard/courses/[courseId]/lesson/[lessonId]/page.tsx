@@ -159,7 +159,7 @@ export default function CoursePlayerPage() {
                  </div>
             )}
         </div>
-        <h1 className="text-3xl font-bold font-headline">{currentLesson?.title || course.title}</h1>
+                    <h1 className="text-3xl font-bold">{currentLesson?.title || course.title}</h1>
         <p className="text-muted-foreground mt-2">
           {currentLesson?.description}
         </p>
@@ -195,7 +195,7 @@ export default function CoursePlayerPage() {
       <div className="w-full xl:col-span-1 flex flex-col gap-4">
         <div className="flex-1 rounded-lg border bg-card text-card-foreground shadow-sm">
             <div className="p-4 border-b">
-                <h2 className="text-xl font-bold font-headline mb-2">{course.title}</h2>
+                <h2 className="text-xl font-bold mb-2">{course.title}</h2>
             </div>
             <Accordion type="single" collapsible defaultValue="item-0" className="w-full p-2">
                 <AccordionItem value="item-0" className="border-none">

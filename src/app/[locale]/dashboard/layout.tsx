@@ -16,6 +16,7 @@ import {
   Clapperboard,
   User as UserIcon,
   Settings,
+  MessageSquare,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ import { Logo } from "@/components/Logo";
 import { useAuth } from "@/hooks/use-auth";
 import { Link, useRouter } from '@/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
+import Footer from "@/components/Footer";
 
 export default function DashboardLayout({
   children,
@@ -61,6 +63,7 @@ export default function DashboardLayout({
       { href: "/dashboard/subscription", icon: <CreditCard className="h-4 w-4" />, label: t('navSubscription') },
       { href: "/dashboard/live", icon: <Clapperboard className="h-4 w-4" />, label: "Ao Vivo" },
       { href: "/dashboard/account", icon: <UserIcon className="h-4 w-4" />, label: "Minha Conta" },
+      { href: "/dashboard/contact", icon: <MessageSquare className="h-4 w-4" />, label: "Contato" },
   ];
   
 
@@ -99,7 +102,7 @@ export default function DashboardLayout({
                         {isAdmin && (
               <div className="grid items-start px-2 text-sm font-medium lg:px-4 mb-4 border-t pt-4">
                 <Link
-                  href={"/admin/dashboard" as any}
+                  href="/admin/dashboard"
                   className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                     pathname.endsWith("/admin/dashboard")
                       ? 'text-primary' 
@@ -145,6 +148,7 @@ export default function DashboardLayout({
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
           {children}
         </main>
+        <Footer />
       </div>
     </div>
   );

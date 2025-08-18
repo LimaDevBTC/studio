@@ -11,6 +11,7 @@ import { collection, getDocs, query, where, limit, doc, getDoc } from 'firebase/
 import { db } from '@/lib/firebase';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
+import SubscriptionAlert from "@/components/SubscriptionAlert";
 import { Progress } from '@/components/ui/progress';
 
 
@@ -132,8 +133,11 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* Alerta de Status da Assinatura */}
+      <SubscriptionAlert />
+      
       <div>
-        <h1 className="text-3xl font-bold font-headline">{t('welcome', { name: user?.displayName?.split(' ')[0] || 'User' })}</h1>
+                        <h1 className="text-3xl font-bold">{t('welcome', { name: user?.displayName?.split(' ')[0] || 'User' })}</h1>
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
 
@@ -194,7 +198,7 @@ export default function DashboardPage() {
         </div>
         
         <section className="lg:col-span-2">
-            <h2 className="text-2xl font-semibold font-headline mb-4">{t('recommendedForYou')}</h2>
+            <h2 className="text-2xl font-semibold mb-4">{t('recommendedForYou')}</h2>
             <div className="grid gap-6 sm:grid-cols-2">
                 {loading ? (
                    Array.from({ length: 2 }).map((_, index) => (
@@ -231,7 +235,15 @@ export default function DashboardPage() {
                             </CardContent>
                             <CardFooter>
                                 <Button asChild className="w-full">
-                                    <Link href={`/dashboard/courses/${course.id}` as any}>{t('viewCourse')}</Link>
+                                                        {course.status === "Waitlist" ? (
+                        <Link href={`/dashboard/courses/${course.id}/preview` as any}>
+                            Ver Preview
+                        </Link>
+                    ) : (
+                                        <Link href={`/dashboard/courses/${course.id}` as any}>
+                                            {t('viewCourse')}
+                                        </Link>
+                                    )}
                                 </Button>
                             </CardFooter>
                         </Card>

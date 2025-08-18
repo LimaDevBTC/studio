@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Radio, Clapperboard, Video, ExternalLink, Clock, Users, Lock, Play } from "lucide-react";
+import { Radio, Clapperboard, Video, ExternalLink, Clock, Users, Lock, Play, Calendar, Link as LinkIcon } from "lucide-react";
 import { collection, query, orderBy, getDocs, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
@@ -65,18 +65,18 @@ export default function UserLivePage() {
 
     const getServiceIcon = (service: string) => {
         switch (service) {
-            case 'meet': return '🔵';
-            case 'zoom': return '🔵';
-            case 'youtube': return '🔴';
-            default: return '🔗';
+            case 'meet': return <Video className="h-4 w-4" />;
+            case 'zoom': return <Video className="h-4 w-4" />;
+            case 'youtube': return <Video className="h-4 w-4" />;
+            default: return <LinkIcon className="h-4 w-4" />;
         }
     };
 
     const getStatusColor = (status: LiveStatus) => {
         switch (status) {
-            case 'scheduled': return 'bg-blue-100 text-blue-800';
-            case 'live': return 'bg-green-100 text-green-800';
-            case 'finished': return 'bg-gray-100 text-gray-800';
+            case 'scheduled': return 'bg-blue-50 text-blue-700 border-blue-200';
+            case 'live': return 'bg-red-50 text-red-700 border-red-200';
+            case 'finished': return 'bg-gray-50 text-gray-600 border-gray-200';
         }
     };
 
@@ -118,11 +118,11 @@ export default function UserLivePage() {
         );
     }
 
-        return (
-        <div className="container mx-auto p-6 space-y-6">
+    return (
+        <div className="container mx-auto p-6 space-y-8">
             <div className="text-center space-y-4">
-                <h1 className="text-4xl font-bold font-headline">Lives e Consultorias</h1>
-                <p className="text-xl text-muted-foreground">
+                <h1 className="text-4xl font-bold">Lives e Consultorias</h1>
+                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                     Acompanhe nossas transmissões ao vivo e participe de consultorias personalizadas
                 </p>
             </div>
@@ -130,8 +130,8 @@ export default function UserLivePage() {
             {/* Live em andamento */}
             {liveSessions.some(s => s.status === 'live') && (
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold flex items-center gap-2">
-                        <Radio className="h-6 w-6 text-green-600 animate-pulse" />
+                    <h2 className="text-2xl font-semibold flex items-center gap-3 text-red-700">
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
                         AO VIVO AGORA
                     </h2>
                     
@@ -139,33 +139,30 @@ export default function UserLivePage() {
                         {liveSessions
                             .filter(s => s.status === 'live')
                             .map((session) => (
-                                <Card key={session.id} className="border-green-500 bg-gradient-to-br from-green-50 to-emerald-50 shadow-lg">
+                                <Card key={session.id} className="border-red-200 bg-gradient-to-r from-red-50 to-white shadow-sm hover:shadow-md transition-shadow">
                                     <CardHeader>
                                         <div className="flex items-start justify-between">
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <span className="text-3xl">{getServiceIcon(session.service)}</span>
-                                                    <CardTitle className="text-xl text-gray-900">
-                                                        {session.title}
-                                                    </CardTitle>
-                                                    <Badge className="bg-red-600 text-white animate-pulse shadow-md">
-                                                        🔴 AO VIVO
+                                            <div className="flex-1 space-y-3">
+                                                <div className="flex items-center gap-3">
+                                                    <CardTitle className="text-xl">{session.title}</CardTitle>
+                                                    <Badge className="bg-red-100 text-red-800 border-red-200 font-medium">
+                                                        AO VIVO
                                                     </Badge>
                                                     {session.isPrivate && (
-                                                        <Badge variant="secondary" className="flex items-center gap-1 bg-purple-100 text-purple-800 border-purple-200">
-                                                            <Lock className="h-3 w-3" />
+                                                        <Badge variant="outline" className="border-purple-200 text-purple-700">
+                                                            <Lock className="h-3 w-3 mr-1" />
                                                             Privada
                                                         </Badge>
                                                     )}
                                                 </div>
-                                                <CardDescription className="text-gray-700 font-medium">
+                                                <CardDescription className="text-base text-gray-600">
                                                     {session.description}
                                                 </CardDescription>
                                             </div>
                                             
                                             <Button
                                                 size="lg"
-                                                className="bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                                                className="bg-red-600 hover:bg-red-700 text-white shadow-sm"
                                                 onClick={() => window.open(session.externalUrl, '_blank')}
                                             >
                                                 <Play className="h-4 w-4 mr-2" />
@@ -174,33 +171,34 @@ export default function UserLivePage() {
                                         </div>
                                     </CardHeader>
                                     
-                                    <CardContent className="bg-white/70 rounded-lg p-4 border border-green-200">
+                                    <CardContent>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                            <div className="bg-white p-3 rounded-lg border border-green-100">
-                                                <span className="font-semibold text-gray-800">Serviço:</span>
-                                                <div className="flex items-center gap-2 mt-2">
-                                                    <span className="text-lg">{getServiceIcon(session.service)}</span>
-                                                    <span className="capitalize font-medium text-gray-900">{session.service}</span>
+                                            <div className="flex items-center gap-2 p-3 bg-white rounded-lg border border-gray-100">
+                                                <Video className="h-4 w-4 text-gray-500" />
+                                                <div>
+                                                    <span className="font-medium text-gray-700">Serviço</span>
+                                                    <div className="text-gray-900 capitalize">{session.service}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div className="bg-white p-3 rounded-lg border border-green-100">
-                                                <span className="font-semibold text-gray-800">Iniciada em:</span>
-                                                <div className="mt-2 font-medium text-gray-900">
-                                                    {formatDate(session.scheduledAt)}
+                                            <div className="flex items-center gap-2 p-3 bg-white rounded-lg border border-gray-100">
+                                                <Calendar className="h-4 w-4 text-gray-500" />
+                                                <div>
+                                                    <span className="font-medium text-gray-700">Iniciada em</span>
+                                                    <div className="text-gray-900">{formatDate(session.scheduledAt)}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div className="bg-white p-3 rounded-lg border border-green-100">
-                                                <span className="font-semibold text-gray-800">Link:</span>
-                                                <div className="mt-2">
+                                            <div className="flex items-center gap-2 p-3 bg-white rounded-lg border border-gray-100">
+                                                <LinkIcon className="h-4 w-4 text-gray-500" />
+                                                <div>
+                                                    <span className="font-medium text-gray-700">Acesso</span>
                                                     <a
                                                         href={session.externalUrl}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-green-700 hover:text-green-800 flex items-center gap-1 font-medium hover:underline transition-colors"
+                                                        className="text-red-600 hover:text-red-800 font-medium hover:underline transition-colors"
                                                     >
-                                                        <ExternalLink className="h-3 w-3" />
                                                         Acessar Live
                                                     </a>
                                                 </div>
@@ -215,17 +213,17 @@ export default function UserLivePage() {
 
             {/* Próximas lives */}
             <div className="space-y-4">
-                <h2 className="text-2xl font-semibold flex items-center gap-2">
+                <h2 className="text-2xl font-semibold flex items-center gap-3 text-red-700">
                     <Clock className="h-6 w-6" />
                     Próximas Lives
                 </h2>
                 
                 {liveSessions.filter(s => s.status === 'scheduled').length === 0 ? (
-                    <Card>
-                        <CardContent className="p-6 text-center">
-                            <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                            <p className="text-muted-foreground">Nenhuma live agendada no momento.</p>
-                            <p className="text-sm text-muted-foreground mt-2">
+                    <Card className="border-dashed border-gray-200">
+                        <CardContent className="p-8 text-center">
+                            <Clock className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                            <p className="text-gray-600 font-medium">Nenhuma live agendada no momento.</p>
+                            <p className="text-sm text-gray-500 mt-2">
                                 Fique atento às nossas próximas transmissões!
                             </p>
                         </CardContent>
@@ -235,24 +233,25 @@ export default function UserLivePage() {
                         {liveSessions
                             .filter(s => s.status === 'scheduled')
                             .map((session) => (
-                                <Card key={session.id}>
+                                <Card key={session.id} className="hover:shadow-md transition-shadow border-gray-100">
                                     <CardHeader>
                                         <div className="flex items-start justify-between">
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <span className="text-2xl">{getServiceIcon(session.service)}</span>
+                                            <div className="flex-1 space-y-3">
+                                                <div className="flex items-center gap-3">
                                                     <CardTitle className="text-lg">{session.title}</CardTitle>
-                                                    <Badge variant="secondary">
+                                                    <Badge variant="secondary" className={getStatusColor(session.status)}>
                                                         {getStatusText(session.status)}
                                                     </Badge>
                                                     {session.isPrivate && (
-                                                        <Badge variant="outline" className="flex items-center gap-1">
-                                                            <Lock className="h-3 w-3" />
+                                                        <Badge variant="outline" className="border-purple-200 text-purple-700">
+                                                            <Lock className="h-3 w-3 mr-1" />
                                                             Privada
                                                         </Badge>
                                                     )}
                                                 </div>
-                                                <CardDescription>{session.description}</CardDescription>
+                                                <CardDescription className="text-gray-600">
+                                                    {session.description}
+                                                </CardDescription>
                                             </div>
                                             
                                             <Button
@@ -267,33 +266,36 @@ export default function UserLivePage() {
                                     
                                     <CardContent>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                            <div>
-                                                <span className="font-medium">Serviço:</span>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                    <span>{getServiceIcon(session.service)}</span>
-                                                    <span className="capitalize">{session.service}</span>
+                                            <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
+                                                <Video className="h-4 w-4 text-red-400" />
+                                                <div className="space-y-3">
+                                                    <span className="font-medium text-white">Serviço</span>
+                                                    <div className="text-white capitalize">{session.service}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div>
-                                                <span className="font-medium">Agendada para:</span>
-                                                <div className="mt-1">
-                                                    {formatDate(session.scheduledAt)}
+                                            <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
+                                                <Calendar className="h-4 w-4 text-red-400" />
+                                                <div className="space-y-3">
+                                                    <span className="font-medium text-white">Agendada para</span>
+                                                    <div className="text-white">{formatDate(session.scheduledAt)}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div>
-                                                <span className="font-medium">Link:</span>
-                                                <div className="mt-1">
-                                                    <a
-                                                        href={session.externalUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                                                    >
-                                                        <ExternalLink className="h-3 w-3" />
-                                                        Acessar Live
-                                                    </a>
+                                            <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
+                                                <LinkIcon className="h-4 w-4 text-red-400" />
+                                                <div className="space-y-3">
+                                                    <span className="font-medium text-white">Acesso</span>
+                                                    <div className="text-white">
+                                                        <a
+                                                            href={session.externalUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-red-400 hover:text-red-300 font-medium hover:underline transition-colors"
+                                                        >
+                                                            Acessar Live
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -307,7 +309,7 @@ export default function UserLivePage() {
             {/* Lives finalizadas */}
             {liveSessions.filter(s => s.status === 'finished').length > 0 && (
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold flex items-center gap-2">
+                    <h2 className="text-2xl font-semibold flex items-center gap-3 text-gray-700">
                         <Video className="h-6 w-6" />
                         Lives Anteriores
                     </h2>
@@ -316,21 +318,20 @@ export default function UserLivePage() {
                         {liveSessions
                             .filter(s => s.status === 'finished')
                             .map((session) => (
-                                <Card key={session.id} className="opacity-75">
+                                <Card key={session.id} className="opacity-80 hover:opacity-100 transition-opacity border-gray-100">
                                     <CardHeader>
                                         <div className="flex items-start justify-between">
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <span className="text-2xl">{getServiceIcon(session.service)}</span>
-                                                    <CardTitle className="text-lg text-gray-600">
+                                            <div className="flex-1 space-y-3">
+                                                <div className="flex items-center gap-3">
+                                                    <CardTitle className="text-lg text-gray-700">
                                                         {session.title}
                                                     </CardTitle>
-                                                    <Badge variant="secondary" className="bg-gray-100 text-gray-600">
+                                                    <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-gray-200">
                                                         Finalizada
                                                     </Badge>
                                                     {session.isPrivate && (
-                                                        <Badge variant="secondary" className="flex items-center gap-1 bg-purple-100 text-purple-800 border-purple-200">
-                                                            <Lock className="h-3 w-3" />
+                                                        <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-200">
+                                                            <Lock className="h-3 w-3 mr-1" />
                                                             Privada
                                                         </Badge>
                                                     )}
@@ -343,7 +344,7 @@ export default function UserLivePage() {
                                             <Button
                                                 variant="outline"
                                                 size="sm"
-                                                className="text-gray-600 border-gray-300 hover:bg-gray-50"
+                                                className="text-gray-600 border-gray-200 hover:bg-gray-50"
                                                 onClick={() => window.open(session.externalUrl, '_blank')}
                                             >
                                                 <ExternalLink className="h-4 w-4 mr-2" />
@@ -354,28 +355,36 @@ export default function UserLivePage() {
                                     
                                     <CardContent>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                            <div>
-                                                <span className="font-medium text-gray-600">Serviço:</span>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                    <span>{getServiceIcon(session.service)}</span>
-                                                    <span className="capitalize text-gray-700">{session.service}</span>
+                                                                                        <div className="flex items-center gap-2 p-3 bg-gray-700/60 rounded-lg border border-gray-600/50">
+                                                <Video className="h-4 w-4 text-red-400" />
+                                                <div className="space-y-3">
+                                                    <span className="font-medium text-white">Serviço</span>
+                                                    <div className="text-white capitalize">{session.service}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div>
-                                                <span className="font-medium text-gray-600">Finalizada em:</span>
-                                                <div className="mt-1 text-gray-700">
-                                                    {formatDate(session.finishedAt || session.scheduledAt)}
+                                            <div className="flex items-center gap-2 p-3 bg-gray-700/60 rounded-lg border border-gray-600/50">
+                                                <Calendar className="h-4 w-4 text-red-400" />
+                                                <div className="space-y-3">
+                                                    <span className="font-medium text-white">Realizada em</span>
+                                                    <div className="text-white">{formatDate(session.scheduledAt)}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div>
-                                                <span className="font-medium text-gray-600">Duração:</span>
-                                                <div className="mt-1 text-gray-700">
-                                                    {session.startedAt && session.finishedAt 
-                                                        ? `${Math.round((session.finishedAt.toDate() - session.startedAt.toDate()) / (1000 * 60))} min`
-                                                        : 'N/A'
-                                                    }
+                                            <div className="flex items-center gap-2 p-3 bg-gray-700/60 rounded-lg border border-gray-600/50">
+                                                <LinkIcon className="h-4 w-4 text-red-400" />
+                                                <div className="space-y-3">
+                                                    <span className="font-medium text-white">Acesso</span>
+                                                    <div className="text-white">
+                                                        <a
+                                                            href={session.externalUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-red-400 hover:text-red-300 font-medium hover:underline transition-colors"
+                                                        >
+                                                            Ver Gravação
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -384,22 +393,6 @@ export default function UserLivePage() {
                             ))}
                     </div>
                 </div>
-            )}
-
-            {/* Mensagem se não há lives */}
-            {liveSessions.length === 0 && (
-                <Card>
-                    <CardContent className="p-12 text-center">
-                        <Clapperboard className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Nenhuma live disponível</h3>
-                        <p className="text-muted-foreground">
-                            Não há lives agendadas ou em andamento no momento.
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-2">
-                            Volte mais tarde para conferir nossas próximas transmissões!
-                        </p>
-                    </CardContent>
-                </Card>
             )}
         </div>
     );

@@ -11,6 +11,9 @@
 import * as logger from "firebase-functions/logger";
 import {onCall, HttpsError} from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
+import * as functions from 'firebase-functions';
+import * as sgMail from '@sendgrid/mail';
+import { onSchedule } from "firebase-functions/v2/scheduler";
 
 // Initialize the Firebase Admin SDK.
 admin.initializeApp();
@@ -187,4 +190,166 @@ export const finishLiveStream = onCall(async (request) => {
         logger.error("Error finishing live stream:", error);
         throw new HttpsError("internal", "Failed to finish live stream.", error);
     }
+});
+
+// Configurar SendGrid
+sgMail.setApiKey(functions.config().sendgrid?.key || 'your-sendgrid-api-key');
+
+// Cloud Function para enviar emails em massa
+export const sendWaitlistEmails = functions.https.onCall(async (data, context) => {
+  // Verificar se o usuário é admin
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'Usuário não autenticado');
+  }
+
+  try {
+    const userDoc = await admin.firestore().collection('users').doc(context.auth.uid).get();
+    if (!userDoc.exists || !userDoc.data()?.isAdmin) {
+      throw new functions.https.HttpsError('permission-denied', 'Acesso negado: apenas admins podem enviar emails');
+    }
+  } catch (error) {
+    throw new functions.https.HttpsError('permission-denied', 'Erro ao verificar permissões');
+  }
+
+  const { courseId, emailTemplate, recipientEmails } = data;
+
+  if (!courseId || !emailTemplate || !recipientEmails || !Array.isArray(recipientEmails)) {
+    throw new functions.https.HttpsError('invalid-argument', 'Dados inválidos fornecidos');
+  }
+
+  try {
+    const results = [];
+    const errors = [];
+
+    // Enviar emails para cada destinatário
+    for (const email of recipientEmails) {
+      try {
+        const msg = {
+          to: email,
+          from: functions.config().sendgrid?.from || 'support@mqmcrypto.com',
+          subject: `🎯 Curso Disponível: ${courseId}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; color: white;">
+                <h1 style="margin: 0; font-size: 28px;">🎉 Curso Disponível!</h1>
+                <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">O curso que você estava esperando já está disponível!</p>
+              </div>
+              
+              <div style="padding: 30px; background: white;">
+                <h2 style="color: #333; margin-bottom: 20px;">${courseId}</h2>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  ${emailTemplate.replace(/\n/g, '<br>')}
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${functions.config().app?.url || 'https://mqmcrypto.com'}/dashboard/courses" 
+                     style="background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                    Acessar Curso Agora
+                  </a>
+                </div>
+                
+                <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+                
+                <p style="color: #666; font-size: 14px; text-align: center;">
+                  Este email foi enviado automaticamente. Se você não solicitou esta notificação, 
+                  pode ignorar ou cancelar sua inscrição na lista de espera.
+                </p>
+              </div>
+              
+              <div style="background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 12px;">
+                <p>© 2024 Sua Plataforma. Todos os direitos reservados.</p>
+              </div>
+            </div>
+          `,
+          text: `
+            🎉 Curso Disponível: ${courseId}
+            
+            ${emailTemplate}
+            
+            Acesse agora: ${functions.config().app?.url || 'https://mqmcrypto.com'}/dashboard/courses
+            
+            ---
+            Este email foi enviado automaticamente.
+          `
+        };
+
+        await sgMail.send(msg);
+        results.push({ email, status: 'success' });
+        
+        // Atualizar status no Firestore
+        const waitlistQuery = admin.firestore()
+          .collection('waitlist')
+          .where('courseId', '==', courseId)
+          .where('userEmail', '==', email);
+        
+        const waitlistDocs = await waitlistQuery.get();
+        for (const doc of waitlistDocs.docs) {
+          await doc.ref.update({ 
+            status: 'notified',
+            notifiedAt: admin.firestore.FieldValue.serverTimestamp()
+          });
+        }
+
+      } catch (error: any) {
+        console.error(`Erro ao enviar email para ${email}:`, error);
+        errors.push({ email, status: 'error', error: error.message });
+      }
+    }
+
+    return {
+      success: true,
+      results,
+      errors,
+      totalSent: results.length,
+      totalErrors: errors.length
+    };
+
+  } catch (error) {
+    console.error('Erro geral ao enviar emails:', error);
+    throw new functions.https.HttpsError('internal', 'Erro interno ao enviar emails');
+  }
+});
+
+/**
+ * Scheduled function to check and update expired subscriptions daily
+ * Runs every day at 2:00 AM UTC
+ */
+export const checkExpiredSubscriptions = onSchedule({
+  schedule: "0 2 * * *", // Every day at 2:00 AM UTC
+  timeZone: "UTC"
+}, async (event) => {
+  logger.log("Starting expired subscription check...");
+  
+  try {
+    const now = new Date();
+    const usersSnapshot = await db.collection('users')
+      .where('planExpiryDate', '<=', now)
+      .where('plan', '!=', 'Free Trial')
+      .get();
+    
+    let updatedCount = 0;
+    
+    for (const doc of usersSnapshot.docs) {
+      const userData = doc.data();
+      
+      // Only update if the plan is actually expired
+      if (userData.planExpiryDate && userData.planExpiryDate.toDate() <= now) {
+        await doc.ref.update({
+          plan: 'Free Trial',
+          planExpiryDate: null,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        
+        logger.log(`Updated expired subscription for user: ${doc.id}`);
+        updatedCount++;
+      }
+    }
+    
+    logger.log(`Expired subscription check completed. Updated ${updatedCount} users.`);
+    
+  } catch (error) {
+    logger.error("Error checking expired subscriptions:", error);
+    throw error;
+  }
 });

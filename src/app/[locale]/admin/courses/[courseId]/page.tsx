@@ -334,7 +334,7 @@ export default function AdminCourseEditPage() {
                 <ArrowLeft className="h-4 w-4" />
                 </Button>
                 <div>
-                    <h1 className="text-2xl lg:text-3xl font-bold font-headline">
+                    <h1 className="text-2xl lg:text-3xl font-bold">
                         {isNewCourse ? "Create New Course" : "Edit Course"}
                     </h1>
                     <p className="text-muted-foreground">

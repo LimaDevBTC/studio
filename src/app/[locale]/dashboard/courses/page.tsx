@@ -108,7 +108,7 @@ export default function MyCoursesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold font-headline">Meus Cursos</h1>
+                    <h1 className="text-3xl font-bold">Meus Cursos</h1>
         <p className="text-muted-foreground">Todos os seus cursos inscritos e disponíveis em um só lugar.</p>
       </div>
 
@@ -173,7 +173,7 @@ export default function MyCoursesPage() {
                 <Sparkles className="w-8 h-8 text-primary"/>
                </div>
              </div>
-            <CardTitle className="font-headline text-2xl">Desbloqueie todos os cursos</CardTitle>
+                            <CardTitle className="text-2xl">Desbloqueie todos os cursos</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">

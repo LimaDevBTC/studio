@@ -143,13 +143,13 @@ export default function CourseOverviewPage() {
                             data-ai-hint={course.aiHint}
                         />
                      </div>
-                     <h1 className="text-3xl font-bold font-headline">{course.title}</h1>
+                     <h1 className="text-3xl font-bold">{course.title}</h1>
                      <p className="text-muted-foreground">{course.description}</p>
                 </div>
                 <div className="space-y-4">
                     <Card>
                         <CardContent className="p-6">
-                            <h2 className="text-xl font-bold font-headline mb-4">Course Content</h2>
+                            <h2 className="text-xl font-bold mb-4">Course Content</h2>
                             
 
                             
@@ -158,7 +158,7 @@ export default function CourseOverviewPage() {
                                     <div className="text-center">
                                         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-3">
                                             <p className="text-sm text-orange-800 font-medium">
-                                                🚧 Este curso está em desenvolvimento
+                                                Este curso está em desenvolvimento
                                             </p>
                                             <p className="text-xs text-orange-700 mt-1">
                                                 Entre na lista de espera para ser notificado quando estiver disponível

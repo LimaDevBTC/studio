@@ -15,6 +15,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@google-cloud/livestream": "^2.1.0",
+    "@sendgrid/mail": "^8.1.5",
     "firebase-admin": "^12.2.0",
     "firebase-functions": "^5.0.1"
   },

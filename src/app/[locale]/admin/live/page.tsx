@@ -4,12 +4,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Radio, Clapperboard, Video, Copy, Loader2, AlertCircle, Play, Square, Plus, Edit, Trash2, ExternalLink, Users, Lock } from "lucide-react";
+import { Radio, Clapperboard, Video, Copy, Loader2, AlertCircle, Play, Square, Plus, Edit, Trash2, ExternalLink, Users, Lock, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { doc, onSnapshot, setDoc, deleteDoc, collection, query, orderBy, getDocs, addDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -221,18 +222,18 @@ export default function AdminLivePage() {
 
     const getServiceIcon = (service: LiveService) => {
         switch (service) {
-            case 'meet': return '🔵';
-            case 'zoom': return '🔵';
-            case 'youtube': return '🔴';
-            default: return '🔗';
+            case 'meet': return <Video className="h-4 w-4" />;
+            case 'zoom': return <Video className="h-4 w-4" />;
+            case 'youtube': return <Video className="h-4 w-4" />;
+            default: return <ExternalLink className="h-4 w-4" />;
         }
     };
 
     const getStatusColor = (status: LiveStatus) => {
         switch (status) {
-            case 'scheduled': return 'bg-blue-100 text-blue-800';
-            case 'live': return 'bg-green-100 text-green-800';
-            case 'finished': return 'bg-gray-100 text-gray-800';
+            case 'scheduled': return 'bg-blue-50 text-blue-700 border-blue-200';
+            case 'live': return 'bg-red-50 text-red-700 border-red-200';
+            case 'finished': return 'bg-gray-50 text-gray-600 border-gray-200';
         }
     };
 
@@ -240,7 +241,7 @@ export default function AdminLivePage() {
         <div className="container mx-auto p-6 space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold font-headline">Gerenciar Lives</h1>
+                    <h1 className="text-3xl font-bold">Gerenciar Lives</h1>
                     <p className="text-muted-foreground">Crie e gerencie sessões de live streaming.</p>
                 </div>
                 <Button 
@@ -403,26 +404,25 @@ export default function AdminLivePage() {
                                 <CardHeader>
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <span className="text-2xl">{getServiceIcon(session.service)}</span>
+                                            <div className="flex items-center gap-3 mb-3">
                                                 <CardTitle className="text-lg">{session.title}</CardTitle>
-                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(session.status)}`}>
+                                                <Badge className={getStatusColor(session.status)}>
                                                     {session.status === 'scheduled' && 'Agendada'}
                                                     {session.status === 'live' && 'AO VIVO'}
                                                     {session.status === 'finished' && 'Finalizada'}
-                                                </span>
+                                                </Badge>
                                                 {session.isPrivate ? (
-                                                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 flex items-center gap-1">
-                                                        <Lock className="h-3 w-3" />
+                                                    <Badge variant="outline" className="border-purple-200 text-purple-700">
+                                                        <Lock className="h-3 w-3 mr-1" />
                                                         Consultoria Privada
                                                         {session.allowedUsers && session.allowedUsers.length > 0 && (
                                                             <span className="ml-1">({session.allowedUsers.length} participante{session.allowedUsers.length > 1 ? 's' : ''})</span>
                                                         )}
-                                                    </span>
+                                                    </Badge>
                                                 ) : (
-                                                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                    <Badge variant="outline" className="border-blue-200 text-blue-700">
                                                         Live Pública
-                                                    </span>
+                                                    </Badge>
                                                 )}
                                             </div>
                                             <CardDescription>{session.description}</CardDescription>
@@ -473,33 +473,38 @@ export default function AdminLivePage() {
                                 
                                 <CardContent>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                        <div>
-                                            <span className="font-medium">Serviço:</span>
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <span>{getServiceIcon(session.service)}</span>
-                                                <span className="capitalize">{session.service}</span>
+                                        <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
+                                            <Video className="h-4 w-4 text-red-400" />
+                                            <div>
+                                                <span className="font-medium text-white">Serviço</span>
+                                                <div className="text-white capitalize">{session.service}</div>
                                             </div>
                                         </div>
                                         
-                                        <div>
-                                            <span className="font-medium">Agendada para:</span>
-                                            <div className="mt-1">
-                                                {session.scheduledAt instanceof Date ? session.scheduledAt.toLocaleString('pt-BR') : session.scheduledAt.toDate().toLocaleString('pt-BR')}
+                                        <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
+                                            <Calendar className="h-4 w-4 text-red-400" />
+                                            <div>
+                                                <span className="font-medium text-white">Agendada para</span>
+                                                <div className="text-white">
+                                                    {session.scheduledAt instanceof Date ? session.scheduledAt.toLocaleString('pt-BR') : session.scheduledAt.toDate().toLocaleString('pt-BR')}
+                                                </div>
                                             </div>
                                         </div>
                                         
-                                        <div>
-                                            <span className="font-medium">Link:</span>
-                                            <div className="mt-1">
-                                                <a
-                                                    href={session.externalUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                                                >
-                                                    <ExternalLink className="h-3 w-3" />
-                                                    Acessar Live
-                                                </a>
+                                        <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
+                                            <ExternalLink className="h-4 w-4 text-red-400" />
+                                            <div>
+                                                <span className="font-medium text-white">Acesso</span>
+                                                <div>
+                                                    <a
+                                                        href={session.externalUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-red-400 hover:text-red-300 font-medium hover:underline transition-colors"
+                                                    >
+                                                        Acessar Live
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

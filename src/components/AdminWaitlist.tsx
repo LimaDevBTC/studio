@@ -1,29 +1,22 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
-import { collection, query, getDocs, doc, updateDoc, deleteDoc, orderBy, limit, where } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { 
-  Clock, 
-  Users, 
-  Mail, 
-  Trash2, 
-  Send, 
-  Filter, 
-  Search,
-  RefreshCw,
-  AlertCircle,
-  CheckCircle
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Search, Mail, Users, Filter, Send, Loader2, AlertCircle, CheckCircle, XCircle, Clock, Trash2, RefreshCw } from "lucide-react";
+import { collection, getDocs, query, where, orderBy, updateDoc, doc, onSnapshot, deleteDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "@/lib/firebase";
 
 interface WaitlistEntry {
   id: string;
@@ -45,7 +38,7 @@ interface CourseWaitlist {
 }
 
 export function AdminWaitlist() {
-  const t = useTranslations('AdminWaitlist');
+  const { user } = useAuth();
   const { toast } = useToast();
   const [waitlists, setWaitlists] = useState<CourseWaitlist[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -187,42 +180,58 @@ export function AdminWaitlist() {
     
     setIsSendingEmail(true);
     try {
-      // Aqui você implementaria a lógica de envio de email
-      // Por enquanto, vamos simular o envio
+      // Obter emails dos leads ativos
       const activeEntries = selectedCourse.entries.filter(entry => entry.status === 'active');
+      const recipientEmails = activeEntries.map(entry => entry.userEmail);
       
-      // Simular envio
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Marcar como notificado
-      for (const entry of activeEntries) {
-        await updateDoc(doc(db, 'waitlist', entry.id), { status: 'notified' });
+      if (recipientEmails.length === 0) {
+        toast({
+          title: "Nenhum lead ativo",
+          description: "Não há leads ativos para enviar emails",
+          variant: "destructive",
+        });
+        return;
       }
 
-      // Atualizar estado local
-      setWaitlists(prev => prev.map(course => 
-        course.courseId === selectedCourse.courseId 
-          ? {
-              ...course,
-              entries: course.entries.map(entry => 
-                entry.status === 'active' ? { ...entry, status: 'notified' } : entry
-              )
-            }
-          : course
-      ));
-
-      toast({
-        title: "Emails Enviados!",
-        description: `${activeEntries.length} emails foram enviados com sucesso`,
+      // Chamar Cloud Function para enviar emails
+      const sendWaitlistEmails = httpsCallable(functions, 'sendWaitlistEmails');
+      const result = await sendWaitlistEmails({
+        courseId: selectedCourse.courseId,
+        emailTemplate: emailTemplate.trim(),
+        recipientEmails: recipientEmails
       });
 
-      setIsEmailModalOpen(false);
-      setEmailTemplate('');
-    } catch (error) {
+      const data = result.data as any;
+      
+      if (data.success) {
+        // Atualizar estado local
+        setWaitlists(prev => prev.map(course => 
+          course.courseId === selectedCourse.courseId 
+            ? {
+                ...course,
+                entries: course.entries.map(entry => 
+                  entry.status === 'active' ? { ...entry, status: 'notified' } : entry
+                )
+              }
+            : course
+        ));
+
+        toast({
+          title: "Emails Enviados!",
+          description: `${data.totalSent} emails foram enviados com sucesso${data.totalErrors > 0 ? ` (${data.totalErrors} falharam)` : ''}`,
+        });
+
+        setIsEmailModalOpen(false);
+        setEmailTemplate('');
+      } else {
+        throw new Error('Falha ao enviar emails');
+      }
+
+    } catch (error: any) {
       console.error('Erro ao enviar emails:', error);
       toast({
         title: "Erro",
-        description: "Falha ao enviar emails",
+        description: error.message || "Falha ao enviar emails",
         variant: "destructive",
       });
     } finally {

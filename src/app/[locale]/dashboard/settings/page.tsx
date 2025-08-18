@@ -97,7 +97,7 @@ export default function SettingsPage() {
         {t('backButton')}
       </Button>
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold font-headline">{t('title')}</h1>
+                    <h1 className="text-3xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
 

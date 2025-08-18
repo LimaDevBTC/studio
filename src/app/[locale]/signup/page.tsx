@@ -86,7 +86,7 @@ export default function SignupPage() {
           </div>
           <Card className="mx-auto max-w-sm w-[400px] bg-card">
             <CardHeader>
-              <CardTitle className="text-2xl font-headline">{t('title')}</CardTitle>
+                              <CardTitle className="text-2xl">{t('title')}</CardTitle>
               <CardDescription>
                 {t('description')}
               </CardDescription>

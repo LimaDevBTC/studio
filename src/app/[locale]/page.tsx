@@ -69,7 +69,7 @@ export default function Home() {
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-headline">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                     {t('heroTitle')}
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
@@ -99,7 +99,7 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">{t('featuresTitle')}</div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">{t('featuresTitle')}</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{t('featuresTitle')}</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   {t('featuresSubtitle')}
                 </p>
@@ -121,7 +121,7 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">{t('coursesTitle')}</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{t('coursesTitle')}</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   {t('coursesSubtitle')}
                 </p>
@@ -149,7 +149,7 @@ export default function Home() {
         <section id="pricing" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
             <div className="space-y-3">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight font-headline">
+                              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
                 {t('pricingTitle')}
               </h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
