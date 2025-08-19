@@ -267,27 +267,27 @@ export default function UserLivePage() {
                                     
                                     <CardContent>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                            <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
+                                            <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
                                                 <Video className="h-4 w-4 text-[#F7931A]" />
-                                                <div className="space-y-3">
-                                                    <span className="font-medium text-white">{t('service')}</span>
-                                                    <div className="text-white capitalize">{session.service}</div>
+                                                <div>
+                                                    <span className="font-medium text-card-foreground">{t('service')}</span>
+                                                    <div className="text-card-foreground capitalize">{session.service}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
+                                            <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
                                                 <Calendar className="h-4 w-4 text-[#F7931A]" />
-                                                <div className="space-y-3">
-                                                    <span className="font-medium text-white">{t('scheduledFor')}</span>
-                                                    <div className="text-white">{formatDate(session.scheduledAt)}</div>
+                                                <div>
+                                                    <span className="font-medium text-card-foreground">{t('scheduledFor')}</span>
+                                                    <div className="text-card-foreground">{formatDate(session.scheduledAt)}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
+                                            <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
                                                 <LinkIcon className="h-4 w-4 text-[#F7931A]" />
-                                                <div className="space-y-3">
-                                                    <span className="font-medium text-white">{t('access')}</span>
-                                                    <div className="text-white">
+                                                <div>
+                                                    <span className="font-medium text-card-foreground">{t('access')}</span>
+                                                    <div>
                                                         <a
                                                             href={session.externalUrl}
                                                             target="_blank"
@@ -356,27 +356,27 @@ export default function UserLivePage() {
                                     
                                     <CardContent>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                                                                        <div className="flex items-center gap-2 p-3 bg-gray-700/60 rounded-lg border border-gray-600/50">
+                                            <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
                                                 <Video className="h-4 w-4 text-[#F7931A]" />
-                                                <div className="space-y-3">
-                                                    <span className="font-medium text-white">{t('service')}</span>
-                                                    <div className="text-white capitalize">{session.service}</div>
+                                                <div>
+                                                    <span className="font-medium text-card-foreground">{t('service')}</span>
+                                                    <div className="text-card-foreground capitalize">{session.service}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div className="flex items-center gap-2 p-3 bg-gray-700/60 rounded-lg border border-gray-600/50">
+                                            <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
                                                 <Calendar className="h-4 w-4 text-[#F7931A]" />
-                                                <div className="space-y-3">
-                                                    <span className="font-medium text-white">{t('completedAt')}</span>
-                                                    <div className="text-white">{formatDate(session.scheduledAt)}</div>
+                                                <div>
+                                                    <span className="font-medium text-card-foreground">{t('completedAt')}</span>
+                                                    <div className="text-card-foreground">{formatDate(session.scheduledAt)}</div>
                                                 </div>
                                             </div>
                                             
-                                            <div className="flex items-center gap-2 p-3 bg-gray-700/60 rounded-lg border border-gray-600/50">
+                                            <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
                                                 <LinkIcon className="h-4 w-4 text-[#F7931A]" />
-                                                <div className="space-y-3">
-                                                    <span className="font-medium text-white">{t('access')}</span>
-                                                    <div className="text-white">
+                                                <div>
+                                                    <span className="font-medium text-card-foreground">{t('access')}</span>
+                                                    <div>
                                                         <a
                                                             href={session.externalUrl}
                                                             target="_blank"

@@ -4,55 +4,15 @@
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, DollarSign, RefreshCw, Eye } from "lucide-react";
+import { Check, DollarSign, RefreshCw, Eye, Crown, TrendingUp } from "lucide-react";
 import { useAuth } from '@/hooks/use-auth';
 import { useEffect, useState } from 'react';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import SubscriptionStatus from '@/components/SubscriptionStatus';
+import IntelligentSubscriptionPlans from '@/components/IntelligentSubscriptionPlans';
 
-const plans = [
-  {
-    id: "consultation",
-    name: "Consultoria",
-    price: 39.00,
-    description: "1 sessão de consultoria personalizada",
-    features: [
-      "1 sessão de consultoria personalizada",
-      "Análise individual do seu perfil",
-      "Estratégias personalizadas",
-      "Suporte direto com especialista",
-      "Sem recorrência - pagamento único"
-    ],
-    popular: false
-  },
-  {
-    id: "monthly",
-    name: "Mensal",
-    price: 49.90,
-    description: "Acesso completo a todos os cursos por 1 mês",
-    features: [
-      "Acesso a todos os cursos",
-      "Suporte por email",
-      "Atualizações gratuitas",
-      "Certificado de conclusão"
-    ],
-    popular: false
-  },
-  {
-    id: "yearly",
-    name: "Anual",
-    price: 499.00,
-    description: "Acesso completo a todos os cursos por 1 ano",
-    features: [
-      "Acesso a todos os cursos",
-      "Suporte prioritário",
-      "Atualizações gratuitas",
-      "Certificado de conclusão",
-      "2 meses grátis"
-    ],
-    popular: true
-  }
-];
+// Planos movidos para o componente IntelligentSubscriptionPlans
 
 interface Transaction {
   id: string;
@@ -131,61 +91,11 @@ export default function SubscriptionPage() {
         </p>
       </div>
 
-      {/* Planos de Assinatura */}
-      <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {plans.map((plan) => (
-          <Card key={plan.id} className={`relative ${plan.popular ? 'border-primary shadow-lg' : ''}`}>
-            {plan.popular && (
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-                  Mais Popular
-                </span>
-              </div>
-            )}
-            
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl">{plan.name}</CardTitle>
-              <div className="text-4xl font-bold">
-                ${plan.price}
-                {plan.id === "consultation" ? (
-                  <span className="text-lg text-muted-foreground ml-1">
-                    por sessão
-                  </span>
-                ) : (
-                  <span className="text-lg text-muted-foreground">
-                    /{plan.id === "monthly" ? "mês" : "ano"}
-                  </span>
-                )}
-              </div>
-              <CardDescription className="text-base">
-                {plan.description}
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="space-y-4">
-              <ul className="space-y-2">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-primary" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              <Button 
-                className="w-full" 
-                size="lg"
-                onClick={() => {
-                  // Abrir modal de pagamento
-                  console.log(`Selecionado plano: ${plan.name}`);
-                }}
-              >
-                Escolher {plan.name}
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Status da Assinatura Atual */}
+      <SubscriptionStatus className="max-w-4xl mx-auto" />
+
+      {/* Planos Inteligentes */}
+      <IntelligentSubscriptionPlans className="max-w-6xl mx-auto" />
 
       {/* Seção de Transações do Usuário - Versão Simplificada */}
       <div className="max-w-4xl mx-auto">

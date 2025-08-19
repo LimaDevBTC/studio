@@ -36,19 +36,19 @@ const coursePreviews = [
   {
     title: "course1Title",
     description: "course1Desc",
-    image: "https://placehold.co/600x400.png",
+    image: "/images/pose.png",
     aiHint: "bitcoin abstract",
   },
   {
     title: "course2Title",
     description: "course2Desc",
-    image: "https://placehold.co/600x400.png",
+    image: "/images/pose.png",
     aiHint: "finance technology",
   },
   {
     title: "course3Title",
     description: "course3Desc",
-    image: "https://placehold.co/600x400.png",
+    image: "/images/pose.png",
     aiHint: "stock charts",
   },
 ];
@@ -291,37 +291,40 @@ export default function Home() {
         </nav>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+        <section className="w-full py-16 md:py-20 lg:py-24 xl:py-28 -mt-[80px]">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-6">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+            <div className="grid gap-8 lg:grid-cols-[450px_1fr] lg:gap-8 xl:grid-cols-[550px_1fr]">
+              <Image
+                src="/images/pose.png"
+                data-ai-hint="MQM Crypto pose"
+                width="600"
+                height="600"
+                alt="MQM Crypto - Desvende o Futuro das Finanças"
+                className="mx-auto w-full h-auto max-w-[600px] object-contain -mt-[70px] lg:order-first"
+                priority
+                quality={100}
+                unoptimized
+              />
+              <div className="flex flex-col justify-center space-y-8 -mt-[80px] lg:order-last">
+                <div className="space-y-4">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none leading-tight">
                     {t('heroTitle')}
                   </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
+                  <p className="max-w-[500px] text-muted-foreground md:text-xl leading-relaxed">
                     {t('heroSubtitle')}
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button size="lg" asChild>
+                <div className="flex flex-col gap-3 min-[400px]:flex-row">
+                  <Button size="lg" className="px-8 py-6 text-lg font-semibold" asChild>
                     <Link href="/signup">{t('startFreeTrial')}</Link>
                   </Button>
                 </div>
               </div>
-              <Image
-                src="https://placehold.co/600x600.png"
-                data-ai-hint="crypto abstract"
-                width="600"
-                height="600"
-                alt="Hero"
-                className="mx-auto aspect-square overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
-              />
             </div>
           </div>
         </section>
 
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32">
+        <section id="features" className="w-full py-4 md:py-8 lg:py-12">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -344,24 +347,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="courses" className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{t('coursesAvailableTitle')}</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  {t('coursesAvailableSubtitle')}
-                </p>
-              </div>
-            </div>
-            <div className="mt-12">
-              <CoursesSection />
-            </div>
-          </div>
-        </section>
-
         {/* Consultoria Personalizada Banner */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
+        <section className="w-full py-8 md:py-16 lg:py-20 bg-secondary">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -373,16 +360,16 @@ export default function Home() {
             </div>
             
             <div className="max-w-4xl mx-auto mt-12">
-              <Card className="bg-card border-border">
+              <Card className="bg-card border-border shadow-lg">
                 <CardContent className="p-8">
                   <div className="grid md:grid-cols-2 gap-8 items-center">
                     <div className="space-y-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                        <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
                           <Users className="w-6 h-6 text-primary" />
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold">{t('consultationIndividualTitle')}</h3>
+                          <h3 className="text-2xl font-bold text-card-foreground">{t('consultationIndividualTitle')}</h3>
                           <p className="text-muted-foreground">{t('consultationIndividualDesc')}</p>
                         </div>
                       </div>
@@ -390,30 +377,30 @@ export default function Home() {
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
                           <CheckCircle className="w-5 h-5 text-primary" />
-                          <span>{t('consultationFeature1')}</span>
+                          <span className="text-card-foreground">{t('consultationFeature1')}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <CheckCircle className="w-5 h-5 text-primary" />
-                          <span>{t('consultationFeature2')}</span>
+                          <span className="text-card-foreground">{t('consultationFeature2')}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <CheckCircle className="w-5 h-5 text-primary" />
-                          <span>{t('consultationFeature3')}</span>
+                          <span className="text-card-foreground">{t('consultationFeature3')}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <CheckCircle className="w-5 h-5 text-primary" />
-                          <span>{t('consultationFeature4')}</span>
+                          <span className="text-card-foreground">{t('consultationFeature4')}</span>
                         </div>
                       </div>
                     </div>
                     
                     <div className="text-center space-y-6">
-                      <div className="bg-primary/10 rounded-2xl p-6 border border-primary/20">
-                        <div className="text-4xl font-bold text-primary mb-2">$39.00</div>
+                      <div className="bg-muted rounded-xl p-6 border border-border">
+                        <div className="text-4xl font-bold text-card-foreground mb-2">USD$39,00</div>
                         <div className="text-muted-foreground">{t('consultationPrice')}</div>
                       </div>
                       
-                      <Button size="lg" className="w-full">
+                      <Button size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
                         {t('consultationButton')}
                         <ArrowRight className="ml-2 w-4 h-4" />
                       </Button>
@@ -425,6 +412,22 @@ export default function Home() {
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          </div>
+        </section>
+
+        <section id="courses" className="w-full py-8 md:py-16 lg:py-20 bg-background">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{t('coursesAvailableTitle')}</h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  {t('coursesAvailableSubtitle')}
+                </p>
+              </div>
+            </div>
+            <div className="mt-12">
+              <CoursesSection />
             </div>
           </div>
         </section>

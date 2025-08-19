@@ -463,7 +463,7 @@ export default function AdminLivePage() {
                                                 size="sm"
                                                 variant="outline"
                                                 onClick={() => deleteLiveSession(session.id)}
-                                                className="text-red-600 hover:text-red-700"
+                                                className="text-[#F7931A] hover:text-[#F7931A]/80"
                                             >
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
@@ -473,40 +473,40 @@ export default function AdminLivePage() {
                                 
                                 <CardContent>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                        <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
-                                            <Video className="h-4 w-4 text-red-400" />
+                                        <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
+                                            <Video className="h-4 w-4 text-[#F7931A]" />
                                             <div>
-                                                <span className="font-medium text-white">Serviço</span>
-                                                <div className="text-white capitalize">{session.service}</div>
+                                                <span className="font-medium text-card-foreground">Serviço</span>
+                                                <div className="text-card-foreground capitalize">{session.service}</div>
                                             </div>
                                         </div>
                                         
-                                        <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
-                                            <Calendar className="h-4 w-4 text-red-400" />
+                                        <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
+                                            <Calendar className="h-4 w-4 text-[#F7931A]" />
                                             <div>
-                                                <span className="font-medium text-white">Agendada para</span>
-                                                <div className="text-white">
+                                                <span className="font-medium text-card-foreground">Agendada para</span>
+                                                <div className="text-card-foreground">
                                                     {session.scheduledAt instanceof Date ? session.scheduledAt.toLocaleString('pt-BR') : session.scheduledAt.toDate().toLocaleString('pt-BR')}
                                                 </div>
                                             </div>
                                         </div>
                                         
-                                        <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
-                                            <ExternalLink className="h-4 w-4 text-red-400" />
+                                        <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
+                                            <ExternalLink className="h-4 w-4 text-[#F7931A]" />
                                             <div>
-                                                <span className="font-medium text-white">Acesso</span>
+                                                <span className="font-medium text-card-foreground">Acesso</span>
                                                 <div>
                                                     <a
                                                         href={session.externalUrl}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-red-400 hover:text-red-300 font-medium hover:underline transition-colors"
+                                                        className="text-[#F7931A] hover:text-[#F7931A]/80 font-medium hover:underline transition-colors"
                                                     >
                                                         Acessar Live
                                                     </a>
-                        </div>
-                    </div>
-                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
                     </div>
                 </CardContent>
             </Card>
