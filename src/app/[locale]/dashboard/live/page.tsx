@@ -10,9 +10,10 @@ import { collection, query, orderBy, getDocs, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
 import { LiveSession, LiveStatus } from "@/types/live";
+import { useTranslations } from 'next-intl';
 
 export default function UserLivePage() {
-
+    const t = useTranslations('LivePage');
     const [liveSessions, setLiveSessions] = useState<LiveSession[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const { user } = useAuth();
@@ -54,7 +55,7 @@ export default function UserLivePage() {
                 
                 setLiveSessions(filteredSessions);
             } catch (error) {
-                console.error("Erro ao buscar sessões:", error);
+                console.error("Error fetching sessions:", error);
             } finally {
                 setIsLoading(false);
             }
@@ -75,16 +76,16 @@ export default function UserLivePage() {
     const getStatusColor = (status: LiveStatus) => {
         switch (status) {
             case 'scheduled': return 'bg-blue-50 text-blue-700 border-blue-200';
-            case 'live': return 'bg-red-50 text-red-700 border-red-200';
+            case 'live': return 'bg-[#F7931A]/10 text-[#F7931A] border-[#F7931A]/20';
             case 'finished': return 'bg-gray-50 text-gray-600 border-gray-200';
         }
     };
 
     const getStatusText = (status: LiveStatus) => {
         switch (status) {
-            case 'scheduled': return 'Agendada';
-            case 'live': return 'AO VIVO';
-            case 'finished': return 'Finalizada';
+            case 'scheduled': return t('statusScheduled');
+            case 'live': return t('statusLive');
+            case 'finished': return t('statusFinished');
         }
     };
 
@@ -111,7 +112,7 @@ export default function UserLivePage() {
                 <div className="flex items-center justify-center min-h-[400px]">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                        <p className="text-muted-foreground">Carregando lives...</p>
+                        <p className="text-muted-foreground">{t('loading')}</p>
                     </div>
                 </div>
             </div>
@@ -121,37 +122,37 @@ export default function UserLivePage() {
     return (
         <div className="container mx-auto p-6 space-y-8">
             <div className="text-center space-y-4">
-                <h1 className="text-4xl font-bold">Lives e Consultorias</h1>
+                <h1 className="text-4xl font-bold">{t('title')}</h1>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Acompanhe nossas transmissões ao vivo e participe de consultorias personalizadas
+                    {t('subtitle')}
                 </p>
             </div>
 
-            {/* Live em andamento */}
+            {/* Live in progress */}
             {liveSessions.some(s => s.status === 'live') && (
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold flex items-center gap-3 text-red-700">
-                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                        AO VIVO AGORA
+                    <h2 className="text-2xl font-semibold flex items-center gap-3 text-[#F7931A]">
+                        <div className="w-3 h-3 bg-[#F7931A] rounded-full animate-pulse"></div>
+                        {t('liveNow')}
                     </h2>
                     
                     <div className="grid gap-4">
                         {liveSessions
                             .filter(s => s.status === 'live')
                             .map((session) => (
-                                <Card key={session.id} className="border-red-200 bg-gradient-to-r from-red-50 to-white shadow-sm hover:shadow-md transition-shadow">
+                                <Card key={session.id} className="border-[#F7931A]/20 bg-gradient-to-r from-[#F7931A]/10 to-white shadow-sm hover:shadow-md transition-shadow">
                                     <CardHeader>
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1 space-y-3">
                                                 <div className="flex items-center gap-3">
                                                     <CardTitle className="text-xl">{session.title}</CardTitle>
-                                                    <Badge className="bg-red-100 text-red-800 border-red-200 font-medium">
-                                                        AO VIVO
+                                                    <Badge className="bg-[#F7931A]/10 text-[#F7931A] border-[#F7931A]/20 font-medium">
+                                                        {t('live')}
                                                     </Badge>
                                                     {session.isPrivate && (
                                                         <Badge variant="outline" className="border-purple-200 text-purple-700">
                                                             <Lock className="h-3 w-3 mr-1" />
-                                                            Privada
+                                                            {t('private')}
                                                         </Badge>
                                                     )}
                                                 </div>
@@ -162,11 +163,11 @@ export default function UserLivePage() {
                                             
                                             <Button
                                                 size="lg"
-                                                className="bg-red-600 hover:bg-red-700 text-white shadow-sm"
+                                                className="bg-[#F7931A] hover:bg-[#F7931A]/90 text-white shadow-sm"
                                                 onClick={() => window.open(session.externalUrl, '_blank')}
                                             >
                                                 <Play className="h-4 w-4 mr-2" />
-                                                Participar Agora
+                                                {t('joinNow')}
                                             </Button>
                                         </div>
                                     </CardHeader>
@@ -176,7 +177,7 @@ export default function UserLivePage() {
                                             <div className="flex items-center gap-2 p-3 bg-white rounded-lg border border-gray-100">
                                                 <Video className="h-4 w-4 text-gray-500" />
                                                 <div>
-                                                    <span className="font-medium text-gray-700">Serviço</span>
+                                                    <span className="font-medium text-gray-700">{t('service')}</span>
                                                     <div className="text-gray-900 capitalize">{session.service}</div>
                                                 </div>
                                             </div>
@@ -184,7 +185,7 @@ export default function UserLivePage() {
                                             <div className="flex items-center gap-2 p-3 bg-white rounded-lg border border-gray-100">
                                                 <Calendar className="h-4 w-4 text-gray-500" />
                                                 <div>
-                                                    <span className="font-medium text-gray-700">Iniciada em</span>
+                                                    <span className="font-medium text-gray-700">{t('startedAt')}</span>
                                                     <div className="text-gray-900">{formatDate(session.scheduledAt)}</div>
                                                 </div>
                                             </div>
@@ -192,14 +193,14 @@ export default function UserLivePage() {
                                             <div className="flex items-center gap-2 p-3 bg-white rounded-lg border border-gray-100">
                                                 <LinkIcon className="h-4 w-4 text-gray-500" />
                                                 <div>
-                                                    <span className="font-medium text-gray-700">Acesso</span>
+                                                    <span className="font-medium text-gray-700">{t('access')}</span>
                                                     <a
                                                         href={session.externalUrl}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="text-red-600 hover:text-red-800 font-medium hover:underline transition-colors"
+                                                        className="text-[#F7931A] hover:text-[#F7931A]/80 font-medium hover:underline transition-colors"
                                                     >
-                                                        Acessar Live
+                                                        {t('accessLive')}
                                                     </a>
                                                 </div>
                                             </div>
@@ -211,20 +212,20 @@ export default function UserLivePage() {
                 </div>
             )}
 
-            {/* Próximas lives */}
+            {/* Upcoming lives */}
             <div className="space-y-4">
-                <h2 className="text-2xl font-semibold flex items-center gap-3 text-red-700">
+                <h2 className="text-2xl font-semibold flex items-center gap-3 text-[#F7931A]">
                     <Clock className="h-6 w-6" />
-                    Próximas Lives
+                    {t('upcomingLives')}
                 </h2>
                 
                 {liveSessions.filter(s => s.status === 'scheduled').length === 0 ? (
                     <Card className="border-dashed border-gray-200">
                         <CardContent className="p-8 text-center">
                             <Clock className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                            <p className="text-gray-600 font-medium">Nenhuma live agendada no momento.</p>
+                            <p className="text-gray-600 font-medium">{t('noUpcomingLives')}</p>
                             <p className="text-sm text-gray-500 mt-2">
-                                Fique atento às nossas próximas transmissões!
+                                {t('stayTuned')}
                             </p>
                         </CardContent>
                     </Card>
@@ -245,7 +246,7 @@ export default function UserLivePage() {
                                                     {session.isPrivate && (
                                                         <Badge variant="outline" className="border-purple-200 text-purple-700">
                                                             <Lock className="h-3 w-3 mr-1" />
-                                                            Privada
+                                                            {t('private')}
                                                         </Badge>
                                                     )}
                                                 </div>
@@ -259,7 +260,7 @@ export default function UserLivePage() {
                                                 onClick={() => window.open(session.externalUrl, '_blank')}
                                             >
                                                 <ExternalLink className="h-4 w-4 mr-2" />
-                                                Ver Detalhes
+                                                {t('viewDetails')}
                                             </Button>
                                         </div>
                                     </CardHeader>
@@ -267,33 +268,33 @@ export default function UserLivePage() {
                                     <CardContent>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                                             <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
-                                                <Video className="h-4 w-4 text-red-400" />
+                                                <Video className="h-4 w-4 text-[#F7931A]" />
                                                 <div className="space-y-3">
-                                                    <span className="font-medium text-white">Serviço</span>
+                                                    <span className="font-medium text-white">{t('service')}</span>
                                                     <div className="text-white capitalize">{session.service}</div>
                                                 </div>
                                             </div>
                                             
                                             <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
-                                                <Calendar className="h-4 w-4 text-red-400" />
+                                                <Calendar className="h-4 w-4 text-[#F7931A]" />
                                                 <div className="space-y-3">
-                                                    <span className="font-medium text-white">Agendada para</span>
+                                                    <span className="font-medium text-white">{t('scheduledFor')}</span>
                                                     <div className="text-white">{formatDate(session.scheduledAt)}</div>
                                                 </div>
                                             </div>
                                             
                                             <div className="flex items-center gap-2 p-3 bg-gray-800/80 rounded-lg border border-gray-700/50">
-                                                <LinkIcon className="h-4 w-4 text-red-400" />
+                                                <LinkIcon className="h-4 w-4 text-[#F7931A]" />
                                                 <div className="space-y-3">
-                                                    <span className="font-medium text-white">Acesso</span>
+                                                    <span className="font-medium text-white">{t('access')}</span>
                                                     <div className="text-white">
                                                         <a
                                                             href={session.externalUrl}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="text-red-400 hover:text-red-300 font-medium hover:underline transition-colors"
+                                                            className="text-[#F7931A] hover:text-[#F7931A]/80 font-medium hover:underline transition-colors"
                                                         >
-                                                            Acessar Live
+                                                            {t('accessLive')}
                                                         </a>
                                                     </div>
                                                 </div>
@@ -306,12 +307,12 @@ export default function UserLivePage() {
                 )}
             </div>
 
-            {/* Lives finalizadas */}
+            {/* Finished lives */}
             {liveSessions.filter(s => s.status === 'finished').length > 0 && (
                 <div className="space-y-4">
                     <h2 className="text-2xl font-semibold flex items-center gap-3 text-gray-700">
                         <Video className="h-6 w-6" />
-                        Lives Anteriores
+                        {t('previousLives')}
                     </h2>
                     
                     <div className="grid gap-4">
@@ -327,12 +328,12 @@ export default function UserLivePage() {
                                                         {session.title}
                                                     </CardTitle>
                                                     <Badge variant="secondary" className="bg-gray-100 text-gray-600 border-gray-200">
-                                                        Finalizada
+                                                        {t('finished')}
                                                     </Badge>
                                                     {session.isPrivate && (
                                                         <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-200">
                                                             <Lock className="h-3 w-3 mr-1" />
-                                                            Privada
+                                                            {t('private')}
                                                         </Badge>
                                                     )}
                                                 </div>
@@ -348,7 +349,7 @@ export default function UserLivePage() {
                                                 onClick={() => window.open(session.externalUrl, '_blank')}
                                             >
                                                 <ExternalLink className="h-4 w-4 mr-2" />
-                                                Ver Gravação
+                                                {t('viewRecording')}
                                             </Button>
                                         </div>
                                     </CardHeader>
@@ -356,33 +357,33 @@ export default function UserLivePage() {
                                     <CardContent>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                                                                                         <div className="flex items-center gap-2 p-3 bg-gray-700/60 rounded-lg border border-gray-600/50">
-                                                <Video className="h-4 w-4 text-red-400" />
+                                                <Video className="h-4 w-4 text-[#F7931A]" />
                                                 <div className="space-y-3">
-                                                    <span className="font-medium text-white">Serviço</span>
+                                                    <span className="font-medium text-white">{t('service')}</span>
                                                     <div className="text-white capitalize">{session.service}</div>
                                                 </div>
                                             </div>
                                             
                                             <div className="flex items-center gap-2 p-3 bg-gray-700/60 rounded-lg border border-gray-600/50">
-                                                <Calendar className="h-4 w-4 text-red-400" />
+                                                <Calendar className="h-4 w-4 text-[#F7931A]" />
                                                 <div className="space-y-3">
-                                                    <span className="font-medium text-white">Realizada em</span>
+                                                    <span className="font-medium text-white">{t('completedAt')}</span>
                                                     <div className="text-white">{formatDate(session.scheduledAt)}</div>
                                                 </div>
                                             </div>
                                             
                                             <div className="flex items-center gap-2 p-3 bg-gray-700/60 rounded-lg border border-gray-600/50">
-                                                <LinkIcon className="h-4 w-4 text-red-400" />
+                                                <LinkIcon className="h-4 w-4 text-[#F7931A]" />
                                                 <div className="space-y-3">
-                                                    <span className="font-medium text-white">Acesso</span>
+                                                    <span className="font-medium text-white">{t('access')}</span>
                                                     <div className="text-white">
                                                         <a
                                                             href={session.externalUrl}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="text-red-400 hover:text-red-300 font-medium hover:underline transition-colors"
+                                                            className="text-[#F7931A] hover:text-[#F7931A]/80 font-medium hover:underline transition-colors"
                                                         >
-                                                            Ver Gravação
+                                                            {t('viewRecording')}
                                                         </a>
                                                     </div>
                                                 </div>

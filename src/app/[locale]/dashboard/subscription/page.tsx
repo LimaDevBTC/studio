@@ -12,9 +12,23 @@ import { db } from '@/lib/firebase';
 
 const plans = [
   {
+    id: "consultation",
+    name: "Consultoria",
+    price: 39.00,
+    description: "1 sessão de consultoria personalizada",
+    features: [
+      "1 sessão de consultoria personalizada",
+      "Análise individual do seu perfil",
+      "Estratégias personalizadas",
+      "Suporte direto com especialista",
+      "Sem recorrência - pagamento único"
+    ],
+    popular: false
+  },
+  {
     id: "monthly",
     name: "Mensal",
-    price: 29.99,
+    price: 49.90,
     description: "Acesso completo a todos os cursos por 1 mês",
     features: [
       "Acesso a todos os cursos",
@@ -27,7 +41,7 @@ const plans = [
   {
     id: "yearly",
     name: "Anual",
-    price: 299.99,
+    price: 499.00,
     description: "Acesso completo a todos os cursos por 1 ano",
     features: [
       "Acesso a todos os cursos",
@@ -133,9 +147,15 @@ export default function SubscriptionPage() {
               <CardTitle className="text-2xl">{plan.name}</CardTitle>
               <div className="text-4xl font-bold">
                 ${plan.price}
-                <span className="text-lg text-muted-foreground">
-                  /{plan.id === "monthly" ? "mês" : "ano"}
-                </span>
+                {plan.id === "consultation" ? (
+                  <span className="text-lg text-muted-foreground ml-1">
+                    por sessão
+                  </span>
+                ) : (
+                  <span className="text-lg text-muted-foreground">
+                    /{plan.id === "monthly" ? "mês" : "ano"}
+                  </span>
+                )}
               </div>
               <CardDescription className="text-base">
                 {plan.description}

@@ -46,6 +46,8 @@
     "feature3Desc": "Mantenha-se motivado acompanhando a conclusão de seus cursos e suas conquistas.",
     "coursesTitle": "Explore Nossos Cursos",
     "coursesSubtitle": "De introduções amigáveis para iniciantes a análises técnicas avançadas, temos um curso para você.",
+    "coursesAvailableTitle": "Nossos Cursos Disponíveis",
+    "coursesAvailableSubtitle": "Explore nossa coleção de cursos premium e junte-se às listas de espera para os próximos lançamentos.",
     "course1Title": "Bitcoin para Iniciantes",
     "course1Desc": "Entenda os fundamentos da primeira e mais famosa criptomoeda.",
     "course2Title": "DeFi Explicado",
@@ -53,6 +55,17 @@
     "course3Title": "Estratégias Avançadas de Trading",
     "course3Desc": "Domine os gráficos e aprenda estratégias para otimizar suas negociações.",
     "learnMore": "Saiba Mais →",
+    "consultationTitle": "Consultoria Personalizada",
+    "consultationSubtitle": "Receba orientação individual de especialistas para maximizar seus investimentos em criptomoedas",
+    "consultationIndividualTitle": "Atendimento Individual",
+    "consultationIndividualDesc": "Sessão personalizada com especialista",
+    "consultationFeature1": "Análise do seu perfil de investidor",
+    "consultationFeature2": "Estratégias personalizadas",
+    "consultationFeature3": "Suporte direto com especialista",
+    "consultationFeature4": "Sem recorrência - pagamento único",
+    "consultationPrice": "por sessão",
+    "consultationButton": "Agendar Consultoria",
+    "consultationSessionInfo": "Sessão única de 60 minutos com especialista certificado",
     "pricingTitle": "Pronto para Começar a Aprender?",
     "pricingSubtitle": "Junte-se a milhares de alunos em sua jornada para a maestria em cripto.",
     "viewSubscriptions": "Ver Planos de Assinatura",
@@ -70,9 +83,13 @@
     "navDashboard": "Painel",
     "navMyCourses": "Meus Cursos",
     "navSubscription": "Assinatura",
+    "navLive": "Ao Vivo",
+    "navMyAccount": "Minha Conta",
     "userMenuProfile": "Perfil",
     "userMenuSettings": "Configurações",
-    "userMenuLogout": "Sair"
+    "userMenuLogout": "Sair",
+    "logout": "Sair",
+    "coursesDescription": "Todos os seus cursos inscritos e disponíveis em um só lugar."
   },
   "DashboardPage": {
     "welcome": "Bem-vindo de volta, {name}!",
@@ -85,12 +102,25 @@
     "subscriptionRenewal": "Seu plano será renovado em 10 de julho de 2025.",
     "manageSubscription": "Gerenciar Assinatura",
     "recommendedForYou": "Recomendado para Você",
-    "viewCourse": "Ver Curso"
+    "viewCourse": "Ver Curso",
+    "waitlist": "Lista de Espera",
+    "viewPreview": "Ver Preview",
+    "noRecommendedCourses": "Nenhum curso recomendado disponível no momento."
   },
 
   "SubscriptionPage": {
     "title": "Assinatura e Transações",
     "subtitle": "Gerencie seu plano de assinatura e acompanhe o histórico de suas transações de pagamento via criptomoedas.",
+    "consultationPlan": {
+      "name": "Consultoria",
+      "pricePeriod": "por sessão",
+      "description": "1 sessão de consultoria personalizada",
+      "feature1": "1 sessão de consultoria personalizada",
+      "feature2": "Análise individual do seu perfil",
+      "feature3": "Estratégias personalizadas",
+      "feature4": "Suporte direto com especialista",
+      "feature5": "Sem recorrência - pagamento único"
+    },
     "monthlyPlan": {
       "name": "Mensal",
       "pricePeriod": "/mês",
@@ -476,5 +506,27 @@
     "loading": "Carregando...",
     "error": "Erro",
     "errorDesc": "Falha ao carregar listas de espera"
+  },
+  "LivePage": {
+    "title": "Lives e Consultorias",
+    "subtitle": "Acompanhe nossas transmissões ao vivo e participe de consultorias personalizadas",
+    "loading": "Carregando lives...",
+    "liveNow": "AO VIVO AGORA",
+    "live": "AO VIVO",
+    "private": "Privada",
+    "joinNow": "Participar Agora",
+    "service": "Serviço",
+    "startedAt": "Iniciada em",
+    "access": "Acesso",
+    "accessLive": "Acessar Live",
+    "upcomingLives": "Próximas Lives",
+    "noUpcomingLives": "Nenhuma live agendada no momento.",
+    "stayTuned": "Fique atento às nossas próximas transmissões!",
+    "viewDetails": "Ver Detalhes",
+    "scheduledFor": "Agendada para",
+    "previousLives": "Lives Anteriores",
+    "finished": "Finalizada",
+    "viewRecording": "Ver Gravação",
+    "completedAt": "Realizada em"
   }
 }

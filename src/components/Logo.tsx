@@ -1,12 +1,21 @@
 "use client";
 
-import { Film } from "lucide-react";
+import Image from 'next/image';
 
 export function Logo() {
   return (
-    <div className="flex items-center gap-2">
-      <Film className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold text-primary">MQM CRYPTO</span>
+    <div className="flex items-center">
+      {/* Logo MQMCrypto - Imagem real */}
+      <Image 
+        src="/images/logo.png"
+        alt="MQMCrypto Logo"
+        width={4000}
+        height={2250}
+        className="h-24 w-auto"
+        priority
+        quality={100}
+        unoptimized
+      />
     </div>
   );
 }

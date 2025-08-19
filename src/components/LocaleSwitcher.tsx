@@ -39,15 +39,15 @@ export function LocaleSwitcher() {
 
   return (
     <Select defaultValue={locale} onValueChange={onSelectChange} disabled={isPending}>
-      <SelectTrigger className="w-auto min-w-[120px]">
+      <SelectTrigger className="w-auto min-w-[140px] h-10 px-3 py-2 bg-background border-border hover:bg-accent">
         <SelectValue placeholder={t('label')}>
           {nativeNames[locale as keyof typeof nativeNames]}
         </SelectValue>
       </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="en">{nativeNames.en}</SelectItem>
-        <SelectItem value="es">{nativeNames.es}</SelectItem>
-        <SelectItem value="pt">{nativeNames.pt}</SelectItem>
+      <SelectContent className="min-w-[140px]">
+        <SelectItem value="en" className="py-3">{nativeNames.en}</SelectItem>
+        <SelectItem value="es" className="py-3">{nativeNames.es}</SelectItem>
+        <SelectItem value="pt" className="py-3">{nativeNames.pt}</SelectItem>
       </SelectContent>
     </Select>
   );

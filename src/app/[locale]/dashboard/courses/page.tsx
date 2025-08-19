@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Sparkles, CheckCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from 'next-intl';
 
 interface Course {
   id: string;
@@ -26,6 +27,7 @@ interface Course {
 }
 
 export default function MyCoursesPage() {
+  const t = useTranslations('DashboardLayout');
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const { user, userData, loading: authLoading } = useAuth();
@@ -108,8 +110,8 @@ export default function MyCoursesPage() {
   return (
     <div className="space-y-8">
       <div>
-                    <h1 className="text-3xl font-bold">Meus Cursos</h1>
-        <p className="text-muted-foreground">Todos os seus cursos inscritos e disponíveis em um só lugar.</p>
+                    <h1 className="text-3xl font-bold">{t('navMyCourses')}</h1>
+        <p className="text-muted-foreground">{t('coursesDescription')}</p>
       </div>
 
       {isLoading ? (

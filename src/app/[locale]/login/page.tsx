@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Logo } from "@/components/Logo";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { useToast } from "@/hooks/use-toast";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { Link, useRouter } from "@/navigation";
+import Image from 'next/image';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,14 +28,29 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // No need to call router.push, the AuthProvider will handle the redirect
+      // Redirecionamento direto sem toast de sucesso
+      router.push('/dashboard');
     } catch (error: any) {
       console.error("Error signing in:", error);
+      let errorMessage = "Erro ao fazer login. Tente novamente.";
+      
+      // Mensagens de erro mais específicas
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = "Usuário não encontrado. Verifique seu email.";
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = "Senha incorreta. Tente novamente.";
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = "Email inválido. Verifique o formato.";
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = "Muitas tentativas. Tente novamente em alguns minutos.";
+      }
+      
       toast({
         variant: "destructive",
-        title: "Login Failed",
-        description: error.message,
+        title: "Falha no Login",
+        description: errorMessage,
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -45,14 +60,24 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // No need to call router.push, the AuthProvider will handle the redirect
+      // Redirecionamento direto sem toast de sucesso
+      router.push('/dashboard');
     } catch (error: any) {
       console.error("Error signing in with Google:", error);
+      let errorMessage = "Erro ao fazer login com Google. Tente novamente.";
+      
+      if (error.code === 'auth/popup-closed-by-user') {
+        errorMessage = "Login cancelado. Tente novamente.";
+      } else if (error.code === 'auth/popup-blocked') {
+        errorMessage = "Popup bloqueado. Permita popups para este site.";
+      }
+      
       toast({
         variant: "destructive",
-        title: "Google Login Failed",
-        description: error.message,
+        title: "Falha no Login com Google",
+        description: errorMessage,
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -65,7 +90,18 @@ export default function LoginPage() {
                 <LocaleSwitcher />
             </div>
           <div className="mb-8">
-              <Logo />
+            <Link href="/">
+              <Image 
+                src="/images/logo.png"
+                alt="MQMCrypto Logo"
+                width={4000}
+                height={2250}
+                className="h-24 w-auto cursor-pointer hover:opacity-80 transition-opacity"
+                priority
+                quality={100}
+                unoptimized
+              />
+            </Link>
           </div>
           <Card className="mx-auto max-w-sm w-[400px] bg-card">
             <CardHeader>
@@ -92,7 +128,7 @@ export default function LoginPage() {
                   <div className="grid gap-2">
                     <div className="flex items-center">
                       <Label htmlFor="password">{t('passwordLabel')}</Label>
-                      <Link href="#" className="ml-auto inline-block text-sm underline">
+                      <Link href="/dashboard/account" className="ml-auto inline-block text-sm underline">
                         {t('forgotPassword')}
                       </Link>
                     </div>

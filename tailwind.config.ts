@@ -28,7 +28,7 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#F7931A",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -54,6 +54,12 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        // Cores personalizadas MQMCrypto
+        mqm: {
+          orange: "#F7931A",
+          dark: "#1a1a1a",
+          light: "#f8f9fa",
         },
       },
       borderRadius: {

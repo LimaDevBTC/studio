@@ -1,5 +1,4 @@
 import { NextIntlClientProvider } from 'next-intl';
-import { ProtectRoute } from '@/hooks/use-auth';
 import { getMessages } from 'next-intl/server';
 
 export default async function LocaleLayout({
@@ -14,9 +13,7 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <ProtectRoute>
-        {children}
-      </ProtectRoute>
+      {children}
     </NextIntlClientProvider>
   );
 }

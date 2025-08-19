@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Mail, MessageSquare, Phone, MapPin, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import XIcon from "@/components/icons/XIcon";
+import Image from 'next/image';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -85,8 +86,20 @@ export default function ContactPage() {
   return (
     <div className="container mx-auto p-6 space-y-8">
       {/* Header */}
-      <div className="text-center space-y-4">
-                    <h1 className="text-4xl font-bold">Entre em Contato</h1>
+      <div className="text-center space-y-6">
+        <div className="flex justify-center mb-4">
+          <Image 
+            src="/images/logo.png"
+            alt="MQMCrypto Logo"
+            width={4000}
+            height={2250}
+            className="h-24 w-auto"
+            priority
+            quality={100}
+            unoptimized
+          />
+        </div>
+        <h1 className="text-4xl font-bold">Entre em Contato</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Tem alguma dúvida, sugestão ou precisa de ajuda? Estamos aqui para você!
         </p>

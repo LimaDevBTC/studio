@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { Link } from "@/navigation";
+import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 
 export function AuthStatus() {
   const { user, loading } = useAuth();
@@ -18,13 +19,11 @@ export function AuthStatus() {
       <Link href="/dashboard">{t("goToDashboard")}</Link>
     </Button>
   ) : (
-    <>
-      <Button variant="ghost" asChild>
+    <div className="flex items-center gap-3">
+      <LocaleSwitcher />
+      <Button asChild>
         <Link href="/login">{t("login")}</Link>
       </Button>
-      <Button asChild>
-        <Link href="/signup">{t("getStarted")}</Link>
-      </Button>
-    </>
+    </div>
   );
 }

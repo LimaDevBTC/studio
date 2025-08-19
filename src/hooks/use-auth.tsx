@@ -45,30 +45,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     let unsubscribeFirestore: (() => void) | null = null;
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (authUser) => {
+      console.log('🔐 Auth state changed:', authUser ? 'User logged in' : 'No user');
+      
       if (unsubscribeFirestore) {
         unsubscribeFirestore();
         unsubscribeFirestore = null;
       }
 
       if (authUser) {
+        console.log('👤 User authenticated:', authUser.email);
         setLoading(true);
-        // Ensure user document exists or is created on login/signup.
-        await createUserDocument(authUser); 
         
-        // Listen for changes in the user's document.
-        const userDocRef = doc(db, 'users', authUser.uid);
-        unsubscribeFirestore = onSnapshot(userDocRef, (doc) => {
-          setUser(authUser);
-          setUserData(doc.exists() ? doc.data() : null);
-          setLoading(false);
-        }, (error) => {
-          console.error("Error fetching user data:", error);
+        try {
+          // Ensure user document exists or is created on login/signup.
+          await createUserDocument(authUser);
+          console.log('📄 User document created/verified');
+          
+          // Listen for changes in the user's document.
+          const userDocRef = doc(db, 'users', authUser.uid);
+          unsubscribeFirestore = onSnapshot(userDocRef, (doc) => {
+            console.log('📊 User data updated:', doc.exists() ? 'Document exists' : 'No document');
+            setUser(authUser);
+            setUserData(doc.exists() ? doc.data() : null);
+            setLoading(false);
+          }, (error) => {
+            console.error("❌ Error fetching user data:", error);
+            setUser(authUser);
+            setUserData(null);
+            setLoading(false);
+          });
+
+        } catch (error) {
+          console.error('❌ Error in createUserDocument:', error);
           setUser(authUser);
           setUserData(null);
           setLoading(false);
-        });
+        }
 
       } else {
+        console.log('🚪 User signed out');
         setUser(null);
         setUserData(null);
         setLoading(false);
@@ -76,6 +91,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
+      console.log('🧹 Cleaning up auth listeners');
       unsubscribeAuth();
       if (unsubscribeFirestore) {
         unsubscribeFirestore();

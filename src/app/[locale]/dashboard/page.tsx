@@ -227,7 +227,7 @@ export default function DashboardPage() {
                                     <h3 className="font-bold text-lg">{course.title}</h3>
                                     {course.status === "Waitlist" && (
                                         <span className="px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded-full font-medium">
-                                            🚧 Lista de Espera
+                                            {t('waitlist')}
                                         </span>
                                     )}
                                 </div>
@@ -237,7 +237,7 @@ export default function DashboardPage() {
                                 <Button asChild className="w-full">
                                                         {course.status === "Waitlist" ? (
                         <Link href={`/dashboard/courses/${course.id}/preview` as any}>
-                            Ver Preview
+                            {t('viewPreview')}
                         </Link>
                     ) : (
                                         <Link href={`/dashboard/courses/${course.id}` as any}>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
                         </Card>
                     ))
                 ) : (
-                  <p className="col-span-full text-center text-muted-foreground py-10">No recommended courses available right now.</p>
+                  <p className="col-span-full text-center text-muted-foreground py-10">{t('noRecommendedCourses')}</p>
                 )}
             </div>
         </section>

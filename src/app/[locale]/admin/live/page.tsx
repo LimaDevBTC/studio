@@ -135,7 +135,7 @@ export default function AdminLivePage() {
             console.error(error);
             toast({ variant: "destructive", title: "Erro", description: error.message });
         } finally {
-            setIsLoading(false);
+             setIsLoading(false);
         }
     };
 
@@ -237,13 +237,13 @@ export default function AdminLivePage() {
         }
     };
 
-    return (
+  return (
         <div className="container mx-auto p-6 space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
+       <div className="flex items-center justify-between">
+        <div>
                     <h1 className="text-3xl font-bold">Gerenciar Lives</h1>
                     <p className="text-muted-foreground">Crie e gerencie sessões de live streaming.</p>
-                </div>
+        </div>
                 <Button 
                     onClick={() => setShowCreateForm(true)}
                     className="flex items-center gap-2"
@@ -251,19 +251,19 @@ export default function AdminLivePage() {
                     <Plus className="h-4 w-4" />
                     Nova Sessão
                 </Button>
-            </div>
+      </div>
 
             {/* Formulário de criação/edição */}
             {showCreateForm && (
-                <Card>
-                    <CardHeader>
+        <Card>
+            <CardHeader>
                         <CardTitle>
                             {editingSession ? 'Editar Sessão' : 'Nova Sessão de Live'}
                         </CardTitle>
-                        <CardDescription>
+                <CardDescription>
                             Configure os detalhes da sua sessão de live streaming.
-                        </CardDescription>
-                    </CardHeader>
+                </CardDescription>
+            </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
@@ -374,18 +374,18 @@ export default function AdminLivePage() {
                                 disabled={isLoading}
                             >
                                 Cancelar
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
+                    </Button>
+                </div>
+            </CardContent>
+        </Card>
+      )}
 
             {/* Lista de sessões */}
             <div className="space-y-4">
                 <h2 className="text-2xl font-semibold">Sessões de Live</h2>
                 
                 {liveSessions.length === 0 ? (
-                    <Card>
+         <Card>
                         <CardContent className="p-6 text-center">
                             <Clapperboard className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                             <p className="text-muted-foreground">Nenhuma sessão de live criada ainda.</p>
@@ -395,8 +395,8 @@ export default function AdminLivePage() {
                             >
                                 Criar Primeira Sessão
                             </Button>
-                        </CardContent>
-                    </Card>
+            </CardContent>
+         </Card>
                 ) : (
                     <div className="grid gap-4">
                         {liveSessions.map((session) => (
@@ -469,7 +469,7 @@ export default function AdminLivePage() {
                                             </Button>
                                         </div>
                                     </div>
-                                </CardHeader>
+                </CardHeader>
                                 
                                 <CardContent>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -504,16 +504,16 @@ export default function AdminLivePage() {
                                                     >
                                                         Acessar Live
                                                     </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
+                        </div>
                     </div>
-                )}
-            </div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+                        ))}
         </div>
-    );
+      )}
+            </div>
+    </div>
+  );
 }

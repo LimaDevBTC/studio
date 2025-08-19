@@ -29,11 +29,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Logo } from "@/components/Logo";
 import { useAuth } from "@/hooks/use-auth";
 import { Link, useRouter } from '@/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import Footer from "@/components/Footer";
+import Image from 'next/image';
 
 export default function DashboardLayout({
   children,
@@ -58,12 +58,11 @@ export default function DashboardLayout({
   }
 
   const navItems = [
-      { href: "/dashboard", icon: <Home className="h-4 w-4" />, label: t('navDashboard') },
-      { href: "/dashboard/courses", icon: <BookOpenCheck className="h-4 w-4" />, label: t('navMyCourses') },
-      { href: "/dashboard/subscription", icon: <CreditCard className="h-4 w-4" />, label: t('navSubscription') },
-      { href: "/dashboard/live", icon: <Clapperboard className="h-4 w-4" />, label: "Ao Vivo" },
-      { href: "/dashboard/account", icon: <UserIcon className="h-4 w-4" />, label: "Minha Conta" },
-      { href: "/dashboard/contact", icon: <MessageSquare className="h-4 w-4" />, label: "Contato" },
+      { href: "/dashboard" as const, icon: <Home className="h-4 w-4" />, label: t('navDashboard') },
+      { href: "/dashboard/courses" as const, icon: <BookOpenCheck className="h-4 w-4" />, label: t('navMyCourses') },
+      { href: "/dashboard/subscription" as const, icon: <CreditCard className="h-4 w-4" />, label: t('navSubscription') },
+      { href: "/dashboard/live" as const, icon: <Clapperboard className="h-4 w-4" />, label: t('navLive') },
+      { href: "/dashboard/account" as const, icon: <UserIcon className="h-4 w-4" />, label: t('navMyAccount') },
   ];
   
 
@@ -74,7 +73,16 @@ export default function DashboardLayout({
       <div className="hidden border-r bg-card md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-16 items-center border-b px-4 lg:px-6">
-            <Logo />
+            <Image 
+              src="/images/logo.png"
+              alt="MQMCrypto Logo"
+              width={4000}
+              height={2250}
+              className="h-20 w-auto"
+              priority
+              quality={100}
+              unoptimized
+            />
           </div>
           <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -141,7 +149,7 @@ export default function DashboardLayout({
               className="flex items-center gap-2"
             >
               <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline">Sair</span>
+              <span className="hidden sm:inline">{t('logout')}</span>
             </Button>
           </div>
         </header>

@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Logo } from "@/components/Logo";
 import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { useToast } from "@/hooks/use-toast";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { Link, useRouter } from "@/navigation";
+import Image from 'next/image';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -82,7 +82,18 @@ export default function SignupPage() {
                 <LocaleSwitcher />
             </div>
           <div className="mb-8">
-            <Logo />
+            <Link href="/">
+              <Image 
+                src="/images/logo.png"
+                alt="MQMCrypto Logo"
+                width={4000}
+                height={2250}
+                className="h-24 w-auto cursor-pointer hover:opacity-80 transition-opacity"
+                priority
+                quality={100}
+                unoptimized
+              />
+            </Link>
           </div>
           <Card className="mx-auto max-w-sm w-[400px] bg-card">
             <CardHeader>
