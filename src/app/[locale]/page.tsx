@@ -281,41 +281,41 @@ export default function Home() {
           alt="MQMCrypto Logo"
           width={4000}
           height={2250}
-          className="h-24 w-auto"
+          className="h-20 w-auto lg:h-32"
           priority
           quality={100}
           unoptimized
         />
-        <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
+        <nav className="ml-auto flex gap-2 sm:gap-4 lg:gap-6 items-center">
           <AuthStatus />
         </nav>
       </header>
       <main className="flex-1">
         <section className="w-full py-16 md:py-20 lg:py-24 xl:py-28 -mt-[80px]">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-8 lg:grid-cols-[450px_1fr] lg:gap-8 xl:grid-cols-[550px_1fr]">
+            <div className="grid gap-6 lg:grid-cols-[450px_1fr] lg:gap-6 xl:grid-cols-[550px_1fr]">
               <Image
                 src="/images/pose.png"
                 data-ai-hint="MQM Crypto pose"
                 width="600"
                 height="600"
                 alt="MQM Crypto - Desvende o Futuro das Finanças"
-                className="mx-auto w-full h-auto max-w-[600px] object-contain -mt-[70px] lg:order-first"
+                className="mx-auto w-full h-auto max-w-[400px] lg:max-w-[600px] object-contain -mt-[0px] lg:-mt-[50px] lg:order-first"
                 priority
                 quality={100}
                 unoptimized
               />
-              <div className="flex flex-col justify-center space-y-8 -mt-[80px] lg:order-last">
-                <div className="space-y-4">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none leading-tight">
+              <div className="flex flex-col justify-center space-y-6 lg:space-y-8 -mt-[5px] lg:-mt-[170px] lg:order-last text-center lg:text-left">
+                <div className="space-y-3 lg:space-y-4">
+                  <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl lg:text-5xl xl:text-6xl/none leading-tight">
                     {t('heroTitle')}
                   </h1>
-                  <p className="max-w-[500px] text-muted-foreground md:text-xl leading-relaxed">
+                  <p className="max-w-full lg:max-w-[500px] text-muted-foreground text-lg lg:md:text-xl xl:text-2xl leading-relaxed text-center lg:text-left">
                     {t('heroSubtitle')}
                   </p>
                 </div>
-                <div className="flex flex-col gap-3 min-[400px]:flex-row">
-                  <Button size="lg" className="px-8 py-6 text-lg font-semibold" asChild>
+                <div className="flex flex-col gap-3 min-[400px]:flex-row justify-center lg:justify-start">
+                  <Button size="lg" className="px-6 py-4 lg:px-8 lg:py-6 text-base lg:text-lg font-semibold" asChild>
                     <Link href="/signup">{t('startFreeTrial')}</Link>
                   </Button>
                 </div>
@@ -326,16 +326,16 @@ export default function Home() {
 
         <section id="features" className="w-full py-4 md:py-8 lg:py-12">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+            <div className="flex flex-col items-center justify-center space-y-3 lg:space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">{t('featuresTitle')}</div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{t('featuresTitle')}</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl lg:text-5xl">{t('featuresTitle')}</h2>
+                <p className="max-w-full lg:max-w-[900px] text-muted-foreground text-base lg:text-xl/relaxed xl:text-xl/relaxed px-4 lg:px-0">
                   {t('featuresSubtitle')}
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 mt-12">
+            <div className="mx-auto grid max-w-5xl items-start gap-6 lg:gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 mt-8 lg:mt-12">
               {features.map((feature, index) => (
                 <div key={index} className="grid gap-1 text-center">
                   <div className="flex justify-center">{feature.icon}</div>
@@ -468,15 +468,13 @@ export default function Home() {
                 unoptimized
               />
               <p className="text-muted-foreground max-w-md">
-                Plataforma líder em educação sobre criptomoedas e blockchain. 
-                Oferecemos cursos premium e consultoria personalizada para 
-                investidores e entusiastas do mercado digital.
+                {t('footerDescription')}
               </p>
             </div>
 
             {/* Contato */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Contato</h3>
+              <h3 className="text-lg font-semibold">{t('footerContact')}</h3>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-primary" />
@@ -491,14 +489,14 @@ export default function Home() {
 
             {/* Redes Sociais */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Redes Sociais</h3>
+              <h3 className="text-lg font-semibold">{t('footerSocialMedia')}</h3>
               <div className="flex space-x-4">
                 <a 
                   href="https://x.com/mqmcrypto" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
-                  aria-label="Siga-nos no X (Twitter)"
+                  aria-label={`${t('footerFollowUs')} X (Twitter)`}
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -509,7 +507,7 @@ export default function Home() {
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
-                  aria-label="Inscreva-se no nosso canal do YouTube"
+                  aria-label={t('footerYouTube')}
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -520,7 +518,7 @@ export default function Home() {
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary transition-colors"
-                  aria-label="Siga-nos no Instagram"
+                  aria-label={t('footerInstagram')}
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
@@ -533,7 +531,7 @@ export default function Home() {
           {/* Linha de Copyright */}
           <div className="border-t border-border mt-8 pt-8 text-center">
             <p className="text-sm text-muted-foreground">
-              © 2024 MQMCrypto. Todos os direitos reservados.
+              © {new Date().getFullYear()} MQM CRYPTO. {t('footerRights')}
             </p>
           </div>
         </div>
