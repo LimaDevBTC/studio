@@ -409,8 +409,12 @@
       "title": "Account Information",
       "memberSince": "Member since:",
       "lastLogin": "Last login:",
+      "plan": "Plan",
       "status": "Status",
-      "active": "Active"
+      "active": "Active",
+      "inactive": "Inactive",
+      "expired": "Expired",
+      "expiryDate": "Expiry Date"
     },
     "toast": {
       "profileUpdated": {

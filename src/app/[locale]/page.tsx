@@ -275,18 +275,20 @@ export default function Home() {
   
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="px-4 lg:px-6 h-24 flex items-center">
-        <Image 
-          src="/images/logo.png"
-          alt="MQMCrypto Logo"
-          width={4000}
-          height={2250}
-          className="h-20 w-auto lg:h-32"
-          priority
-          quality={100}
-          unoptimized
-        />
-        <nav className="ml-auto flex gap-2 sm:gap-4 lg:gap-6 items-center">
+      <header className="px-4 lg:px-6 h-20 lg:h-24 flex items-center justify-between relative z-50">
+        <div className="flex-shrink-0">
+          <Image 
+            src="/images/logo.png"
+            alt="MQMCrypto Logo"
+            width={4000}
+            height={2250}
+            className="h-16 w-auto lg:h-32"
+            priority
+            quality={100}
+            unoptimized
+          />
+        </div>
+        <nav className="ml-auto flex gap-2 sm:gap-4 lg:gap-6 items-center relative z-50">
           <AuthStatus />
         </nav>
       </header>
@@ -444,7 +446,7 @@ export default function Home() {
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
               <Button asChild size="lg" className="w-full">
-                <Link href="/dashboard/subscription">{t('viewSubscriptions')}</Link>
+                <Link href="/login">{t('viewSubscriptions')}</Link>
               </Button>
             </div>
           </div>

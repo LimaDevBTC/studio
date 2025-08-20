@@ -87,7 +87,16 @@ export default function DashboardLayout({
           <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               {navItems.map(item => {
-                const isActive = pathname.endsWith(item.href);
+                // Lógica corrigida para detectar link ativo
+                let isActive = false;
+                
+                if (item.href === '/dashboard') {
+                  // Dashboard ativo apenas quando estiver exatamente na página principal
+                  isActive = pathname === '/dashboard' || pathname === '/pt/dashboard' || pathname === '/en/dashboard' || pathname === '/es/dashboard';
+                } else {
+                  // Outras páginas ativas quando o pathname contém o href
+                  isActive = pathname.includes(item.href);
+                }
 
                 return (
                   <Link
@@ -112,7 +121,7 @@ export default function DashboardLayout({
                 <Link
                   href="/admin/dashboard"
                   className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                    pathname.endsWith("/admin/dashboard")
+                    pathname.includes("/admin/dashboard")
                       ? 'text-primary' 
                       : 'text-muted-foreground hover:text-primary'
                   }`}
@@ -126,7 +135,22 @@ export default function DashboardLayout({
         </div>
       </div>
       <div className="flex flex-col">
+        {/* Header Mobile com Logo */}
         <header className="flex h-16 items-center gap-4 border-b bg-card px-4 lg:px-6">
+          {/* Logo Mobile - Visível apenas em mobile */}
+          <div className="md:hidden flex-shrink-0">
+            <Image 
+              src="/images/logo.png"
+              alt="MQMCrypto Logo"
+              width={200}
+              height={112}
+              className="h-16 w-auto"
+              priority
+              quality={100}
+              unoptimized
+            />
+          </div>
+          
           <div className="w-full flex-1">
             {/* Add search bar if needed */}
           </div>

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useTranslations } from 'next-intl';
 import { auth } from "@/lib/firebase";
@@ -13,15 +13,27 @@ import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { useToast } from "@/hooks/use-toast";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { Link, useRouter } from "@/navigation";
+import { useAuth } from "@/hooks/use-auth";
 import Image from 'next/image';
 
 export default function LoginPage() {
   const router = useRouter();
   const t = useTranslations('LoginPage');
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Redirecionar usuários já autenticados
+  useEffect(() => {
+    console.log('🔍 DEBUG LOGIN - user:', user, 'authLoading:', authLoading);
+    if (user && !authLoading) {
+      console.log('🔄 Usuário já autenticado, redirecionando para dashboard...');
+      // Usar window.location para evitar problemas de roteamento
+      window.location.href = '/dashboard';
+    }
+  }, [user, authLoading]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +41,7 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       // Redirecionamento direto sem toast de sucesso
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     } catch (error: any) {
       console.error("Error signing in:", error);
       let errorMessage = "Erro ao fazer login. Tente novamente.";
@@ -61,7 +73,7 @@ export default function LoginPage() {
     try {
       await signInWithPopup(auth, provider);
       // Redirecionamento direto sem toast de sucesso
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     } catch (error: any) {
       console.error("Error signing in with Google:", error);
       let errorMessage = "Erro ao fazer login com Google. Tente novamente.";
@@ -82,6 +94,20 @@ export default function LoginPage() {
     }
   };
 
+
+  // Não mostrar a página se estiver redirecionando
+  if (authLoading || user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">
+            {authLoading ? 'Verificando autenticação...' : 'Redirecionando...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
       <div className="flex items-center justify-center min-h-screen bg-background">

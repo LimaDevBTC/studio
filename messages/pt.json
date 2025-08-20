@@ -471,8 +471,12 @@
       "title": "Informações da Conta",
       "memberSince": "Membro desde:",
       "lastLogin": "Último login:",
+      "plan": "Plano",
       "status": "Status",
-      "active": "Ativo"
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "expired": "Expirado",
+      "expiryDate": "Data de Expiração"
     },
     "toast": {
       "profileUpdated": {

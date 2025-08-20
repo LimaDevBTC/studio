@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
+import { useSubscriptionStatus } from '@/hooks/use-subscription-status';
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 export default function AccountPage() {
   const t = useTranslations('AccountPage');
   const { user, userData } = useAuth();
+  const { subscriptionStatus } = useSubscriptionStatus();
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
   
@@ -360,9 +362,33 @@ export default function AccountPage() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">{t('accountInfo.status')}:</span>
-                <Badge variant="default">{t('accountInfo.active')}</Badge>
+                <span className="text-sm text-muted-foreground">{t('accountInfo.plan')}:</span>
+                <span className="text-sm font-medium">
+                  {subscriptionStatus?.planName || 'Free Trial'}
+                </span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">{t('accountInfo.status')}:</span>
+                <Badge 
+                  variant={subscriptionStatus?.isActive ? "default" : "destructive"}
+                  className={subscriptionStatus?.isExpired ? "bg-red-100 text-red-800 border-red-200" : ""}
+                >
+                  {subscriptionStatus?.isExpired 
+                    ? t('accountInfo.expired') 
+                    : subscriptionStatus?.isActive 
+                    ? t('accountInfo.active') 
+                    : t('accountInfo.inactive')
+                  }
+                </Badge>
+              </div>
+              {subscriptionStatus?.expiryDate && (
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">{t('accountInfo.expiryDate')}:</span>
+                  <span className="text-sm font-medium">
+                    {subscriptionStatus.expiryDate.toLocaleDateString('pt-BR')}
+                  </span>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

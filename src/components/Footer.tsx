@@ -188,7 +188,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-border mt-8 pt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            © 2024 MQMCrypto. Todos os direitos reservados. 
+            © {new Date().getFullYear()} MQMCrypto. Todos os direitos reservados. 
             Plataforma de educação em criptomoedas.
           </p>
         </div>

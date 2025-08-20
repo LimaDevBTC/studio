@@ -340,5 +340,85 @@
     "rejectionErrorDesc": "No se pudo rechazar el pago. Por favor, inténtalo de nuevo.",
     "errorFetchingDetails": "Error al Obtener Detalles",
     "errorFetchingDetailsDesc": "No se pudieron obtener los detalles de la transacción. Por favor, inténtalo de nuevo."
+  },
+  "AccountPage": {
+    "title": "Mi Cuenta",
+    "subtitle": "Gestiona tu perfil, configuración y preferencias",
+    "personalProfile": {
+      "title": "Perfil Personal",
+      "description": "Tu información personal y datos de contacto",
+      "changePhoto": "Cambiar Foto",
+      "photoHint": "JPG, PNG o GIF. Máximo 2MB.",
+      "fullName": "Nombre Completo",
+      "email": "Correo electrónico",
+      "emailHint": "El correo electrónico no se puede cambiar",
+      "editProfile": "Editar Perfil",
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "security": {
+      "title": "Seguridad",
+      "description": "Gestiona tu contraseña y configuración de seguridad",
+      "currentPassword": "Contraseña Actual",
+      "currentPasswordPlaceholder": "Ingresa tu contraseña actual",
+      "newPassword": "Nueva Contraseña",
+      "newPasswordPlaceholder": "Ingresa la nueva contraseña",
+      "confirmPassword": "Confirmar Nueva Contraseña",
+      "confirmPasswordPlaceholder": "Confirma la nueva contraseña",
+      "changePassword": "Cambiar Contraseña"
+    },
+    "activity": {
+      "title": "Actividad",
+      "description": "Historial de tus actividades en la plataforma",
+      "coursesAccessed": "Cursos Accedidos",
+      "coursesCount": "3 cursos",
+      "transactions": "Transacciones",
+      "transactionsCount": "5 pagos",
+      "viewFullHistory": "Ver Historial Completo"
+    },
+    "settings": {
+      "title": "Configuración",
+      "description": "Preferencias de la plataforma",
+      "language": "Idioma",
+      "theme": "Tema",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "notifications": "Notificaciones",
+      "email": "Correo electrónico",
+      "push": "Push"
+    },
+    "accountInfo": {
+      "title": "Información de la Cuenta",
+      "memberSince": "Miembro desde:",
+      "lastLogin": "Último acceso:",
+      "plan": "Plan",
+      "status": "Estado",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "expired": "Expirado",
+      "expiryDate": "Fecha de Expiración"
+    },
+    "toast": {
+      "profileUpdated": {
+        "title": "¡Perfil Actualizado!",
+        "description": "Tu información ha sido guardada exitosamente."
+      },
+      "profileError": {
+        "title": "Error",
+        "description": "No se pudo actualizar el perfil."
+      },
+      "passwordChanged": {
+        "title": "¡Contraseña Cambiada!",
+        "description": "Tu contraseña ha sido actualizada exitosamente."
+      },
+      "passwordError": {
+        "title": "Error",
+        "description": "No se pudo cambiar la contraseña."
+      },
+      "passwordMismatch": {
+        "title": "Error",
+        "description": "Las contraseñas no coinciden."
+      }
+    }
   }
 }

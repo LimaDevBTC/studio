@@ -342,15 +342,7 @@ export default function UserLivePage() {
                                                 </CardDescription>
                                             </div>
                                             
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className="text-gray-600 border-gray-200 hover:bg-gray-50"
-                                                onClick={() => window.open(session.externalUrl, '_blank')}
-                                            >
-                                                <ExternalLink className="h-4 w-4 mr-2" />
-                                                {t('viewRecording')}
-                                            </Button>
+                                            {/* Botão removido - link disponível na parte inferior */}
                                         </div>
                                     </CardHeader>
                                     

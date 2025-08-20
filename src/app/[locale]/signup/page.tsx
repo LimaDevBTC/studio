@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useTranslations } from 'next-intl';
 import { auth } from "@/lib/firebase";
@@ -13,16 +13,28 @@ import { GoogleIcon } from "@/components/icons/GoogleIcon";
 import { useToast } from "@/hooks/use-toast";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { Link, useRouter } from "@/navigation";
+import { useAuth } from "@/hooks/use-auth";
 import Image from 'next/image';
 
 export default function SignupPage() {
   const router = useRouter();
   const t = useTranslations('SignupPage');
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Redirecionar usuários já autenticados
+  useEffect(() => {
+    console.log('🔍 DEBUG SIGNUP - user:', user, 'authLoading:', authLoading);
+    if (user && !authLoading) {
+      console.log('🔄 Usuário já autenticado, redirecionando para dashboard...');
+      // Usar window.location para evitar problemas de roteamento
+      window.location.href = '/dashboard';
+    }
+  }, [user, authLoading]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,6 +86,20 @@ export default function SignupPage() {
       setLoading(false);
     }
   };
+
+  // Não mostrar a página se estiver redirecionando
+  if (authLoading || user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">
+            {authLoading ? 'Verificando autenticação...' : 'Redirecionando...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
       <div className="flex items-center justify-center min-h-screen bg-background">
