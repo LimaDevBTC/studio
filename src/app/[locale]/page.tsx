@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, ShieldCheck, BarChart, Users, CheckCircle, ArrowRight, Clock, Users as UsersIcon, Mail, Globe, Phone } from "lucide-react";
+import { BookOpen, ShieldCheck, BarChart, Users, CheckCircle, ArrowRight, Clock, Users as UsersIcon, Mail, Globe, Phone, UserCheck, Shield, Brain, TrendingUp, GraduationCap, Lock } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AuthStatus } from "@/components/AuthStatus";
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
@@ -16,19 +16,34 @@ import { useEffect } from 'react';
 
 const features = [
   {
-    icon: <BookOpen className="w-8 h-8 text-primary" />,
+    icon: <UserCheck className="w-8 h-8 text-primary" />,
     title: "feature1Title",
     description: "feature1Desc",
   },
   {
-    icon: <ShieldCheck className="w-8 h-8 text-primary" />,
+    icon: <Shield className="w-8 h-8 text-primary" />,
     title: "feature2Title",
     description: "feature2Desc",
   },
   {
-    icon: <BarChart className="w-8 h-8 text-primary" />,
+    icon: <Brain className="w-8 h-8 text-primary" />,
     title: "feature3Title",
     description: "feature3Desc",
+  },
+  {
+    icon: <TrendingUp className="w-8 h-8 text-primary" />,
+    title: "feature4Title",
+    description: "feature4Desc",
+  },
+  {
+    icon: <GraduationCap className="w-8 h-8 text-primary" />,
+    title: "feature5Title",
+    description: "feature5Desc",
+  },
+  {
+    icon: <Lock className="w-8 h-8 text-primary" />,
+    title: "feature6Title",
+    description: "feature6Desc",
   },
 ];
 
@@ -326,23 +341,49 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="features" className="w-full py-4 md:py-8 lg:py-12">
+        <section id="features" className="w-full py-16 md:py-20 lg:py-24">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-3 lg:space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">{t('featuresTitle')}</div>
-                <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl lg:text-5xl">{t('featuresTitle')}</h2>
-                <p className="max-w-full lg:max-w-[900px] text-muted-foreground text-base lg:text-xl/relaxed xl:text-xl/relaxed px-4 lg:px-0">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl lg:text-5xl xl:text-6xl">
+                  {t('featuresTitle')}
+                </h2>
+                <p className="max-w-3xl mx-auto text-muted-foreground text-lg lg:text-xl xl:text-2xl leading-relaxed">
                   {t('featuresSubtitle')}
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl items-start gap-6 lg:gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 mt-8 lg:mt-12">
+            
+            <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {features.map((feature, index) => (
-                <div key={index} className="grid gap-1 text-center">
-                  <div className="flex justify-center">{feature.icon}</div>
-                  <h3 className="text-lg font-bold">{t(feature.title)}</h3>
-                  <p className="text-sm text-muted-foreground">{t(feature.description)}</p>
+                <div 
+                  key={index} 
+                  className="group relative overflow-hidden rounded-2xl bg-card border border-border p-8 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1"
+                >
+                  {/* Background gradient effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  {/* Icon container */}
+                  <div className="relative z-10 mb-6">
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300">
+                      {feature.icon}
+                    </div>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="relative z-10 space-y-4">
+                    <h3 className="text-xl font-bold text-card-foreground group-hover:text-primary transition-colors duration-300">
+                      {t(feature.title)}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed group-hover:text-card-foreground transition-colors duration-300">
+                      {t(feature.description)}
+                    </p>
+                  </div>
+                  
+                  {/* Hover indicator */}
+                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="w-2 h-2 rounded-full bg-primary" />
+                  </div>
                 </div>
               ))}
             </div>
