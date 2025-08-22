@@ -17,6 +17,7 @@ import {
   User as UserIcon,
   Settings,
   MessageSquare,
+  Calendar,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -61,6 +62,7 @@ export default function DashboardLayout({
       { href: "/dashboard" as const, icon: <Home className="h-4 w-4" />, label: t('navDashboard') },
       { href: "/dashboard/courses" as const, icon: <BookOpenCheck className="h-4 w-4" />, label: t('navMyCourses') },
       { href: "/dashboard/subscription" as const, icon: <CreditCard className="h-4 w-4" />, label: t('navSubscription') },
+      { href: "/dashboard/consultation" as const, icon: <Calendar className="h-4 w-4" />, label: t('navConsultation') },
       { href: "/dashboard/live" as const, icon: <Clapperboard className="h-4 w-4" />, label: t('navLive') },
       { href: "/dashboard/account" as const, icon: <UserIcon className="h-4 w-4" />, label: t('navMyAccount') },
   ];

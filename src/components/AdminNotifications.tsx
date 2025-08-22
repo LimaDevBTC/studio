@@ -234,6 +234,17 @@ export default function AdminNotifications() {
         approvedAt: serverTimestamp()
       });
 
+      // ATUALIZAR STATUS DA TRANSAÇÃO CORRESPONDENTE
+      if (notification.transactionId) {
+        await updateDoc(doc(db, "transactions", notification.transactionId), {
+          status: "approved",
+          updatedAt: serverTimestamp(),
+          approvedBy: user?.uid,
+          approvedAt: serverTimestamp()
+        });
+        console.log("✅ Status da transação atualizado para 'approved'!");
+      }
+
       // LIBERAR ACESSO AUTOMATICAMENTE
       if (notification.type === 'course') {
         // Adicionar acesso ao curso
@@ -260,6 +271,9 @@ export default function AdminNotifications() {
           transactionId: notification.transactionId
         }, { merge: true });
         console.log("✅ Assinatura criada/atualizada!");
+      } else if (notification.type === 'consultation') {
+        // Consultoria aprovada - acesso será verificado pelo hook useConsultationAccess
+        console.log("✅ Consultoria aprovada - usuário pode agendar!");
       }
 
       toast({
@@ -306,6 +320,17 @@ export default function AdminNotifications() {
         rejectedBy: user?.uid,
         rejectedAt: serverTimestamp()
       });
+
+      // ATUALIZAR STATUS DA TRANSAÇÃO CORRESPONDENTE
+      if (notification.transactionId) {
+        await updateDoc(doc(db, "transactions", notification.transactionId), {
+          status: "rejected",
+          updatedAt: serverTimestamp(),
+          rejectedBy: user?.uid,
+          rejectedAt: serverTimestamp()
+        });
+        console.log("✅ Status da transação atualizado para 'rejected'!");
+      }
 
       toast({
         title: t("paymentRejected"),

@@ -85,6 +85,25 @@
     "footerYouTube": "Suscríbete a nuestro canal de YouTube",
     "footerInstagram": "Síguenos en Instagram"
   },
+  "ConsultationPage": {
+    "title": "Agenda tu Consultoría Personalizada",
+    "subtitle": "Elige el horario ideal para tu sesión de 60 minutos con especialista de MQM Crypto",
+    "backToDashboard": "Volver al Panel",
+    "selectDateTime": "Selecciona tu Fecha y Hora",
+    "consultationDetails": "Detalles de la Consultoría",
+    "importantInfo": "Información Importante",
+    "consultationPrice": "Precio de la Consultoría",
+    "singlePayment": "Pago único confirmado",
+    "sessionInfo": "Sesión individual de 60 minutos",
+    "profileAnalysis": "Análisis de tu perfil de inversor",
+    "personalizedStrategies": "Estrategias personalizadas",
+    "directSupport": "Soporte directo con especialista",
+    "noRecurrence": "Sin recurrencia - pago único",
+    "videoCall": "La consultoría se realizará por video llamada",
+    "emailLink": "Recibirás un enlace de acceso por email",
+    "prepareQuestions": "Prepara tus dudas y objetivos para aprovechar al máximo",
+    "sessionRecorded": "La sesión será grabada para tu referencia futura"
+  },
   "LocaleSwitcher": {
     "label": "Cambiar idioma",
     "en": "English",
@@ -95,6 +114,7 @@
     "navDashboard": "Panel",
     "navMyCourses": "Mis Cursos",
     "navSubscription": "Suscripción",
+    "navConsultation": "Consultoría",
     "userMenuProfile": "Perfil",
     "userMenuSettings": "Configuración",
     "userMenuLogout": "Cerrar sesión"

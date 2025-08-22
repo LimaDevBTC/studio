@@ -1,29 +1,23 @@
 {
   "indexes": [
     {
-      "collectionGroup": "liveSessions",
+      "collectionGroup": "transactions",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "isPrivate",
+          "fieldPath": "userId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "scheduledAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "liveSessions",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "isPrivate",
+          "fieldPath": "type",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "createdAt",
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "updatedAt",
           "order": "DESCENDING"
         }
       ]

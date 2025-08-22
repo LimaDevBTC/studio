@@ -51,7 +51,7 @@ interface CryptoPaymentModalProps {
   courseTitle: string;
   coursePrice: number;
   trigger: React.ReactNode;
-  type?: 'course' | 'subscription'; // Novo campo para diferenciar cursos de assinaturas
+  type?: 'course' | 'subscription' | 'consultation'; // Tipos de pagamento
 }
 
 interface TransactionData {
@@ -104,17 +104,23 @@ export default function CryptoPaymentModal({
   const t = useTranslations("CryptoPayment");
 
   const getItemType = () => {
-    return type === 'subscription' ? 'Plano' : 'Curso';
+    if (type === 'subscription') return 'Plano';
+    if (type === 'consultation') return 'Consultoria';
+    return 'Curso';
   };
 
   const getItemTitle = () => {
-    return type === 'subscription' ? courseTitle : courseTitle;
+    return courseTitle;
   };
 
   const getItemDescription = () => {
-    return type === 'subscription' 
-      ? 'Plano de assinatura com acesso completo a todos os cursos'
-      : 'Curso completo com todas as aulas e materiais';
+    if (type === 'subscription') {
+      return 'Plano de assinatura com acesso completo a todos os cursos';
+    } else if (type === 'consultation') {
+      return 'Sessão de consultoria personalizada de 60 minutos';
+    } else {
+      return 'Curso completo com todas as aulas e materiais';
+    }
   };
 
   const handleCopyAddress = async () => {
@@ -172,19 +178,26 @@ export default function CryptoPaymentModal({
         status: "pending",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        type: type === 'subscription' ? "subscription" : "course"
+        type: type || "course"
       };
 
       // Adicionar campos específicos baseado no tipo
       if (type === 'subscription') {
         transactionData.planId = courseId;
         transactionData.planName = courseTitle;
+      } else if (type === 'consultation') {
+        transactionData.courseId = courseId;
+        transactionData.courseTitle = courseTitle;
       } else {
         transactionData.courseId = courseId;
         transactionData.courseTitle = courseTitle;
       }
 
+      console.log("📝 Dados da transação:", transactionData);
+
+      console.log("🔥 Tentando criar transação na coleção 'transactions'...");
       const transactionRef = await addDoc(collection(db, "transactions"), transactionData);
+      console.log("✅ Transação criada com sucesso, ID:", transactionRef.id);
 
       // Criar notificação para o admin
       const notificationData: NotificationData = {
@@ -196,7 +209,7 @@ export default function CryptoPaymentModal({
         network: selectedMethod.network,
         status: "pending",
         createdAt: serverTimestamp(),
-        type: type === 'subscription' ? "subscription" : "course", // CORRIGIDO: tipo correto
+        type: type || "course",
         transactionId: transactionRef.id
       };
 
@@ -204,6 +217,9 @@ export default function CryptoPaymentModal({
       if (type === 'subscription') {
         notificationData.planId = courseId;
         notificationData.planName = courseTitle;
+      } else if (type === 'consultation') {
+        notificationData.courseId = courseId;
+        notificationData.courseTitle = courseTitle;
       } else {
         notificationData.courseId = courseId;
         notificationData.courseTitle = courseTitle;

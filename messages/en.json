@@ -85,6 +85,25 @@
     "footerYouTube": "Subscribe to our YouTube channel",
     "footerInstagram": "Follow us on Instagram"
   },
+  "ConsultationPage": {
+    "title": "Schedule Your Personalized Consultation",
+    "subtitle": "Choose the ideal time for your 60-minute session with MQM Crypto specialist",
+    "backToDashboard": "Back to Dashboard",
+    "selectDateTime": "Select Your Date and Time",
+    "consultationDetails": "Consultation Details",
+    "importantInfo": "Important Information",
+    "consultationPrice": "Consultation Price",
+    "singlePayment": "Single payment confirmed",
+    "sessionInfo": "Individual 60-minute session",
+    "profileAnalysis": "Analysis of your investor profile",
+    "personalizedStrategies": "Personalized strategies",
+    "directSupport": "Direct support with specialist",
+    "noRecurrence": "No recurrence - one-time payment",
+    "videoCall": "The consultation will be conducted via video call",
+    "emailLink": "You will receive an access link by email",
+    "prepareQuestions": "Prepare your questions and goals to make the most of it",
+    "sessionRecorded": "The session will be recorded for your future reference"
+  },
   "LocaleSwitcher": {
     "label": "Change language",
     "en": "English",
@@ -95,6 +114,7 @@
     "navDashboard": "Dashboard",
     "navMyCourses": "My Courses",
     "navSubscription": "Subscription",
+    "navConsultation": "Consultation",
     "navLive": "Live",
     "navMyAccount": "My Account",
     "userMenuProfile": "Profile",

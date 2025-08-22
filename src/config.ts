@@ -23,6 +23,7 @@ export const pathnames = {
   '/dashboard/courses/[courseId]': '/dashboard/courses/[courseId]',
   '/dashboard/courses/[courseId]/lesson/[lessonId]': '/dashboard/courses/[courseId]/lesson/[lessonId]',
   '/dashboard/subscription': '/dashboard/subscription',
+  '/dashboard/consultation': '/dashboard/consultation',
   '/dashboard/live': '/dashboard/live',
 
   '/admin/dashboard': '/admin/dashboard',

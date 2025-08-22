@@ -119,7 +119,7 @@ export default function UserLivePage() {
         );
     }
 
-    return (
+        return (
         <div className="container mx-auto p-6 space-y-8">
             <div className="text-center space-y-4">
                 <h1 className="text-4xl font-bold">{t('title')}</h1>
@@ -320,7 +320,7 @@ export default function UserLivePage() {
                             .filter(s => s.status === 'finished')
                             .map((session) => (
                                 <Card key={session.id} className="opacity-80 hover:opacity-100 transition-opacity border-gray-100">
-                                    <CardHeader>
+                <CardHeader>
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1 space-y-3">
                                                 <div className="flex items-center gap-3">
@@ -344,9 +344,9 @@ export default function UserLivePage() {
                                             
                                             {/* Botão removido - link disponível na parte inferior */}
                                         </div>
-                                    </CardHeader>
+                </CardHeader>
                                     
-                                    <CardContent>
+                <CardContent>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                                             <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
                                                 <Video className="h-4 w-4 text-[#F7931A]" />
@@ -381,8 +381,8 @@ export default function UserLivePage() {
                                                 </div>
                                             </div>
                                         </div>
-                                    </CardContent>
-                                </Card>
+                </CardContent>
+            </Card>
                             ))}
                     </div>
                 </div>

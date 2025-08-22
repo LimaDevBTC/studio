@@ -196,7 +196,7 @@ export default function IntelligentSubscriptionPlans({ className }: IntelligentS
                   courseId={plan.id}
                   courseTitle={plan.name}
                   coursePrice={plan.price}
-                  type={plan.id === 'consultation' ? 'course' : 'subscription'}
+                  type={plan.id === 'consultation' ? 'consultation' : 'subscription'}
                   trigger={
                     <Button 
                       className={`w-full ${
