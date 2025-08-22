@@ -443,9 +443,11 @@ export default function Home() {
                         <div className="text-muted-foreground">{t('consultationPrice')}</div>
                       </div>
                       
-                      <Button size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                        {t('consultationButton')}
-                        <ArrowRight className="ml-2 w-4 h-4" />
+                      <Button asChild size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                        <Link href="/login">
+                          {t('consultationButton')}
+                          <ArrowRight className="ml-2 w-4 h-4" />
+                        </Link>
                       </Button>
                       
                       <p className="text-sm text-muted-foreground">
