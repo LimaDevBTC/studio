@@ -116,81 +116,8 @@ export const setAdminClaim = onCall(async (request) => {
 });
 
 
-/**
- * Creates a live stream channel using Agora.io.
- * This can only be called by an authenticated admin user.
- */
-export const createLiveStream = onCall(async (request) => {
-    if (!request.auth) {
-        throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-    }
-    
-    // Check admin status in Firestore instead of custom claims
-    const userDoc = await db.collection('users').doc(request.auth.uid).get();
-    if (!userDoc.exists || !userDoc.data()?.isAdmin) {
-        throw new HttpsError("permission-denied", "You must be an admin to perform this action.");
-    }
-    
-    logger.log("createLiveStream function called by admin:", request.auth.uid);
-    
-    const channelId = `mqm-crypto-${Date.now()}`;
-    const liveDocRef = db.collection('live').doc('current');
-
-    try {
-        await liveDocRef.set({ 
-            status: 'ready',
-            channelId: channelId,
-            createdBy: request.auth.uid,
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            // Agora.io não precisa de RTMP, usa WebRTC diretamente
-            agoraChannelId: channelId,
-            agoraAppId: process.env.AGORA_APP_ID || 'your-agora-app-id'
-        });
-        
-        logger.log("Live stream channel created:", channelId);
-        return {
-            status: 'ready',
-            channelId: channelId,
-            agoraChannelId: channelId,
-            agoraAppId: process.env.AGORA_APP_ID || 'your-agora-app-id'
-        };
-
-    } catch (error: any) {
-        logger.error("Error creating live stream:", error);
-        await liveDocRef.set({ status: 'error', errorMessage: error.message }, { merge: true });
-        throw new HttpsError("internal", "Failed to create live stream.", error);
-    }
-});
-
-
-/**
- * Finishes and cleans up a live stream channel.
- * This can only be called by an authenticated admin user.
- */
-export const finishLiveStream = onCall(async (request) => {
-    if (!request.auth) {
-        throw new HttpsError("unauthenticated", "The function must be called while authenticated.");
-    }
-    
-    // Check admin status in Firestore instead of custom claims
-    const userDoc = await db.collection('users').doc(request.auth.uid).get();
-    if (!userDoc.exists || !userDoc.data()?.isAdmin) {
-        throw new HttpsError("permission-denied", "You must be an admin to perform this action.");
-    }
-    
-    logger.log("finishLiveStream function called by admin:", request.auth.uid);
-    const liveDocRef = db.collection('live').doc('current');
-    
-    try {
-        // Agora.io não precisa de cleanup complexo, apenas remove o documento
-        await liveDocRef.delete();
-        logger.log("Live stream finished and cleaned up successfully.");
-        return { message: "Live stream finished and cleaned up successfully." };
-    } catch (error: any) {
-        logger.error("Error finishing live stream:", error);
-        throw new HttpsError("internal", "Failed to finish live stream.", error);
-    }
-});
+// Funções de streaming removidas - não serão usadas
+// O sistema de lives será apenas para agendamento e histórico
 
 // Configurar SendGrid
 sgMail.setApiKey(functions.config().sendgrid?.key || 'your-sendgrid-api-key');

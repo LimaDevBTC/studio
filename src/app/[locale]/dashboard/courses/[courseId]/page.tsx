@@ -7,6 +7,7 @@ import { Link } from "@/navigation";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
+import { useCourseAccess } from "@/hooks/use-course-access";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,8 +50,8 @@ export default function CourseOverviewPage() {
     const params = useParams();
     const courseId = params.courseId as string;
 
-    // hasAccess será calculado depois que o curso for carregado
-    const hasAccess = course ? (userData?.isAdmin || (userData?.plan && userData.plan !== "Free Trial") || course.price === 0) : false;
+    // Verificar acesso usando o hook adequado
+    const { hasAccess, isLoading: accessLoading } = useCourseAccess(courseId);
 
     useEffect(() => {
         const fetchCourseAndProgress = async () => {

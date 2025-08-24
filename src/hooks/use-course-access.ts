@@ -33,7 +33,13 @@ export function useCourseAccess(courseId: string) {
       }
 
       // Se não tem acesso direto, verificar se tem assinatura ativa
-      if (subscriptionStatus.isActive && !subscriptionStatus.isExpired) {
+      // IMPORTANTE: Apenas planos de assinatura dão acesso a todos os cursos
+      if (subscriptionStatus.isActive && 
+          !subscriptionStatus.isExpired && 
+          subscriptionStatus.planName !== 'Free Trial' &&
+          (subscriptionStatus.planName === 'Premium' || 
+           subscriptionStatus.planName === 'Pro' || 
+           subscriptionStatus.planName === 'Enterprise')) {
         setHasAccess(true);
       } else {
         setHasAccess(false);

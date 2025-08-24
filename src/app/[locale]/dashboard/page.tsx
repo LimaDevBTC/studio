@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import SubscriptionAlert from "@/components/SubscriptionAlert";
 import { Progress } from '@/components/ui/progress';
+import { BookOpen } from 'lucide-react';
 
 
 interface Course {
@@ -76,41 +77,29 @@ export default function DashboardPage() {
             setInProgressCourses(coursesWithProgress.filter(c => c !== null) as InProgressCourse[]);
         }
 
-        // Fetch Recommended Courses (Published + Waitlist, excluding Draft and user's acquired courses)
-        // First, get Published courses
+        // Fetch ALL Available Courses (Published + Waitlist) - SEM FILTRAR por acesso do usuário
+        // Primeiro, buscar cursos Published
         const publishedQuery = query(
           collection(db, "courses"), 
-          where("status", "==", "Published"), 
-          limit(6)
+          where("status", "==", "Published")
         );
         const publishedSnapshot = await getDocs(publishedQuery);
         
-        // Then, get Waitlist courses
+        // Depois, buscar cursos Waitlist
         const waitlistQuery = query(
           collection(db, "courses"), 
-          where("status", "==", "Waitlist"), 
-          limit(6)
+          where("status", "==", "Waitlist")
         );
         const waitlistSnapshot = await getDocs(waitlistQuery);
         
-        // Get user's acquired courses to exclude them from recommendations
-        const userAccessQuery = query(
-          collection(db, "userCourseAccess"), 
-          where("userId", "==", user.uid), 
-          where("status", "==", "active")
-        );
-        const userAccessSnapshot = await getDocs(userAccessQuery);
-        const userAcquiredCourseIds = userAccessSnapshot.docs.map(doc => doc.data().courseId);
-        
-        // Combine and filter out acquired courses, then limit to 4
-        const allCourses = [
+        // Combinar TODOS os cursos disponíveis (sem filtrar por acesso)
+        const allAvailableCourses = [
           ...publishedSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, status: "Published" })),
           ...waitlistSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, status: "Waitlist" }))
         ];
         
-        const recommendedList = allCourses
-          .filter(course => !userAcquiredCourseIds.includes(course.id))
-          .slice(0, 4)
+        // Mapear para o formato correto (sem filtrar por acesso)
+        const availableCoursesList = allAvailableCourses
           .map(course => ({
             id: course.id,
             title: (course as any).title || "Untitled Course",
@@ -119,7 +108,9 @@ export default function DashboardPage() {
             aiHint: (course as any).aiHint || "abstract",
             status: course.status,
           }));
-        setRecommendedCourses(recommendedList);
+        
+        // Limitar a 6 cursos para o grid 3x2
+        setRecommendedCourses(availableCoursesList.slice(0, 6));
 
       } catch (error) {
         console.error("Error fetching dashboard data: ", error);
@@ -136,124 +127,414 @@ export default function DashboardPage() {
       {/* Alerta de Status da Assinatura */}
       <SubscriptionAlert />
       
+      {/* Header de Boas-vindas */}
       <div>
-                        <h1 className="text-3xl font-bold">{t('welcome', { name: user?.displayName?.split(' ')[0] || 'User' })}</h1>
+        <h1 className="text-3xl font-bold">{t('welcome', { name: user?.displayName?.split(' ')[0] || 'User' })}</h1>
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-1 space-y-6">
-            {loading ? (
-                 <Card>
-                    <CardHeader>
-                        <Skeleton className="h-6 w-3/4" />
-                        <Skeleton className="h-4 w-1/2" />
-                    </CardHeader>
-                    <CardContent>
-                        <Skeleton className="h-4 w-2/3" />
-                    </CardContent>
-                    <CardFooter>
-                        <Skeleton className="h-10 w-32" />
-                    </CardFooter>
-                 </Card>
-            ) : inProgressCourses.length > 0 ? (
-                 <Card className="lg:col-span-1">
-                    <CardHeader>
-                        <CardTitle>{t('continueWatching')}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                    {inProgressCourses.map(course => (
-                        <div key={course.id} className="flex items-center gap-4">
-                           <div className="relative w-24 h-16 rounded-md overflow-hidden flex-shrink-0">
-                             <Image src={course.imageUrl} alt={course.title} fill className="object-cover" />
-                           </div>
-                           <div className="flex-1">
-                             <p className="font-semibold truncate">{course.title}</p>
-                             <Progress value={course.progress} className="h-2 mt-1" />
-                             <p className="text-xs text-muted-foreground mt-1">{t('progressComplete', {progress: course.progress})}</p>
-                             <Button variant="link" size="sm" asChild className="p-0 h-auto mt-1">
-                                <Link href={`/dashboard/courses/${course.id}` as any}>{t('resumeCourse')}</Link>
-                             </Button>
-                           </div>
-                         </div>
-                    ))}
-                    </CardContent>
-                </Card>
-            ) : null}
-
-            <Card className="lg:col-span-1">
-              <CardHeader>
-                <CardTitle>{t('mySubscription')}</CardTitle>
-                <CardDescription>{userData?.plan ? `You are on the ${userData.plan} plan.` : t('subscriptionDesc')}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm">{t('subscriptionRenewal')}</p>
-              </CardContent>
-              <CardFooter>
-                <Button variant="secondary" asChild>
-                    <Link href="/dashboard/subscription">{t('manageSubscription')}</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-        </div>
+      {/* NOVO LAYOUT: Grid 3x2 Consistente - Sempre 3 colunas no desktop */}
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         
-        <section className="lg:col-span-2">
-            <h2 className="text-2xl font-semibold mb-4">{t('recommendedForYou')}</h2>
-            <div className="grid gap-6 sm:grid-cols-2">
-                {loading ? (
-                   Array.from({ length: 2 }).map((_, index) => (
-                    <Card key={index} className="flex flex-col">
-                        <CardHeader className="p-0">
-                           <Skeleton className="rounded-t-lg aspect-video" />
-                        </CardHeader>
-                        <CardContent className="flex-1 pt-6">
-                            <Skeleton className="h-6 w-3/4 mb-3" />
-                            <Skeleton className="h-4 w-full mb-1" />
-                            <Skeleton className="h-4 w-5/6" />
-                        </CardContent>
-                        <CardFooter>
-                           <Skeleton className="h-10 w-full" />
-                        </CardFooter>
-                    </Card>
-                   ))
-                ) : recommendedCourses.length > 0 ? (
-                    recommendedCourses.map(course => (
-                        <Card key={course.id} className="flex flex-col">
-                            <CardHeader className='p-0'>
-                                <Image src={course.imageUrl} data-ai-hint={course.aiHint} alt={course.title} width={600} height={400} className="rounded-t-lg aspect-video object-cover" />
-                            </CardHeader>
-                            <CardContent className="flex-1 pt-6">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <h3 className="font-bold text-lg">{course.title}</h3>
-                                    {course.status === "Waitlist" && (
-                                        <span className="px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded-full font-medium">
-                                            {t('waitlist')}
-                                        </span>
-                                    )}
-                                </div>
-                                <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{course.description}</p>
-                            </CardContent>
-                            <CardFooter>
-                                <Button asChild className="w-full">
-                                                        {course.status === "Waitlist" ? (
-                        <Link href={`/dashboard/courses/${course.id}/preview` as any}>
-                            {t('viewPreview')}
-                        </Link>
-                    ) : (
-                                        <Link href={`/dashboard/courses/${course.id}` as any}>
-                                            {t('viewCourse')}
-                                        </Link>
-                                    )}
-                                </Button>
-                            </CardFooter>
-                        </Card>
-                    ))
+        {/* PRIMEIRA LINHA: Continue Assistindo + Cursos Recomendados */}
+        
+        {/* Card 1: Continue Assistindo (APENAS se houver cursos em progresso) */}
+        {loading ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Skeleton className="rounded-t-lg aspect-video" />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        ) : inProgressCourses.length > 0 ? (
+          // MOSTRAR CARD "Continue assistindo" apenas se houver cursos em progresso
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Image 
+                src={inProgressCourses[0].imageUrl} 
+                data-ai-hint={inProgressCourses[0].aiHint}
+                alt={inProgressCourses[0].title} 
+                width={600} 
+                height={400} 
+                className="rounded-t-lg aspect-video object-cover" 
+              />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="font-bold text-lg">{inProgressCourses[0].title}</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{inProgressCourses[0].description}</p>
+              <div className="mt-4">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs font-semibold text-muted-foreground">PROGRESSO</span>
+                  <span className="text-xs font-bold text-primary">{inProgressCourses[0].progress}%</span>
+                </div>
+                <Progress value={inProgressCourses[0].progress} className="h-2" />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full">
+                <Link href={`/dashboard/courses/${inProgressCourses[0].id}` as any}>
+                  {t('resumeCourse')}
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : null}
+        {/* NÃO MOSTRAR PLACEHOLDER quando não há cursos em progresso */}
+
+        {/* Card 2: Primeiro Curso Recomendado */}
+        {loading ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Skeleton className="rounded-t-lg aspect-video" />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        ) : recommendedCourses.length > 0 ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Image 
+                src={recommendedCourses[0].imageUrl} 
+                data-ai-hint={recommendedCourses[0].aiHint}
+                alt={recommendedCourses[0].title} 
+                width={600} 
+                height={400} 
+                className="rounded-t-lg aspect-video object-cover" 
+              />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="font-bold text-lg">{recommendedCourses[0].title}</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{recommendedCourses[0].description}</p>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full">
+                {recommendedCourses[0].status === "Waitlist" ? (
+                  <Link href={`/dashboard/courses/${recommendedCourses[0].id}/preview` as any}>
+                    {t('viewPreview')}
+                  </Link>
                 ) : (
-                  <p className="col-span-full text-center text-muted-foreground py-10">{t('noRecommendedCourses')}</p>
+                  <Link href={`/dashboard/courses/${recommendedCourses[0].id}` as any}>
+                    {t('viewCourse')}
+                  </Link>
                 )}
-            </div>
-        </section>
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
+                <div className="text-center text-muted-foreground">
+                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">Carregando...</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        )}
+
+        {/* Card 3: Segundo Curso Recomendado */}
+        {loading ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Skeleton className="rounded-t-lg aspect-video" />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        ) : recommendedCourses.length > 1 ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Image 
+                src={recommendedCourses[1].imageUrl} 
+                data-ai-hint={recommendedCourses[1].aiHint}
+                alt={recommendedCourses[1].title} 
+                width={600} 
+                height={400} 
+                className="rounded-t-lg aspect-video object-cover" 
+              />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="font-bold text-lg">{recommendedCourses[1].title}</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{recommendedCourses[1].description}</p>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full">
+                {recommendedCourses[1].status === "Waitlist" ? (
+                  <Link href={`/dashboard/courses/${recommendedCourses[1].id}/preview` as any}>
+                    {t('viewPreview')}
+                  </Link>
+                ) : (
+                  <Link href={`/dashboard/courses/${recommendedCourses[1].id}` as any}>
+                    {t('viewCourse')}
+                  </Link>
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
+                <div className="text-center text-muted-foreground">
+                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">Carregando...</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        )}
+
+        {/* SEGUNDA LINHA: Mais Cursos Recomendados */}
+        
+        {/* Card 4: Terceiro Curso Recomendado */}
+        {loading ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Skeleton className="rounded-t-lg aspect-video" />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        ) : recommendedCourses.length > 2 ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Image 
+                src={recommendedCourses[2].imageUrl} 
+                data-ai-hint={recommendedCourses[2].aiHint}
+                alt={recommendedCourses[2].title} 
+                width={600} 
+                height={400} 
+                className="rounded-t-lg aspect-video object-cover" 
+              />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="font-bold text-lg">{recommendedCourses[2].title}</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{recommendedCourses[2].description}</p>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full">
+                {recommendedCourses[2].status === "Waitlist" ? (
+                  <Link href={`/dashboard/courses/${recommendedCourses[2].id}/preview` as any}>
+                    {t('viewPreview')}
+                  </Link>
+                ) : (
+                  <Link href={`/dashboard/courses/${recommendedCourses[2].id}` as any}>
+                    {t('viewCourse')}
+                  </Link>
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
+                <div className="text-center text-muted-foreground">
+                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">Carregando...</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        )}
+
+        {/* Card 5: Quarto Curso Recomendado */}
+        {loading ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Skeleton className="rounded-t-lg aspect-video" />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        ) : recommendedCourses.length > 3 ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Image 
+                src={recommendedCourses[3].imageUrl} 
+                data-ai-hint={recommendedCourses[3].aiHint}
+                alt={recommendedCourses[3].title} 
+                width={600} 
+                height={400} 
+                className="rounded-t-lg aspect-video object-cover" 
+              />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="font-bold text-lg">{recommendedCourses[3].title}</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{recommendedCourses[3].description}</p>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full">
+                {recommendedCourses[3].status === "Waitlist" ? (
+                  <Link href={`/dashboard/courses/${recommendedCourses[3].id}/preview` as any}>
+                    {t('viewPreview')}
+                  </Link>
+                ) : (
+                  <Link href={`/dashboard/courses/${recommendedCourses[3].id}` as any}>
+                    {t('viewCourse')}
+                  </Link>
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
+                <div className="text-center text-muted-foreground">
+                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">Carregando...</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        )}
+
+        {/* Card 6: Quinto Curso Recomendado */}
+        {loading ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Skeleton className="rounded-t-lg aspect-video" />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        ) : recommendedCourses.length > 4 ? (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <Image 
+                src={recommendedCourses[4].imageUrl} 
+                data-ai-hint={recommendedCourses[4].aiHint}
+                alt={recommendedCourses[4].title} 
+                width={600} 
+                height={400} 
+                className="rounded-t-lg aspect-video object-cover" 
+              />
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="font-bold text-lg">{recommendedCourses[4].title}</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{recommendedCourses[4].description}</p>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full">
+                {recommendedCourses[4].status === "Waitlist" ? (
+                  <Link href={`/dashboard/courses/${recommendedCourses[4].id}/preview` as any}>
+                    {t('viewPreview')}
+                  </Link>
+                ) : (
+                  <Link href={`/dashboard/courses/${recommendedCourses[4].id}` as any}>
+                    {t('viewCourse')}
+                  </Link>
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <Card className="flex flex-col">
+            <CardHeader className="p-0">
+              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
+                <div className="text-center text-muted-foreground">
+                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">Carregando...</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 pt-6">
+              <Skeleton className="h-6 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-full mb-1" />
+              <Skeleton className="h-4 w-5/6" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-10 w-full" />
+            </CardFooter>
+          </Card>
+        )}
+
       </div>
+
+
     </div>
   )
 }

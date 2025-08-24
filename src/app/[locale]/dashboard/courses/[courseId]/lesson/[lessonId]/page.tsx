@@ -8,10 +8,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Loader2, File, Check, ArrowLeft, BookOpen } from "lucide-react";
+import { CheckCircle2, Loader2, File, Check, ArrowLeft, BookOpen, Lock } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { useCourseAccess } from "@/hooks/use-course-access";
 import { useParams } from "next/navigation";
 import { doc, getDoc, collection, getDocs, setDoc, arrayUnion, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -44,6 +45,7 @@ export default function CoursePlayerPage() {
   const params = useParams();
   const courseId = params.courseId as string;
   const lessonId = params.lessonId as string;
+  const { hasAccess, isLoading: accessLoading } = useCourseAccess(courseId);
   
   useEffect(() => {
     const fetchCourseAndProgress = async () => {
@@ -134,6 +136,40 @@ export default function CoursePlayerPage() {
 
 
   const isCurrentLessonCompleted = currentLesson ? completedLessons.includes(currentLesson.id) : false;
+
+  // Verificar se o usuário tem acesso ao curso
+  if (accessLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verificando acesso...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <div className="max-w-2xl mx-auto mt-8 p-6">
+        <div className="text-center space-y-4">
+          <div className="mx-auto w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+            <Lock className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <h1 className="text-2xl font-bold">Acesso Restrito</h1>
+          <p className="text-muted-foreground">
+            Este curso requer pagamento para ser acessado. 
+            Faça o pagamento para desbloquear todo o conteúdo.
+          </p>
+          <Button asChild>
+            <Link href="/dashboard/subscription">
+              Ver Planos de Assinatura
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 h-full">

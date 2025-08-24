@@ -1,104 +1,286 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
 import { useAuth } from '@/hooks/use-auth';
 import { useConsultationAccess } from '@/hooks/use-consultation-access';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Users, CheckCircle, ArrowLeft } from "lucide-react";
 import { Link } from '@/navigation';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-
-// Declaração de tipo para o Calendly
-declare global {
-  interface Window {
-    Calendly?: {
-      initInlineWidget: (options: any) => void;
-    };
-  }
-}
+import { Button } from "@/components/ui/button";
 
 export default function ConsultationPage() {
-  const t = useTranslations('ConsultationPage');
-  const { user, userData } = useAuth();
+  const { user } = useAuth();
   const consultationAccess = useConsultationAccess();
-  const router = useRouter();
   const [isCalendlyLoaded, setIsCalendlyLoaded] = useState(false);
 
   // Verificar se o usuário tem acesso à consultoria
   const hasConsultationAccess = consultationAccess.hasAccess;
+  const isBlocked = consultationAccess.isBlocked;
 
   // Carregar o script do Calendly
   useEffect(() => {
-    // Verificar se o script já existe
-    if (document.querySelector('script[src*="calendly"]')) {
+    console.log('🔄 Iniciando carregamento do script do Calendly...');
+    
+    // Verificar se já existe um script do Calendly específico para esta página
+    if (document.getElementById('calendly-script-consultation')) {
+      console.log('✅ Script já existe, marcando como carregado');
       setIsCalendlyLoaded(true);
       return;
     }
-
-    // Carregar o script do Calendly
+  
+    console.log('📥 Criando novo script do Calendly...');
     const script = document.createElement('script');
     script.src = 'https://assets.calendly.com/assets/external/widget.js';
     script.async = true;
+    script.id = 'calendly-script-consultation'; // ID específico
     script.onload = () => {
       console.log('✅ Script do Calendly carregado com sucesso');
       setIsCalendlyLoaded(true);
-      
-      // Aguardar um pouco para o Calendly inicializar completamente
-      setTimeout(() => {
-        console.log('🔄 Verificando se o Calendly está disponível...');
-        if (window.Calendly) {
-          console.log('✅ Calendly disponível na janela global');
-        } else {
-          console.log('❌ Calendly não está disponível na janela global');
-        }
-      }, 1000);
     };
     script.onerror = () => {
       console.error('❌ Erro ao carregar script do Calendly');
       setIsCalendlyLoaded(false);
     };
     document.head.appendChild(script);
+    console.log('📤 Script adicionado ao DOM');
+  
+    // Cleanup: remover script se componente for desmontado
+    return () => {
+      console.log('🧹 Cleanup: removendo script do Calendly');
+      const existingScript = document.getElementById('calendly-script-consultation');
+      if (existingScript && existingScript.parentNode) {
+        existingScript.parentNode.removeChild(existingScript);
+      }
+      
+      // Limpar widgets do Calendly apenas se não estiver inicializando
+      if (!isCalendlyLoaded) {
+        const allWidgets = document.querySelectorAll('[data-calendly-widget]');
+        allWidgets.forEach(widget => {
+          if (widget.parentElement && widget.parentElement.id === 'calendly-widget') {
+            widget.remove();
+          }
+        });
+      }
+      
+      // Limpar também o objeto global Calendly se existir
+      if (window.Calendly) {
+        delete (window as any).Calendly;
+      }
+    };
   }, []);
 
   // Inicializar o widget quando o script estiver carregado
   useEffect(() => {
-    if (isCalendlyLoaded && window.Calendly) {
-      console.log('🔄 Inicializando widget do Calendly...');
-      
-      // Aguardar um pouco para garantir que o DOM está pronto
-      setTimeout(() => {
-        try {
-          if (window.Calendly) {
-            window.Calendly.initInlineWidget({
-              url: 'https://calendly.com/airdropmqm/new-meeting',
-              parentElement: document.getElementById('calendly-widget'),
-              minWidth: '320px',
-              height: '700px'
-            });
-            console.log('✅ Widget do Calendly inicializado com sucesso!');
-          }
-        } catch (error) {
-          console.error('❌ Erro ao inicializar widget do Calendly:', error);
-        }
-      }, 500);
+    // NÃO inicializar o widget se o usuário estiver bloqueado
+    if (isBlocked) {
+      console.log('🚫 Usuário bloqueado, não inicializando Calendly');
+      return;
     }
-  }, [isCalendlyLoaded]);
 
-  // Se não tiver acesso à consultoria, redirecionar
+    console.log('🔄 Verificando se pode inicializar widget...');
+    console.log('isCalendlyLoaded:', isCalendlyLoaded);
+    console.log('window.Calendly:', !!window.Calendly);
+    
+    if (!isCalendlyLoaded || !window.Calendly) {
+      console.log('❌ Não pode inicializar ainda');
+      return;
+    }
+
+    console.log('🔄 Inicializando widget do Calendly...');
+    
+    // Aguardar um pouco para garantir que o DOM está pronto
+    const timer = setTimeout(() => {
+      try {
+        const parentElement = document.getElementById('calendly-widget');
+        if (!parentElement) {
+          console.log('⚠️ Elemento pai não encontrado');
+          return;
+        }
+
+        console.log('✅ Elemento pai encontrado:', parentElement);
+
+        // Verificar se já existe um widget nesta página específica
+        const existingWidget = parentElement.querySelector('[data-calendly-widget]');
+        if (existingWidget) {
+          console.log('✅ Widget já existe, não inicializando novamente');
+          return;
+        }
+
+        console.log('🚀 Inicializando novo widget...');
+
+        // Inicializar o widget
+        if (window.Calendly) {
+          window.Calendly.initInlineWidget({
+            url: 'https://calendly.com/airdropmqm/new-meeting',
+            parentElement: parentElement,
+            minWidth: '320px',
+            height: '700px',
+            prefill: {
+              email: user?.email || '',
+              name: user?.displayName || ''
+            }
+          });
+          console.log('✅ Widget do Calendly inicializado com sucesso!');
+        }
+      } catch (error) {
+        console.error('❌ Erro ao inicializar widget do Calendly:', error);
+      }
+    }, 1000); // Aumentar o delay para garantir que o DOM está pronto
+
+    // Cleanup: limpar timer se componente for desmontado
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isCalendlyLoaded, user?.email, user?.displayName, isBlocked]);
+
+  // Se não tiver acesso à consultoria, mostrar card de compra
   useEffect(() => {
     if (!hasConsultationAccess && !consultationAccess.isLoading) {
-      router.push('/dashboard/subscription');
+      // Não redirecionar mais, apenas mostrar o card de compra
+      console.log('Usuário não tem acesso à consultoria, mostrando card de compra');
     }
-  }, [hasConsultationAccess, consultationAccess.isLoading, router]);
+  }, [hasConsultationAccess, consultationAccess.isLoading]);
 
-  if (!hasConsultationAccess) {
+  // Se não tiver acesso à consultoria, mostrar card apropriado
+  if (!hasConsultationAccess && !consultationAccess.isLoading) {
+    // Se estiver bloqueado, mostrar mensagem de consultoria realizada
+    if (isBlocked) {
+      return (
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center gap-4 mb-6">
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/dashboard">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Voltar ao Dashboard
+                </Link>
+              </Button>
+            </div>
+            
+            <div className="text-center space-y-4">
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl lg:text-5xl">
+                Consultoria Realizada
+              </h1>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Sua consultoria personalizada foi concluída com sucesso
+              </p>
+            </div>
+          </div>
+
+          {/* Card de Consultoria Realizada */}
+          <div className="max-w-2xl mx-auto">
+            <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
+              <CardHeader className="text-center pb-4">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                  <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-200">
+                  Consultoria Concluída
+                </CardTitle>
+                <p className="text-green-700 dark:text-green-300">
+                  Obrigado por escolher nossa consultoria personalizada
+                </p>
+              </CardHeader>
+              <CardContent className="text-center space-y-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 justify-center">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span className="text-sm">Sessão de consultoria realizada com sucesso</span>
+                  </div>
+                  <div className="flex items-center gap-3 justify-center">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span className="text-sm">Seus objetivos foram analisados e estratégias definidas</span>
+                  </div>
+                  <div className="flex items-center gap-3 justify-center">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span className="text-sm">Continue aplicando as recomendações recebidas</span>
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <Button asChild variant="outline" className="border-green-300 text-green-700 hover:bg-green-50">
+                    <Link href="/dashboard">
+                      Voltar ao Dashboard
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+    }
+
+    // Se não estiver bloqueado, mostrar card de compra
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Verificando acesso...</p>
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-6">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/dashboard">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Voltar ao Dashboard
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="text-center space-y-4">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl lg:text-5xl">
+              Consultoria Personalizada
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Agende sua sessão de 1 hora com o MQM para transformar sua vida financeira
+            </p>
+          </div>
+        </div>
+
+        {/* Card de Compra da Consultoria */}
+        <div className="max-w-2xl mx-auto">
+          <Card className="border-2 border-primary/20">
+            <CardHeader className="text-center pb-4">
+              <CardTitle className="flex items-center justify-center gap-2 text-xl">
+                <CheckCircle className="h-5 w-5 text-primary" />
+                Consultoria de 1 Hora
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="text-center space-y-6">
+                <div className="space-y-4">
+                  <div className="text-3xl font-bold text-primary">
+                    R$ 39,00
+                  </div>
+                  <p className="text-muted-foreground">
+                    Sessão única de consultoria personalizada
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span className="text-sm">Análise completa do seu perfil financeiro</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span className="text-sm">Estratégias personalizadas para seus objetivos</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span className="text-sm">Suporte direto e acompanhamento</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span className="text-sm">Pagamento único, sem recorrência</span>
+                  </div>
+                </div>
+
+                <Button size="lg" className="w-full">
+                  Comprar Consultoria
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -112,116 +294,151 @@ export default function ConsultationPage() {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/dashboard">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              {t('backToDashboard')}
+              Voltar ao Dashboard
             </Link>
           </Button>
         </div>
         
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl lg:text-5xl">
-            {t('title')}
+            Consultoria Personalizada
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {t('subtitle')}
+            Agende sua sessão de 1 hora com o MQM para transformar sua vida financeira
           </p>
         </div>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
-        {/* Calendly Embed */}
-        <div className="space-y-6">
-          {/* Debug info - remover depois */}
-          <div className="text-xs text-muted-foreground p-2 bg-muted rounded">
-            Debug: Script carregado = {isCalendlyLoaded ? 'true' : 'false'}
-          </div>
-          
-          <Card className="border-2 border-primary/20">
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="flex items-center justify-center gap-2 text-xl">
-                <Calendar className="h-5 w-5 text-primary" />
-                {t('selectDateTime')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              {isCalendlyLoaded ? (
-                <div 
-                  id="calendly-widget"
-                  style={{ 
-                    minWidth: '320px', 
-                    height: '700px',
-                    width: '100%'
-                  }}
-                />
-              ) : (
-                <div className="flex items-center justify-center min-h-[700px] p-8">
-                  <div className="text-center space-y-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-                    <p className="text-muted-foreground">Carregando calendário...</p>
-                    <p className="text-sm text-muted-foreground">Se não carregar, recarregue a página</p>
+        {/* Calendly Embed - Só mostrar se não estiver bloqueado */}
+        {!isBlocked && (
+          <div className="space-y-6">
+            <Card className="border-2 border-primary/20">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="flex items-center justify-center gap-2 text-xl">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  Selecione Data e Hora
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                {isCalendlyLoaded ? (
+                  <div 
+                    id="calendly-widget"
+                    data-calendly-widget="true"
+                    style={{ 
+                      minWidth: '320px', 
+                      height: '700px',
+                      width: '100%'
+                    }}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center min-h-[700px] p-8">
+                    <div className="text-center space-y-4">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                      <p className="text-muted-foreground">Carregando calendário...</p>
+                      <p className="text-sm text-muted-foreground">Se não carregar, recarregue a página</p>
+                    </div>
                   </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
-        {/* Informações da Consultoria */}
+        {/* Sidebar com Status e Informações */}
         <div className="space-y-6">
+          {/* Card de Status - Dinâmico baseado no status */}
+          {isBlocked ? (
+            // Card para usuários bloqueados (consultoria realizada)
+            <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
+              <CardHeader className="text-center pb-4">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                  <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-200">
+                  Consultoria Realizada
+                </CardTitle>
+                <p className="text-green-700 dark:text-green-300">
+                  Sua consultoria foi concluída com sucesso
+                </p>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-200 text-sm font-medium">
+                  <CheckCircle className="h-4 w-4" />
+                  Concluída
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            // Card para usuários com acesso (consultoria disponível)
+            <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
+              <CardHeader className="text-center pb-4">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                  <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-green-800 dark:text-green-200">
+                  Acesso Liberado
+                </CardTitle>
+                <p className="text-green-700 dark:text-green-300">
+                  Sua consultoria personalizada está disponível para agendamento
+                </p>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-200 text-sm font-medium">
+                  <Clock className="h-4 w-4" />
+                  Consultoria de 1 Hora
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Informações da Consultoria */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-primary" />
-                {t('consultationDetails')}
+                Detalhes da Consultoria
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-sm">{t('sessionInfo')}</span>
+                  <span className="text-sm">Sessão de 1 hora por videochamada</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-sm">{t('profileAnalysis')}</span>
+                  <span className="text-sm">Análise completa do seu perfil financeiro</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-sm">{t('personalizedStrategies')}</span>
+                  <span className="text-sm">Estratégias personalizadas para seus objetivos</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-sm">{t('directSupport')}</span>
+                  <span className="text-sm">Suporte direto e acompanhamento</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-sm">{t('noRecurrence')}</span>
+                  <span className="text-sm">Pagamento único, sem recorrência</span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
+          {/* Informações Importantes */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-primary" />
-                {t('importantInfo')}
+                Informações Importantes
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p>• {t('videoCall')}</p>
-              <p>• {t('emailLink')}</p>
-              <p>• {t('prepareQuestions')}</p>
-              <p>• {t('sessionRecorded')}</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-primary/5 border-primary/20">
-            <CardContent className="pt-6">
-              <div className="text-center space-y-2">
-                <p className="text-sm text-muted-foreground">{t('consultationPrice')}</p>
-                <p className="text-2xl font-bold text-primary">USD$39,00</p>
-                <p className="text-xs text-muted-foreground">{t('singlePayment')}</p>
-              </div>
+              <p>• A consultoria será realizada por videochamada</p>
+              <p>• O link será enviado por email antes da sessão</p>
+              <p>• Prepare suas dúvidas e objetivos</p>
+              <p>• A sessão será gravada para você revisar depois</p>
             </CardContent>
           </Card>
         </div>

@@ -140,9 +140,6 @@ function CoursesSection() {
                   </CardHeader>
                   <CardContent className="p-6">
                     <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="secondary" className="bg-orange-100 text-orange-800 border-orange-200">
-                        Lista de Espera
-                      </Badge>
                       {displayData.level && (
                         <Badge variant="outline" className="text-xs">
                           {displayData.level === 'beginner' ? 'Iniciante' : 

@@ -504,9 +504,9 @@ export default function AdminLivePage() {
                                                     >
                                                         Acessar Live
                                                     </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                        </div>
+                    </div>
+                        </div>
                     </div>
                 </CardContent>
             </Card>

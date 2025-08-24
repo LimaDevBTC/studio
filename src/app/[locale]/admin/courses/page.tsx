@@ -8,14 +8,15 @@ import { db } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { MoreHorizontal, PlusCircle, AlertCircle } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, PlusCircle, AlertCircle, ChevronDown, ChevronRight, Edit, Trash2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link, useRouter } from "@/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface CourseData {
   id: string;
@@ -29,6 +30,7 @@ export default function AdminCoursesPage() {
   const [courses, setCourses] = useState<CourseData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
   const { toast } = useToast();
 
   const fetchCourses = async () => {
@@ -99,27 +101,74 @@ export default function AdminCoursesPage() {
         fetchCourses();
     } catch (error) {
         console.error("Error deleting course: ", error);
-        toast({ variant: "destructive", title: "Failed to delete course." });
+        toast({ title: "Error deleting course", variant: "destructive" });
     }
   };
 
+  const toggleExpanded = (courseId: string) => {
+    setExpandedCourse(expandedCourse === courseId ? null : courseId);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Published": return "bg-green-100 text-green-800 border-green-200";
+      case "Waitlist": return "bg-blue-100 text-blue-800 border-blue-200";
+      case "Draft": return "bg-gray-100 text-gray-800 border-gray-200";
+      default: return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <Card key={index}>
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                <Skeleton className="h-5 w-full" />
+                <div className="flex gap-2">
+                  <Skeleton className="h-6 w-20" />
+                  <Skeleton className="h-6 w-16" />
+                </div>
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
-    <div>
-       <div className="flex items-center justify-between mb-6">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-                      <h1 className="text-3xl font-bold">Courses</h1>
-          <p className="text-muted-foreground">Manage your educational content here.</p>
+          <h1 className="text-2xl font-bold tracking-tight">Courses Management</h1>
+          <p className="text-muted-foreground">
+            Manage all courses in the platform
+          </p>
         </div>
         <Button asChild>
           <Link href="/admin/courses/new">
-            <PlusCircle className="mr-2 h-4 w-4" /> Add New Course
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Course
           </Link>
         </Button>
       </div>
 
-      <Card>
-        <CardContent className="pt-6">
+      {/* Tabela Desktop */}
+      <Card className="hidden lg:block">
+        <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
@@ -131,27 +180,7 @@ export default function AdminCoursesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {loading ? (
-                 Array.from({ length: 4 }).map((_, index) => (
-                  <TableRow key={index}>
-                    <TableCell><Skeleton className="h-4 w-[250px]" /></TableCell>
-                    <TableCell><Skeleton className="h-6 w-[80px]" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-[50px]" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
-                    <TableCell><Skeleton className="h-8 w-8" /></TableCell>
-                  </TableRow>
-                ))
-              ) : error ? (
-                <TableRow>
-                  <TableCell colSpan={5}>
-                     <Alert variant="destructive">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertTitle>Error</AlertTitle>
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  </TableCell>
-                </TableRow>
-              ) : Array.isArray(courses) && courses.length > 0 ? (
+              {Array.isArray(courses) && courses.length > 0 ? (
                 courses.map((course) => (
                   <TableRow key={course.id}>
                     <TableCell className="font-medium">{course.title}</TableCell>
@@ -219,6 +248,99 @@ export default function AdminCoursesPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Cards Mobile - Estilo Netflix */}
+      <div className="lg:hidden space-y-3">
+        {Array.isArray(courses) && courses.length > 0 ? (
+          courses.map((course) => (
+            <Collapsible 
+              key={course.id} 
+              open={expandedCourse === course.id}
+              onOpenChange={() => toggleExpanded(course.id)}
+            >
+              <Card className="overflow-hidden border-0 shadow-sm bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+                <CollapsibleTrigger asChild>
+                  <CardContent className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">
+                          {course.title}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge 
+                            className={`text-xs px-2 py-1 border ${getStatusColor(course.status)}`}
+                          >
+                            {course.status}
+                          </Badge>
+                          <span className="text-xs text-gray-500">
+                            {course.lessons} lessons
+                          </span>
+                        </div>
+                      </div>
+                      <div className="ml-3 flex-shrink-0">
+                        {expandedCourse === course.id ? (
+                          <ChevronDown className="h-5 w-5 text-gray-400" />
+                        ) : (
+                          <ChevronRight className="h-5 w-5 text-gray-400" />
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </CollapsibleTrigger>
+                
+                <CollapsibleContent>
+                  <div className="px-4 pb-4 space-y-3">
+                    <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                      <p className="text-xs text-gray-500 mb-3">
+                        Created: {course.createdAt}
+                      </p>
+                      <div className="flex gap-2">
+                        <Button asChild size="sm" variant="outline" className="flex-1">
+                          <Link href={`/admin/courses/${course.id}`}>
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Link>
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button size="sm" variant="destructive" className="flex-1">
+                              <Trash2 className="h-3 w-3 mr-1" />
+                              Delete
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the course, all its lessons, and associated media from storage.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                className="bg-destructive hover:bg-destructive/90"
+                                onClick={() => deleteCourseAndSubcollections(course.id)}
+                              >
+                                Delete Course
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+          ))
+        ) : (
+          <Card>
+            <CardContent className="p-6 text-center">
+              <p className="text-muted-foreground">No courses found. Get started by creating one.</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

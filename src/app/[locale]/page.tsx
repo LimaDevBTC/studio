@@ -3,6 +3,7 @@
 import {useTranslations} from 'next-intl';
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/Logo";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, ShieldCheck, BarChart, Users, CheckCircle, ArrowRight, Clock, Users as UsersIcon, Mail, Globe, Phone, UserCheck, Shield, Brain, TrendingUp, GraduationCap, Lock } from "lucide-react";
@@ -225,7 +226,7 @@ function CoursesSection() {
                       );
                     } else if (displayData.status === 'Waitlist') {
                       return (
-                        <Button asChild size="sm" className="bg-[#F7931A] text-gray-800 hover:bg-[#F7931A]/90 font-semibold">
+                        <Button asChild size="sm">
                           <Link href="/signup">Lista de Espera</Link>
                         </Button>
                       );
@@ -292,16 +293,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-background">
       <header className="px-4 lg:px-6 h-20 lg:h-24 flex items-center justify-between relative z-50">
         <div className="flex-shrink-0">
-          <Image 
-            src="/images/logo.png"
-            alt="MQMCrypto Logo"
-            width={4000}
-            height={2250}
-            className="h-16 w-auto lg:h-32"
-            priority
-            quality={100}
-            unoptimized
-          />
+          <Logo />
         </div>
         <nav className="ml-auto flex gap-2 sm:gap-4 lg:gap-6 items-center relative z-50">
           <AuthStatus />

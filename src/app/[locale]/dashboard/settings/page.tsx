@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, KeyRound, ShieldAlert, Palette, Languages, Bell } from "lucide-react";
+import { Loader2, ArrowLeft, KeyRound, ShieldAlert } from "lucide-react";
 import { sendPasswordResetEmail, deleteUser } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
@@ -23,10 +23,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { LocaleSwitcher } from "@/components/LocaleSwitcher";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+
+
+
 
 
 export default function SettingsPage() {
@@ -101,44 +100,9 @@ export default function SettingsPage() {
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
 
-       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Palette className="h-5 w-5"/> {t('appearance.title')}</CardTitle>
-          <CardDescription>{t('appearance.description')}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                    <Label className="font-semibold">{t('appearance.theme.label')}</Label>
-                    <p className="text-sm text-muted-foreground">{t('appearance.theme.description')}</p>
-                </div>
-                <ThemeToggle />
-            </div>
-             <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                    <Label className="font-semibold">{t('appearance.language.label')}</Label>
-                    <p className="text-sm text-muted-foreground">{t('appearance.language.description')}</p>
-                </div>
-                <LocaleSwitcher />
-            </div>
-        </CardContent>
-      </Card>
+
       
-       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Bell className="h-5 w-5"/> {t('notifications.title')}</CardTitle>
-          <CardDescription>{t('notifications.description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div>
-                    <Label htmlFor="push-notifications" className="font-semibold">{t('notifications.push.label')}</Label>
-                    <p className="text-sm text-muted-foreground">{t('notifications.push.description')}</p>
-                </div>
-                <Switch id="push-notifications" />
-            </div>
-        </CardContent>
-      </Card>
+
 
       <Card>
         <CardHeader>

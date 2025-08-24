@@ -45,10 +45,13 @@ export function WaitlistButton({ courseId, courseTitle, coursePrice }: WaitlistB
     setIsLoading(true);
 
     try {
+      console.log('🔄 Iniciando processo de inscrição na lista de espera...');
+      
       // Adicionar à subcoleção waitlist do curso
       const waitlistRef = doc(collection(db, `courses/${courseId}/waitlist`), user.uid);
+      console.log('📝 Salvando na subcoleção do curso:', `courses/${courseId}/waitlist`);
       
-      await setDoc(waitlistRef, {
+      const courseWaitlistData = {
         userId: user.uid,
         userEmail: user.email,
         userName: user.displayName || user.email,
@@ -57,12 +60,16 @@ export function WaitlistButton({ courseId, courseTitle, coursePrice }: WaitlistB
         coursePrice,
         joinedAt: serverTimestamp(),
         status: 'active'
-      });
+      };
+      
+      await setDoc(waitlistRef, courseWaitlistData);
+      console.log('✅ Salvo na subcoleção do curso com sucesso');
 
       // Adicionar à coleção global waitlist para relatórios
       const globalWaitlistRef = doc(collection(db, 'waitlist'));
+      console.log('📝 Salvando na coleção global waitlist');
       
-      await setDoc(globalWaitlistRef, {
+      const globalWaitlistData = {
         userId: user.uid,
         userEmail: user.email,
         userName: user.displayName || user.email,
@@ -71,7 +78,10 @@ export function WaitlistButton({ courseId, courseTitle, coursePrice }: WaitlistB
         coursePrice,
         joinedAt: serverTimestamp(),
         status: 'active'
-      });
+      };
+      
+      await setDoc(globalWaitlistRef, globalWaitlistData);
+      console.log('✅ Salvo na coleção global com sucesso');
 
       setIsSuccess(true);
       

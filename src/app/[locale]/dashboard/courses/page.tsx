@@ -10,7 +10,7 @@ import Image from "next/image";
 import { Link } from '@/navigation';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
-import { Sparkles, CheckCircle } from "lucide-react";
+import { Sparkles, CheckCircle, Clock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from 'next-intl';
@@ -22,6 +22,7 @@ interface Course {
   imageUrl: string;
   aiHint: string;
   price: number;
+  status: string;
   progress?: number;
   totalLessons?: number;
 }
@@ -32,72 +33,108 @@ export default function MyCoursesPage() {
   const [loading, setLoading] = useState(true);
   const { user, userData, loading: authLoading } = useAuth();
 
-  const userPlan = userData?.plan;
-  const hasPaidPlan = userPlan && userPlan !== "Free Trial";
+  // Lógica de acesso será controlada pelo hook useCourseAccess
 
   useEffect(() => {
-    const fetchCoursesWithProgress = async () => {
+    const fetchUserCourses = async () => {
       if (!user) {
         setLoading(false);
         return;
       }
       setLoading(true);
       try {
-        const coursesCollection = collection(db, "courses");
-        let q;
-
-        if (hasPaidPlan || userData?.isAdmin) {
-          q = query(coursesCollection, where("status", "==", "Published"));
-        } else {
-          q = query(coursesCollection, where("status", "==", "Published"), where("price", "==", 0));
+        // IMPORTANTE: Buscar apenas cursos que o usuário TEM ACESSO
+        // 1. Cursos comprados individualmente
+        const userAccessQuery = query(
+          collection(db, "userCourseAccess"), 
+          where("userId", "==", user.uid), 
+          where("status", "==", "active")
+        );
+        const userAccessSnapshot = await getDocs(userAccessQuery);
+        const userCourseIds = userAccessSnapshot.docs.map(doc => doc.data().courseId);
+        
+        // 2. Verificar se tem assinatura ativa (dá acesso a todos os cursos)
+        let hasActiveSubscription = false;
+        if (userData?.plan && userData.plan !== 'Free Trial') {
+          // Verificar se a assinatura não expirou
+          const now = new Date();
+          const subscriptionEnd = userData.subscriptionEnd?.toDate?.() || new Date(0);
+          hasActiveSubscription = subscriptionEnd > now;
         }
         
-        const courseSnapshot = await getDocs(q);
-        const coursesListPromises = courseSnapshot.docs.map(async (courseDoc) => {
-          const courseData = courseDoc.data();
+        // 3. Se tem assinatura ativa, buscar todos os cursos disponíveis
+        // Se não tem, buscar apenas os cursos comprados individualmente
+        let coursesToFetch = userCourseIds;
+        
+        if (hasActiveSubscription) {
+          // Buscar todos os cursos Published e Waitlist
+          const allCoursesQuery = query(
+            collection(db, "courses"),
+            where("status", "in", ["Published", "Waitlist"])
+          );
+          const allCoursesSnapshot = await getDocs(allCoursesQuery);
+          coursesToFetch = allCoursesSnapshot.docs.map(doc => doc.id);
+        }
+        
+        // 4. Buscar dados dos cursos acessíveis
+        const coursesListPromises = coursesToFetch.map(async (courseId) => {
+          const courseRef = doc(db, "courses", courseId);
+          const courseSnap = await getDoc(courseRef);
           
-          const lessonsCollectionRef = collection(db, "courses", courseDoc.id, "lessons");
+          if (!courseSnap.exists()) return null;
+          
+          const courseData = courseSnap.data();
+          
+          // Buscar progresso do usuário neste curso
+          const progressRef = doc(db, "users", user.uid, "courseProgress", courseId);
+          const progressSnap = await getDoc(progressRef);
+          
+          // Contar total de aulas
+          const lessonsCollectionRef = collection(db, "courses", courseId, "lessons");
           const lessonsSnap = await getDocs(lessonsCollectionRef);
           const totalLessons = lessonsSnap.size;
-
-          const progressRef = doc(db, "users", user.uid, "courseProgress", courseDoc.id);
-          const progressSnap = await getDoc(progressRef);
           
           let progressPercentage = 0;
           if (progressSnap.exists()) {
-              const progressData = progressSnap.data();
-              const completedLessons = progressData.completedLessons?.length || 0;
-              if (totalLessons > 0) {
-                  progressPercentage = Math.round((completedLessons / totalLessons) * 100);
-              }
+            const progressData = progressSnap.data();
+            const completedLessons = progressData.completedLessons?.length || 0;
+            if (totalLessons > 0) {
+              progressPercentage = Math.round((completedLessons / totalLessons) * 100);
+            }
           }
-
+          
           return {
-            id: courseDoc.id,
+            id: courseId,
             title: courseData.title || "Untitled Course",
             description: courseData.description || "No description available.",
             imageUrl: courseData.imageUrl || "https://placehold.co/600x400.png",
             aiHint: courseData.aiHint || "abstract",
             price: courseData.price || 0,
+            status: courseData.status || "Draft",
             progress: progressPercentage,
             totalLessons: totalLessons
           };
         });
-
+        
         const coursesList = await Promise.all(coursesListPromises);
-        setCourses(coursesList);
-
+        const validCourses = coursesList.filter(course => course !== null) as Course[];
+        
+        // DEBUG: Log dos cursos encontrados
+        console.log('🔍 === CURSOS DO USUÁRIO ===');
+        console.log('📊 Total de cursos acessíveis:', validCourses.length);
+        console.log('👤 Usuário tem assinatura ativa?', hasActiveSubscription);
+        console.log('🎯 IDs dos cursos:', coursesToFetch);
+        
+        setCourses(validCourses);
       } catch (error) {
-        console.error("Error fetching courses: ", error);
+        console.error("Erro ao buscar cursos do usuário:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    if (!authLoading) {
-      fetchCoursesWithProgress();
-    }
-  }, [user, userPlan, hasPaidPlan, authLoading, userData?.isAdmin]);
+    fetchUserCourses();
+  }, [user, userData]);
 
   const getButtonText = (progress?: number) => {
     if (progress === undefined || progress === 0) return "Iniciar Curso";
@@ -112,10 +149,15 @@ export default function MyCoursesPage() {
       <div>
                     <h1 className="text-3xl font-bold">{t('navMyCourses')}</h1>
         <p className="text-muted-foreground">{t('coursesDescription')}</p>
+        
+        {/* DEBUG: Mostrar quantidade de cursos */}
+        <div className="mt-2 p-2 bg-muted/50 rounded text-sm">
+          <span className="font-medium">DEBUG:</span> {courses.length} cursos carregados
+        </div>
       </div>
 
       {isLoading ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 3 }).map((_, index) => (
             <Card key={index} className="flex flex-col">
               <CardHeader className='p-0'>
@@ -134,7 +176,7 @@ export default function MyCoursesPage() {
           ))}
         </div>
       ) : courses.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {courses.map(course => (
               <Card key={course.id} className="flex flex-col overflow-hidden">
                 <CardHeader className='p-0 relative'>
@@ -144,6 +186,7 @@ export default function MyCoursesPage() {
                         Concluído!
                      </Badge>
                    )}
+
                   <Image src={course.imageUrl} data-ai-hint={course.aiHint} alt={course.title} width={600} height={400} className="rounded-t-lg aspect-video object-cover" />
                 </CardHeader>
                 <CardContent className="flex-1 pt-6">
@@ -160,9 +203,16 @@ export default function MyCoursesPage() {
                    )}
                 </CardContent>
                 <CardFooter>
-                  <Button asChild className="w-full">
-                    <Link href={`/dashboard/courses/${course.id}`}>{getButtonText(course.progress)}</Link>
-                  </Button>
+                  {course.status === "Waitlist" ? (
+                    <Button className="w-full">
+                      <Clock className="mr-2 h-4 w-4" />
+                      Lista de Espera
+                    </Button>
+                  ) : (
+                    <Button asChild className="w-full">
+                      <Link href={`/dashboard/courses/${course.id}`}>{getButtonText(course.progress)}</Link>
+                    </Button>
+                  )}
                 </CardFooter>
               </Card>
             ))}

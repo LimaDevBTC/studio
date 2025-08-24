@@ -52,8 +52,40 @@
 @layer base {
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
+  
+  html {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    position: relative;
+  }
+  
+  /* Prevenir layout shift */
+  #__next {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+  
+  /* Controle de viewport para admin */
+  .admin-layout {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+  
+  /* Controle de viewport para dashboard */
+  .dashboard-layout {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 }

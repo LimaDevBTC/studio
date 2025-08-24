@@ -16,24 +16,21 @@ import {
   Settings, 
   Shield, 
   Globe, 
-  Moon, 
-  Sun, 
   Camera,
   Save,
   Edit,
   Eye,
-  EyeOff,
-  Bell
+  EyeOff
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useTheme } from "next-themes";
+
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 
 export default function AccountPage() {
   const t = useTranslations('AccountPage');
   const { user, userData } = useAuth();
   const { subscriptionStatus } = useSubscriptionStatus();
-  const { theme, setTheme } = useTheme();
+
   const { toast } = useToast();
   
   // Debug: verificar se as traduções estão sendo carregadas
@@ -286,53 +283,9 @@ export default function AccountPage() {
                 <LocaleSwitcher />
               </div>
 
-              <Separator />
 
-              {/* Tema */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-                  {t('settings.theme')}
-                </Label>
-                <div className="flex gap-2">
-                  <Button
-                    variant={theme === 'light' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setTheme('light')}
-                  >
-                    <Sun className="h-4 w-4 mr-2" />
-                    {t('settings.light')}
-                  </Button>
-                  <Button
-                    variant={theme === 'dark' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setTheme('dark')}
-                  >
-                    <Moon className="h-4 w-4 mr-2" />
-                    {t('settings.dark')}
-                  </Button>
-                </div>
-              </div>
 
-              <Separator />
 
-              {/* Notificações */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Bell className="h-4 w-4" />
-                  {t('settings.notifications')}
-                </Label>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">{t('settings.email')}</span>
-                    <Badge variant="secondary">Ativo</Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">{t('settings.push')}</span>
-                    <Badge variant="outline">Inativo</Badge>
-                  </div>
-                </div>
-              </div>
 
             </CardContent>
           </Card>
