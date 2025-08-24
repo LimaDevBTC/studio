@@ -31,7 +31,9 @@ export const pathnames = {
   '/admin/courses/[courseId]': '/admin/courses/[courseId]',
   '/admin/users': '/admin/users',
   '/admin/live': '/admin/live',
-  '/admin/consultations': '/admin/consultations'
+  '/admin/consultations': '/admin/consultations',
+  '/admin/payments': '/admin/payments',
+  '/admin/waitlist': '/admin/waitlist'
 } satisfies Pathnames<typeof locales>;
 
 // Use the default: `always`

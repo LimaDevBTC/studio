@@ -28,7 +28,7 @@ export default function SignupPage() {
 
   // Redirecionar usuários já autenticados
   useEffect(() => {
-    console.log('🔍 DEBUG SIGNUP - user:', user, 'authLoading:', authLoading);
+
     if (user && !authLoading) {
       console.log('🔄 Usuário já autenticado, redirecionando para dashboard...');
       // Usar window.location para evitar problemas de roteamento

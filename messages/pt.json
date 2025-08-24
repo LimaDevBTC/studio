@@ -615,5 +615,30 @@
     "finished": "Finalizada",
     "viewRecording": "Ver Gravação",
     "completedAt": "Realizada em"
+  },
+  "AdminPayments": {
+    "title": "Pagamentos",
+    "description": "Gerenciar e aprovar pagamentos em criptomoedas",
+    "searchPlaceholder": "Buscar por usuário, curso ou plano...",
+    "filterAll": "Todos",
+    "filterPending": "Pendentes",
+    "filterApproved": "Aprovados",
+    "filterRejected": "Rejeitados",
+    "filterAllNetworks": "Todas as redes",
+    "filterAllTypes": "Todos os tipos",
+    "viewDetails": "Ver Detalhes",
+    "approvePayment": "Aprovar Pagamento",
+    "rejectPayment": "Rejeitar Pagamento",
+    "processing": "Processando...",
+    "paymentApproved": "Pagamento aprovado com sucesso!",
+    "paymentRejected": "Pagamento rejeitado com sucesso!",
+    "errorProcessing": "Erro ao processar pagamento",
+    "refreshData": "Atualizar Dados",
+    "noNotifications": "Nenhuma notificação de pagamento encontrada.",
+    "statsTotal": "Total",
+    "statsPending": "Pendentes",
+    "statsApproved": "Aprovados",
+    "statsRejected": "Rejeitados",
+    "statsAmount": "Valor Total"
   }
 }

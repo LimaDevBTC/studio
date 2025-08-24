@@ -48,14 +48,8 @@ export default function UserSelector({ selectedUsers, onUsersChange, maxUsers = 
                     };
                 }) as User[];
                 
-                // Filtrar apenas usuários não-admin (com debug)
-                const nonAdminUsers = users.filter(user => {
-                    const isNotAdmin = !user.isAdmin;
-                    console.log(`🔍 UserSelector: ${user.email} - isAdmin: ${user.isAdmin}, incluído: ${isNotAdmin}`);
-                    return isNotAdmin;
-                });
-                
-                console.log(`🔍 UserSelector: ${nonAdminUsers.length} usuários não-admin encontrados`);
+                // Filtrar apenas usuários não-admin
+                const nonAdminUsers = users.filter(user => !user.isAdmin);
                 setAllUsers(nonAdminUsers);
             } catch (error) {
                 console.error("❌ UserSelector: Erro ao buscar usuários:", error);
@@ -122,12 +116,7 @@ export default function UserSelector({ selectedUsers, onUsersChange, maxUsers = 
         <div className="space-y-3">
             <Label>Usuários Permitidos</Label>
             
-            {/* Informações de debug */}
-            <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-                <div>Total de usuários: {allUsers.length}</div>
-                <div>Usuários selecionados: {selectedUsers.length}</div>
-                {maxUsers && <div>Máximo permitido: {maxUsers}</div>}
-            </div>
+
 
             {/* Usuários selecionados */}
             {selectedUsers.length > 0 && (

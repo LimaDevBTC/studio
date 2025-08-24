@@ -553,5 +553,30 @@
     "finished": "Finished",
     "viewRecording": "View Recording",
     "completedAt": "Completed at"
+  },
+  "AdminPayments": {
+    "title": "Payments",
+    "description": "Manage and approve cryptocurrency payments",
+    "searchPlaceholder": "Search by user, course or plan...",
+    "filterAll": "All",
+    "filterPending": "Pending",
+    "filterApproved": "Approved",
+    "filterRejected": "Rejected",
+    "filterAllNetworks": "All networks",
+    "filterAllTypes": "All types",
+    "viewDetails": "View Details",
+    "approvePayment": "Approve Payment",
+    "rejectPayment": "Reject Payment",
+    "processing": "Processing...",
+    "paymentApproved": "Payment approved successfully!",
+    "paymentRejected": "Payment rejected successfully!",
+    "errorProcessing": "Error processing payment",
+    "refreshData": "Refresh Data",
+    "noNotifications": "No payment notifications found.",
+    "statsTotal": "Total",
+    "statsPending": "Pending",
+    "statsApproved": "Approved",
+    "statsRejected": "Rejected",
+    "statsAmount": "Total Amount"
   }
 }

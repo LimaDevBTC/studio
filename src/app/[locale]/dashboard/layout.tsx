@@ -77,13 +77,7 @@ export default function DashboardLayout({
 
   const isAdmin = userData?.isAdmin === true;
 
-  // Debug logs
-  console.log('🔍 Dashboard Layout Debug:', {
-    userEmail: user?.email,
-    isAdmin: isAdmin,
-    userData: userData,
-    pathname: pathname
-  });
+
 
   return (
     <div className="dashboard-layout min-h-screen w-full bg-background">

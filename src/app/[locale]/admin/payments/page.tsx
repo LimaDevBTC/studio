@@ -9,47 +9,46 @@ import { useToast } from "@/hooks/use-toast";
 import { 
   DollarSign, 
   Users, 
-  BookOpen, 
   TrendingUp,
   RefreshCw,
   AlertCircle,
   Clock,
-  BookCopy
+  Search,
+  Filter,
+  Eye
 } from "lucide-react";
+import AdminNotifications from "@/components/AdminNotifications";
+import { useTranslations } from "next-intl";
 
-
-interface DashboardStats {
+interface PaymentStats {
   totalRevenue: number;
   totalUsers: number;
-  totalCourses: number;
   activeSubscriptions: number;
   pendingPayments: number;
 }
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState<DashboardStats>({
+export default function AdminPaymentsPage() {
+  const [stats, setStats] = useState<PaymentStats>({
     totalRevenue: 0,
     totalUsers: 0,
-    totalCourses: 0,
     activeSubscriptions: 0,
     pendingPayments: 0,
   });
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const t = useTranslations("AdminPayments");
 
-  const fetchDashboardStats = async () => {
+  const fetchPaymentStats = async () => {
     try {
       const statsPromises = [
         getDocs(query(collection(db, "adminNotifications"), where("status", "==", "approved"))),
         getDocs(collection(db, "users")),
-        getDocs(collection(db, "courses")),
         getDocs(query(collection(db, "adminNotifications"), where("status", "==", "pending")))
       ];
 
       const [
         revenueSnapshot,
         usersSnapshot,
-        coursesSnapshot,
         pendingSnapshot
       ] = await Promise.all(statsPromises);
 
@@ -75,7 +74,6 @@ export default function AdminDashboard() {
       setStats({
         totalRevenue,
         totalUsers: usersSnapshot.size,
-        totalCourses: coursesSnapshot.size,
         activeSubscriptions,
         pendingPayments: pendingSnapshot.size,
       });
@@ -87,33 +85,27 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchDashboardStats();
+    fetchPaymentStats();
 
     // Listeners em tempo real
     const unsubscribeTransactions = onSnapshot(
       collection(db, "adminNotifications"),
-      () => fetchDashboardStats()
+      () => fetchPaymentStats()
     );
 
     const unsubscribeUsers = onSnapshot(
       collection(db, "users"),
-      () => fetchDashboardStats()
-    );
-
-    const unsubscribeCourses = onSnapshot(
-      collection(db, "courses"),
-      () => fetchDashboardStats()
+      () => fetchPaymentStats()
     );
 
     const unsubscribeSubscriptions = onSnapshot(
       collection(db, "userSubscriptions"),
-      () => fetchDashboardStats()
+      () => fetchPaymentStats()
     );
 
     return () => {
       unsubscribeTransactions();
       unsubscribeUsers();
-      unsubscribeCourses();
       unsubscribeSubscriptions();
     };
   }, []);
@@ -127,22 +119,22 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard Administrativo</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-muted-foreground">
-            Visão geral da plataforma e gerenciamento de pagamentos
+            {t("description")}
           </p>
         </div>
         <Button 
-          onClick={fetchDashboardStats}
+          onClick={fetchPaymentStats}
           variant="outline" 
           size="sm"
         >
           <RefreshCw className="h-4 w-4 mr-2" />
-          Atualizar
+          {t("refreshData")}
         </Button>
       </div>
 
@@ -150,7 +142,7 @@ export default function AdminDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Receita Total</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("statsAmount")}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -163,7 +155,7 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Usuários</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("statsTotal")}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -176,20 +168,7 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Cursos</CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalCourses}</div>
-            <p className="text-xs text-muted-foreground">
-              Total de cursos disponíveis
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Assinaturas Ativas</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("statsApproved")}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -199,18 +178,31 @@ export default function AdminDashboard() {
             </p>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{t("statsPending")}</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.pendingPayments}</div>
+            <p className="text-xs text-muted-foreground">
+              Pagamentos pendentes
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Status da Plataforma */}
+      {/* Status dos Pagamentos */}
       <div className="grid gap-4 md:grid-cols-1">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
-              Status da Plataforma
+              Status dos Pagamentos
             </CardTitle>
             <CardDescription>
-              Visão geral do sistema e métricas de performance
+              Visão geral do sistema de pagamentos e métricas de performance
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -231,65 +223,21 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Cards de Ação Rápida */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-green-600" />
-              Gerenciar Pagamentos
-            </CardTitle>
-            <CardDescription>
-              Aprovar e gerenciar pagamentos em criptomoedas
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild className="w-full">
-              <a href="/admin/payments">
-                Acessar Sistema de Pagamentos
-              </a>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-orange-600" />
-              Lista de Espera
-            </CardTitle>
-            <CardDescription>
-              Gerenciar listas de espera e enviar emails em massa
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild className="w-full">
-              <a href="/admin/waitlist">
-                Acessar Sistema de Lista de Espera
-              </a>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookCopy className="h-5 w-5 text-blue-600" />
-              Gerenciar Cursos
-            </CardTitle>
-            <CardDescription>
-              Criar, editar e gerenciar cursos da plataforma
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild className="w-full">
-              <a href="/admin/courses">
-                Acessar Sistema de Cursos
-              </a>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Sistema de Notificações de Pagamento */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5" />
+            Sistema de Notificações de Pagamento
+          </CardTitle>
+          <CardDescription>
+            Gerenciar e aprovar pagamentos em criptomoedas
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AdminNotifications />
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -16,6 +16,8 @@ import {
   Calendar,
   Menu,
   X,
+  DollarSign,
+  Clock,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -34,15 +36,17 @@ import { useAuth } from "@/hooks/use-auth";
 import { auth } from "@/lib/firebase";
 
 const navItems = [
-    { href: "/admin/dashboard", icon: <Home className="h-4 w-4" />, label: "Dashboard" },
-    { href: "/admin/courses", icon: <BookCopy className="h-4 w-4" />, label: "Courses" },
-    { href: "/admin/users", icon: <Users className="h-4 w-4" />, label: "Users" },
-    { href: "/admin/live", icon: <Clapperboard className="h-4 w-4" />, label: "Live" },
-    { href: "/admin/consultations", icon: <Calendar className="h-4 w-4" />, label: "Consultorias" },
+    { href: "/admin/dashboard" as const, icon: <Home className="h-4 w-4" />, label: "Dashboard" },
+    { href: "/admin/payments" as const, icon: <DollarSign className="h-4 w-4" />, label: "Pagamentos" },
+    { href: "/admin/waitlist" as const, icon: <Clock className="h-4 w-4" />, label: "Lista de Espera" },
+    { href: "/admin/courses" as const, icon: <BookCopy className="h-4 w-4" />, label: "Courses" },
+    { href: "/admin/users" as const, icon: <Users className="h-4 w-4" />, label: "Users" },
+    { href: "/admin/live" as const, icon: <Clapperboard className="h-4 w-4" />, label: "Live" },
+    { href: "/admin/consultations" as const, icon: <Calendar className="h-4 w-4" />, label: "Consultorias" },
 ];
 
 const secondaryNavItems = [
-    { href: "/dashboard", icon: <Undo2 className="h-4 w-4" />, label: "Back to App" },
+    { href: "/dashboard" as const, icon: <Undo2 className="h-4 w-4" />, label: "Back to App" },
 ]
 
 export default function AdminLayout({

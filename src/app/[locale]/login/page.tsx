@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   // Redirecionar usuários já autenticados
   useEffect(() => {
-    console.log('🔍 DEBUG LOGIN - user:', user, 'authLoading:', authLoading);
+
     if (user && !authLoading) {
       console.log('🔄 Usuário já autenticado, redirecionando para dashboard...');
       // Usar window.location para evitar problemas de roteamento

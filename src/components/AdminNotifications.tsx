@@ -4,10 +4,9 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Bell, CheckCircle2, XCircle, Clock, DollarSign, Eye, Loader2, Filter, Search, Users, TrendingUp, RefreshCw } from "lucide-react";
+import { Bell, CheckCircle2, XCircle, Clock, DollarSign, Eye, Loader2, Users, TrendingUp, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { db } from "@/lib/firebase";
@@ -65,11 +64,7 @@ export default function AdminNotifications() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Filtros
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [networkFilter, setNetworkFilter] = useState<string>("all");
-  const [typeFilter, setTypeFilter] = useState<string>("all");
+
 
   // Estatísticas
   const [stats, setStats] = useState<Stats>({
@@ -162,43 +157,14 @@ export default function AdminNotifications() {
     setStats(stats);
   };
 
-  // Aplicar filtros
+  // Sem filtros - mostrar todas as notificações
   useEffect(() => {
     if (!notifications || notifications.length === 0) {
       setFilteredNotifications([]);
       return;
     }
-
-    let filtered = [...notifications];
-
-    // Filtro de busca
-    if (searchTerm && searchTerm.trim()) {
-      const term = searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(n => 
-        (n.userName && n.userName.toLowerCase().includes(term)) ||
-        (n.userEmail && n.userEmail.toLowerCase().includes(term)) ||
-        (n.courseTitle && n.courseTitle.toLowerCase().includes(term)) ||
-        (n.planName && n.planName.toLowerCase().includes(term))
-      );
-    }
-
-    // Filtro de status
-    if (statusFilter && statusFilter !== "all") {
-      filtered = filtered.filter(n => n.status === statusFilter);
-    }
-
-    // Filtro de rede
-    if (networkFilter && networkFilter !== "all") {
-      filtered = filtered.filter(n => n.network === networkFilter);
-    }
-
-    // Filtro de tipo
-    if (typeFilter && typeFilter !== "all") {
-      filtered = filtered.filter(n => n.type === typeFilter);
-    }
-
-    setFilteredNotifications(filtered);
-  }, [notifications, searchTerm, statusFilter, networkFilter, typeFilter]);
+    setFilteredNotifications(notifications);
+  }, [notifications]);
 
   const handleViewDetails = async (notification: AdminNotification) => {
     try {
@@ -408,16 +374,37 @@ export default function AdminNotifications() {
 
 
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string, compact: boolean = false) => {
+    const baseClasses = "flex items-center gap-1.5 px-2 py-1 rounded-full border";
+    
     switch (status) {
       case "pending":
-        return <Badge variant="secondary" className="flex items-center gap-1"><Clock className="h-3 w-3" /> Pendente</Badge>;
+        return (
+          <div className={`${baseClasses} bg-yellow-50 border-yellow-200 ${compact ? 'px-1.5 py-0.5' : 'px-2 py-1'}`}>
+            <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+            {!compact && <span className="text-xs font-medium text-yellow-700">Pendente</span>}
+          </div>
+        );
       case "approved":
-        return <Badge variant="default" className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Aprovado</Badge>;
+        return (
+          <div className={`${baseClasses} bg-green-50 border-green-200 ${compact ? 'px-1.5 py-0.5' : 'px-2 py-1'}`}>
+            <CheckCircle2 className="w-3 h-3 text-green-600" />
+            {!compact && <span className="text-xs font-medium text-green-700">Aprovado</span>}
+          </div>
+        );
       case "rejected":
-        return <Badge variant="destructive" className="flex items-center gap-1"><XCircle className="h-3 w-3" /> Rejeitado</Badge>;
+        return (
+          <div className={`${baseClasses} bg-red-50 border-red-200 ${compact ? 'px-1.5 py-0.5' : 'px-2 py-1'}`}>
+            <XCircle className="w-3 h-3 text-red-600" />
+            {!compact && <span className="text-xs font-medium text-red-700">Rejeitado</span>}
+          </div>
+        );
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return (
+          <div className={`${baseClasses} bg-gray-50 border-gray-200 ${compact ? 'px-1.5 py-0.5' : 'px-2 py-1'}`}>
+            {!compact && <span className="text-xs font-medium text-gray-700 capitalize">{status}</span>}
+          </div>
+        );
     }
   };
 
@@ -510,71 +497,7 @@ export default function AdminNotifications() {
         </Card>
       </div>
 
-      {/* Filtros */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            Filtros
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Buscar</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Usuário, email ou produto..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Status</label>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos os Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os Status</SelectItem>
-                  <SelectItem value="pending">Pendentes</SelectItem>
-                  <SelectItem value="approved">Aprovadas</SelectItem>
-                  <SelectItem value="rejected">Rejeitadas</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Rede</label>
-              <Select value={networkFilter} onValueChange={setNetworkFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todas as Redes" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as Redes</SelectItem>
-                  <SelectItem value="Solana">Solana</SelectItem>
-                  <SelectItem value="Bitcoin">Bitcoin</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Tipo</label>
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos os Tipos" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os Tipos</SelectItem>
-                  <SelectItem value="course">Cursos</SelectItem>
-                  <SelectItem value="subscription">Assinaturas</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+
 
       {/* Lista de Notificações */}
       <Card>
@@ -601,152 +524,190 @@ export default function AdminNotifications() {
         <CardContent>
           {!filteredNotifications || filteredNotifications.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              {searchTerm || statusFilter !== "all" || networkFilter !== "all" || typeFilter !== "all"
-                ? "Nenhuma notificação encontrada com os filtros aplicados"
-                : t("noNotifications")
-              }
+              {t("noNotifications")}
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {filteredNotifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 rounded-full">
-                      <DollarSign className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">{notification.userName || "Usuário"}</h4>
-                      <p className="text-sm text-muted-foreground">{notification.userEmail || "Email não disponível"}</p>
-                      <p className="text-sm text-muted-foreground">
-                        <span className="font-medium">
-                          {notification.type === 'subscription' ? 'Plano:' : 'Curso:'}
-                        </span> {notification.courseTitle || notification.planName || "N/A"}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-sm font-mono">
-                          {notification.amount || 0} {notification.currency || "USD"}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          ({notification.network || "N/A"})
-                        </span>
+                <Card key={notification.id} className="hover:shadow-md transition-shadow h-fit">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="p-2 bg-primary/10 rounded-full flex-shrink-0">
+                          <DollarSign className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-base truncate">
+                            {notification.userName || "Usuário"}
+                          </h4>
+                          <p className="text-sm text-muted-foreground truncate">
+                            {notification.userEmail || "Email não disponível"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        {/* Badge compacto em mobile, completo em desktop */}
+                        <div className="hidden sm:block">
+                          {getStatusBadge(notification.status, false)}
+                        </div>
+                        <div className="block sm:hidden">
+                          {getStatusBadge(notification.status, true)}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-3">
+                    {/* Informações do Produto */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          {notification.type === 'subscription' ? 'Plano' : 'Curso'}
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium text-foreground line-clamp-2">
+                        {notification.courseTitle || notification.planName || "N/A"}
+                      </p>
+                    </div>
 
-                  <div className="flex items-center gap-2">
-                    {getStatusBadge(notification.status)}
-                    
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewDetails(notification)}
-                        >
-                          <Eye className="h-4 w-4 mr-1" />
-                          {t("viewDetails")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-2xl">
-                        <DialogHeader>
-                          <DialogTitle>{t("paymentDetails")}</DialogTitle>
-                        </DialogHeader>
-                        
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <label className="text-sm font-medium text-muted-foreground">
-                                {t("user")}
-                              </label>
-                              <p className="font-medium">{notification.userName || "Usuário"}</p>
-                              <p className="text-sm text-muted-foreground">{notification.userEmail || "Email não disponível"}</p>
+                    {/* Valor e Rede */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-bold text-primary">
+                          {notification.amount || 0} {notification.currency || "USD"}
+                        </span>
+                      </div>
+                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                        {notification.network || "N/A"}
+                      </span>
+                    </div>
+
+                    {/* Data de Criação */}
+                    <div className="text-xs text-muted-foreground">
+                      {notification.createdAt?.toDate?.() 
+                        ? new Date(notification.createdAt.toDate()).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })
+                        : 'Data não disponível'
+                      }
+                    </div>
+
+                    {/* Ações */}
+                    <div className="flex gap-2 pt-2">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => handleViewDetails(notification)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            {t("viewDetails")}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>{t("paymentDetails")}</DialogTitle>
+                          </DialogHeader>
+                          
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <label className="text-sm font-medium text-muted-foreground">
+                                  {t("user")}
+                                </label>
+                                <p className="font-medium">{notification.userName || "Usuário"}</p>
+                                <p className="text-sm text-muted-foreground">{notification.userEmail || "Email não disponível"}</p>
+                              </div>
+                              <div>
+                                <label className="text-sm font-medium text-muted-foreground">
+                                  {notification.type === 'subscription' ? 'Plano' : 'Curso'}
+                                </label>
+                                <p className="font-medium">{notification.courseTitle || notification.planName || "N/A"}</p>
+                              </div>
+                              <div>
+                                <label className="text-sm font-medium text-muted-foreground">
+                                  {t("amount")}
+                                </label>
+                                <p className="font-medium">
+                                  {notification.amount || 0} {notification.currency || "USD"}
+                                </p>
+                              </div>
+                              <div>
+                                <label className="text-sm font-medium text-muted-foreground">
+                                  {t("status")}
+                                </label>
+                                {getStatusBadge(notification.status)}
+                              </div>
                             </div>
+
                             <div>
                               <label className="text-sm font-medium text-muted-foreground">
-                                {notification.type === 'subscription' ? 'Plano' : 'Curso'}
+                                Tipo de Produto
                               </label>
-                              <p className="font-medium">{notification.courseTitle || notification.planName || "N/A"}</p>
-                            </div>
-                            <div>
-                              <label className="text-sm font-medium text-muted-foreground">
-                                {t("amount")}
-                              </label>
-                              <p className="font-medium">
-                                {notification.amount || 0} {notification.currency || "USD"}
+                              <p className="font-medium capitalize">
+                                {notification.type === 'subscription' ? 'Assinatura' : 'Curso'}
                               </p>
                             </div>
+
                             <div>
                               <label className="text-sm font-medium text-muted-foreground">
-                                {t("status")}
+                                ID da Transação
                               </label>
-                              {getStatusBadge(notification.status)}
+                              <code className="block p-2 bg-muted rounded text-sm font-mono break-all">
+                                {notification.transactionId || "ID não disponível"}
+                              </code>
                             </div>
+
+                            {notification.status === "pending" && (
+                              <div className="flex flex-col sm:flex-row gap-2 pt-4">
+                                <Button
+                                  onClick={() => handleApprovePayment(notification)}
+                                  disabled={isProcessing}
+                                  className="flex-1"
+                                >
+                                  {isProcessing ? (
+                                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                  ) : (
+                                    <CheckCircle2 className="h-4 w-4 mr-2" />
+                                  )}
+                                  {t("approvePayment")}
+                                </Button>
+                                <Button
+                                  onClick={() => handleRejectPayment(notification)}
+                                  disabled={isProcessing}
+                                  variant="destructive"
+                                  className="flex-1"
+                                >
+                                  {isProcessing ? (
+                                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                  ) : (
+                                    <XCircle className="h-4 w-4 mr-2" />
+                                  )}
+                                  {t("rejectPayment")}
+                                </Button>
+                              </div>
+                            )}
+
+                            {notification.status !== "pending" && (
+                              <div className="pt-4 text-center text-sm text-muted-foreground">
+                                {notification.status === "approved" 
+                                  ? "Esta notificação já foi processada e aprovada."
+                                  : "Esta notificação já foi processada e rejeitada."
+                                }
+                              </div>
+                            )}
                           </div>
-
-                          <div>
-                            <label className="text-sm font-medium text-muted-foreground">
-                              Tipo de Produto
-                            </label>
-                            <p className="font-medium capitalize">
-                              {notification.type === 'subscription' ? 'Assinatura' : 'Curso'}
-                            </p>
-                          </div>
-
-                          <div>
-                            <label className="text-sm font-medium text-muted-foreground">
-                              ID da Transação
-                            </label>
-                            <code className="block p-2 bg-muted rounded text-sm font-mono break-all">
-                              {notification.transactionId || "ID não disponível"}
-                            </code>
-                          </div>
-
-                          {notification.status === "pending" && (
-                            <div className="flex gap-2 pt-4">
-                              <Button
-                                onClick={() => handleApprovePayment(notification)}
-                                disabled={isProcessing}
-                                className="flex-1"
-                              >
-                                {isProcessing ? (
-                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                ) : (
-                                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                                )}
-                                {t("approvePayment")}
-                              </Button>
-                              <Button
-                                onClick={() => handleRejectPayment(notification)}
-                                disabled={isProcessing}
-                                variant="destructive"
-                                className="flex-1"
-                              >
-                                {isProcessing ? (
-                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                ) : (
-                                  <XCircle className="h-4 w-4 mr-2" />
-                                )}
-                                {t("rejectPayment")}
-                              </Button>
-                            </div>
-                          )}
-
-                          {notification.status !== "pending" && (
-                            <div className="pt-4 text-center text-sm text-muted-foreground">
-                              {notification.status === "approved" 
-                                ? "Esta notificação já foi processada e aprovada."
-                                : "Esta notificação já foi processada e rejeitada."
-                              }
-                            </div>
-                          )}
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}

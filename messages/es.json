@@ -462,5 +462,30 @@
         "description": "Las contraseñas no coinciden."
       }
     }
+  },
+  "AdminPayments": {
+    "title": "Pagos",
+    "description": "Gestionar y aprobar pagos en criptomonedas",
+    "searchPlaceholder": "Buscar por usuario, curso o plan...",
+    "filterAll": "Todos",
+    "filterPending": "Pendientes",
+    "filterApproved": "Aprobados",
+    "filterRejected": "Rechazados",
+    "filterAllNetworks": "Todas las redes",
+    "filterAllTypes": "Todos los tipos",
+    "viewDetails": "Ver Detalles",
+    "approvePayment": "Aprobar Pago",
+    "rejectPayment": "Rechazar Pago",
+    "processing": "Procesando...",
+    "paymentApproved": "¡Pago aprobado exitosamente!",
+    "paymentRejected": "¡Pago rechazado exitosamente!",
+    "errorProcessing": "Error al procesar pago",
+    "refreshData": "Actualizar Datos",
+    "noNotifications": "No se encontraron notificaciones de pago.",
+    "statsTotal": "Total",
+    "statsPending": "Pendientes",
+    "statsApproved": "Aprobados",
+    "statsRejected": "Rechazados",
+    "statsAmount": "Valor Total"
   }
 }

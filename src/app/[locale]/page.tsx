@@ -13,6 +13,7 @@ import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Link } from '@/navigation';
 import { usePublicCourses } from "@/hooks/use-public-courses";
 import { useEffect } from 'react';
+import { PublicCourse } from '@/hooks/use-public-courses';
 
 
 const features = [
@@ -70,34 +71,34 @@ const coursePreviews = [
 ];
 
 function CoursesSection() {
-  const { courses, loading, error, debugInfo } = usePublicCourses();
+  const { courses, loading, error } = usePublicCourses();
   const t = useTranslations('HomePage');
 
-  // DEBUG: Mostrar informações de debug
-  console.log('🎬 CoursesSection rendered with:', {
-    courses,
-    loading,
-    error,
-    debugInfo,
-    coursesLength: courses?.length || 0
-  });
 
   // Função para garantir que os campos obrigatórios tenham valores padrão
-  const getCourseDisplayData = (course: any) => ({
-    title: course.title ?? course.name ?? 'Curso sem título',
-    description: course.description ?? course.summary ?? 'Descrição não disponível',
-    thumbnail: course.thumbnail ?? course.image ?? course.coverImage ?? course.courseImage ?? '/images/logo.png',
-    status: course.status ?? course.courseStatus ?? 'published',
-    level: course.level ?? course.courseLevel ?? 'beginner',
-    duration: course.duration ?? course.courseDuration ?? 'Não especificado',
-    waitlistCount: course.waitlistCount ?? 0
-  });
+  const getCourseDisplayData = (course: PublicCourse) => {
+    return {
+      title: course.title || 'Curso sem título',
+      description: course.description || 'Descrição não disponível',
+      thumbnail: course.thumbnail || '/images/logo.png',
+      status: course.status || 'Published',
+      level: course.level || 'Iniciante',
+      duration: course.duration || 'Não definido',
+      waitlistCount: course.waitlistCount || 0,
+      category: course.category || 'Geral'
+    };
+  };
 
   if (loading) {
     return (
       <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-muted-foreground">Carregando cursos...</p>
+        <div className="bg-muted/50 border border-border rounded-lg p-6 max-w-2xl mx-auto">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <h3 className="text-lg font-semibold mb-2">Carregando cursos...</h3>
+          <p className="text-muted-foreground">
+            Aguarde enquanto preparamos os melhores cursos para você.
+          </p>
+        </div>
       </div>
     );
   }
@@ -105,21 +106,9 @@ function CoursesSection() {
   if (error) {
     return (
       <div className="text-center py-12">
-        <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 max-w-2xl mx-auto">
-          <h3 className="text-lg font-semibold text-destructive mb-2">Erro ao carregar cursos</h3>
+        <div className="bg-muted/50 border border-border rounded-lg p-6 max-w-2xl mx-auto">
+          <h3 className="text-lg font-semibold mb-2">Erro ao carregar cursos</h3>
           <p className="text-muted-foreground mb-4">{error}</p>
-          
-          {/* DEBUG: Mostrar informações de debug em caso de erro */}
-          {debugInfo && (
-            <details className="text-left">
-              <summary className="cursor-pointer text-sm font-medium text-muted-foreground mb-2">
-                🔍 Informações de Debug (Clique para expandir)
-              </summary>
-              <pre className="bg-muted p-3 rounded text-xs overflow-auto max-h-40">
-                {JSON.stringify(debugInfo, null, 2)}
-              </pre>
-            </details>
-          )}
         </div>
       </div>
     );
@@ -133,38 +122,12 @@ function CoursesSection() {
           <p className="text-muted-foreground mb-4">
             Estamos trabalhando para disponibilizar novos cursos em breve.
           </p>
-          
-          {/* DEBUG: Mostrar informações de debug quando não há cursos */}
-          {debugInfo && (
-            <details className="text-left">
-              <summary className="cursor-pointer text-sm font-medium text-muted-foreground mb-2">
-                🔍 Informações de Debug (Clique para expandir)
-              </summary>
-              <div className="bg-muted p-3 rounded text-xs space-y-2">
-                <div><strong>Coleção vazia:</strong> {debugInfo.collectionEmpty ? 'Sim' : 'Não'}</div>
-                <div><strong>Total de documentos:</strong> {debugInfo.totalDocs || 0}</div>
-                <div><strong>Cursos processados:</strong> {debugInfo.processedCourses || 0}</div>
-                <div><strong>Cursos com status "published":</strong> {debugInfo.publishedCount || 0}</div>
-                <div><strong>Cursos com status "waitlist":</strong> {debugInfo.waitlistCount || 0}</div>
-                <div><strong>Cursos sem status:</strong> {debugInfo.withoutStatusCount || 0}</div>
-                {debugInfo.courses && (
-                  <div>
-                    <strong>Cursos encontrados:</strong>
-                    <pre className="mt-2 overflow-auto max-h-32">
-                      {JSON.stringify(debugInfo.courses, null, 2)}
-                    </pre>
-                  </div>
-                )}
-              </div>
-            </details>
-          )}
         </div>
       </div>
     );
   }
 
-  // DEBUG: Mostrar cursos que serão renderizados
-  console.log('🎯 Renderizando cursos:', courses);
+
 
   return (
     <div className="space-y-8">
@@ -207,38 +170,43 @@ function CoursesSection() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-4 pt-0 flex-1 flex flex-col">
-                <CardDescription className="mb-4 flex-1">
+              <CardContent className="flex-1 p-4 pt-0">
+                <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
                   {displayData.description}
-                </CardDescription>
-                <div className="flex justify-center mt-auto">
-                  {/* CTA INTELIGENTE BASEADO NO STATUS */}
-                  {(() => {
-                    console.log(`🔍 DEBUG CTA - Curso: ${displayData.title}, Status: ${displayData.status}, Tipo: ${typeof displayData.status}`);
-                    
-                    if (displayData.status === 'Published') {
-                      return (
-                        <Button asChild size="sm" className="bg-[#F7931A] text-gray-800 hover:bg-[#F7931A]/90 font-semibold">
-                          <Link href="/login">
-                            Ver Curso
-                          </Link>
-                        </Button>
-                      );
-                    } else if (displayData.status === 'Waitlist') {
-                      return (
-                        <Button asChild size="sm">
-                          <Link href="/signup">Lista de Espera</Link>
-                        </Button>
-                      );
-                    } else {
-                      return (
-                        <Button asChild size="sm" className="bg-[#F7931A] text-gray-800 hover:bg-[#F7931A]/90 font-semibold" disabled>
-                          Em Breve
-                        </Button>
-                      );
-                    }
-                  })()}
-                </div>
+                </p>
+                
+                {/* CTA INTELIGENTE BASEADO NO STATUS */}
+                {(() => {
+                  
+                  if (displayData.status === 'Published') {
+                    return (
+                      <Button asChild className="w-full">
+                        <Link href="/dashboard">
+                          Começar Agora
+                        </Link>
+                      </Button>
+                    );
+                  }
+                  
+                  if (displayData.status === 'Waitlist' || displayData.status === 'waitlist') {
+                    return (
+                      <Button asChild className="w-full" variant="outline">
+                        <Link href="/dashboard">
+                          Entrar na Lista de Espera
+                        </Link>
+                      </Button>
+                    );
+                  }
+                  
+                  // Status padrão
+                  return (
+                    <Button asChild className="w-full" variant="secondary">
+                      <Link href="/dashboard">
+                        Saiba Mais
+                      </Link>
+                    </Button>
+                  );
+                })()}
               </CardContent>
             </Card>
           );
@@ -252,42 +220,20 @@ export default function Home() {
   const t = useTranslations('HomePage');
   
   // Função para garantir que os campos obrigatórios tenham valores padrão
-  const getCourseDisplayData = (course: any) => ({
-    title: course.title ?? course.name ?? 'Curso sem título',
-    description: course.description ?? course.summary ?? 'Descrição não disponível',
-    thumbnail: course.thumbnail ?? course.image ?? course.coverImage ?? course.courseImage ?? '/images/logo.png',
-    status: course.status ?? course.courseStatus ?? 'published',
-    level: course.level ?? course.courseLevel ?? 'beginner',
-    duration: course.duration ?? course.courseDuration ?? 'Não especificado',
-    waitlistCount: course.waitlistCount ?? 0
-  });
+  const getCourseDisplayData = (course: PublicCourse) => {
+    return {
+      title: course.title || 'Curso sem título',
+      description: course.description || 'Descrição não disponível',
+      thumbnail: course.thumbnail || '/images/logo.png',
+      status: course.status || 'Published',
+      level: course.level || 'Iniciante',
+      duration: course.duration || 'Não definido',
+      waitlistCount: course.waitlistCount || 0,
+      category: course.category || 'Geral'
+    };
+  };
   
-  // DEBUG: Log de debug para verificar se o componente está sendo renderizado
-  useEffect(() => {
-    console.log('🏠 === HOME PAGE RENDERIZADA ===');
-    console.log('📅 Timestamp:', new Date().toISOString());
-    console.log('🌍 Locale atual:', typeof window !== 'undefined' ? window.location.pathname : 'N/A');
-  }, []);
-  
-  // DEBUG: Log dos cursos e seus status
-  const { courses, loading, error, debugInfo } = usePublicCourses();
-  
-  useEffect(() => {
-    if (courses.length > 0) {
-      console.log('🎯 === DEBUG CURSOS NA LANDING PAGE ===');
-      courses.forEach((course, index) => {
-        const displayData = getCourseDisplayData(course);
-        console.log(`📋 Curso ${index + 1}:`, {
-          id: course.id,
-          title: displayData.title,
-          status: displayData.status,
-          statusType: typeof displayData.status,
-          statusLength: displayData.status ? displayData.status.length : 'N/A',
-          hasImage: displayData.thumbnail !== '/images/logo.png'
-        });
-      });
-    }
-  }, [courses]);
+  const { courses, loading, error } = usePublicCourses();
   
   return (
     <div className="flex flex-col min-h-screen bg-background">

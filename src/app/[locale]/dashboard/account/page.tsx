@@ -33,15 +33,7 @@ export default function AccountPage() {
 
   const { toast } = useToast();
   
-  // Debug: verificar se as traduções estão sendo carregadas
-  useEffect(() => {
-    console.log('Traduções carregadas:', {
-      title: t('title'),
-      subtitle: t('subtitle'),
-      personalProfileTitle: t('personalProfile.title'),
-      personalProfileDescription: t('personalProfile.description')
-    });
-  }, [t]);
+
   
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);

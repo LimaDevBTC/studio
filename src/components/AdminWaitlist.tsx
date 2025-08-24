@@ -3,14 +3,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Mail, Users, Filter, Send, Loader2, AlertCircle, CheckCircle, XCircle, Clock, Trash2, RefreshCw } from "lucide-react";
+
+import { Mail, Users, Send, Loader2, AlertCircle, CheckCircle, XCircle, Clock, Trash2, RefreshCw } from "lucide-react";
 import { collection, getDocs, query, where, orderBy, updateDoc, doc, onSnapshot, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
@@ -43,9 +42,7 @@ export function AdminWaitlist() {
   const [waitlists, setWaitlists] = useState<CourseWaitlist[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCourse, setSelectedCourse] = useState<CourseWaitlist | null>(null);
-  const [isViewingDetails, setIsViewingDetails] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [emailTemplate, setEmailTemplate] = useState('');
   const [isSendingEmail, setIsSendingEmail] = useState(false);
@@ -118,10 +115,7 @@ export function AdminWaitlist() {
     }
   };
 
-  const handleViewDetails = (course: CourseWaitlist) => {
-    setSelectedCourse(course);
-    setIsViewingDetails(true);
-  };
+
 
   const handleStatusChange = async (entryId: string, newStatus: string) => {
     try {
@@ -261,12 +255,8 @@ export function AdminWaitlist() {
     );
   };
 
-  const filteredWaitlists = waitlists.filter(course => {
-    const matchesSearch = course.courseTitle.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || 
-      course.entries.some(entry => entry.status === statusFilter);
-    return matchesSearch && matchesStatus;
-  });
+  // Sem filtros - mostrar todas as listas de espera
+  const filteredWaitlists = waitlists;
 
   const totalLeads = waitlists.reduce((sum, course) => sum + course.count, 0);
   const activeLeads = waitlists.reduce((sum, course) => 
@@ -336,34 +326,7 @@ export function AdminWaitlist() {
         </Card>
       </div>
 
-      {/* Filtros */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground pointer-events-none" />
-              <Input
-                placeholder="Buscar por nome do curso..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filtrar por status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os Status</SelectItem>
-                <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="notified">Notificado</SelectItem>
-                <SelectItem value="converted">Convertido</SelectItem>
-                <SelectItem value="unsubscribed">Cancelado</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+
 
       {/* Lista de Cursos */}
       <div className="space-y-4">
@@ -373,10 +336,7 @@ export function AdminWaitlist() {
               <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <p className="text-lg font-medium">Nenhuma lista de espera encontrada</p>
               <p className="text-muted-foreground">
-                {searchTerm || statusFilter !== 'all' 
-                  ? 'Tente ajustar os filtros de busca'
-                  : 'Crie cursos com status "Waitlist" para começar'
-                }
+                Crie cursos com status "Waitlist" para começar
               </p>
             </CardContent>
           </Card>
@@ -393,13 +353,6 @@ export function AdminWaitlist() {
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      onClick={() => handleViewDetails(course)}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Ver Detalhes
-                    </Button>
-                    <Button
                       onClick={() => {
                         setSelectedCourse(course);
                         setIsEmailModalOpen(true);
@@ -412,18 +365,61 @@ export function AdminWaitlist() {
                   </div>
                 </div>
 
-                {/* Status dos leads */}
-                <div className="flex gap-2 flex-wrap">
-                  {course.entries.slice(0, 5).map(entry => (
-                    <Badge key={entry.id} variant="outline" className="text-xs">
-                      {entry.userName} - {getStatusBadge(entry.status)}
-                    </Badge>
-                  ))}
-                  {course.entries.length > 5 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{course.entries.length - 5} mais
-                    </Badge>
-                  )}
+                {/* Lista de Leads em Cards Responsivos */}
+                <div className="mt-4">
+                  <h4 className="text-sm font-medium text-muted-foreground mb-3">
+                    Leads na Lista de Espera ({course.entries.length})
+                  </h4>
+                  <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                    {course.entries.map(entry => (
+                      <Card key={entry.id} className="p-3 hover:shadow-md transition-shadow">
+                        <div className="space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm truncate" title={entry.userName}>
+                                {entry.userName}
+                              </p>
+                              <p className="text-xs text-muted-foreground truncate" title={entry.userEmail}>
+                                {entry.userEmail}
+                              </p>
+                            </div>
+                            <div className="flex-shrink-0">
+                              {getStatusBadge(entry.status)}
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <span>
+                              Entrou em {entry.joinedAt?.toDate?.()?.toLocaleDateString('pt-BR') || 'N/A'}
+                            </span>
+                          </div>
+                          <div className="flex gap-2 pt-2">
+                            <Select
+                              value={entry.status}
+                              onValueChange={(value: string) => handleStatusChange(entry.id, value)}
+                            >
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="active">Ativo</SelectItem>
+                                <SelectItem value="notified">Notificado</SelectItem>
+                                <SelectItem value="converted">Convertido</SelectItem>
+                                <SelectItem value="unsubscribed">Cancelado</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleRemoveFromWaitlist(entry.id)}
+                              className="h-8 px-2"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -431,70 +427,8 @@ export function AdminWaitlist() {
         )}
       </div>
 
-      {/* Modal de Detalhes */}
-      <Dialog open={isViewingDetails} onOpenChange={setIsViewingDetails}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Detalhes da Lista de Espera - {selectedCourse?.courseTitle}</DialogTitle>
-            <DialogDescription>
-              Gerencie os usuários na lista de espera deste curso
-            </DialogDescription>
-          </DialogHeader>
 
-          {selectedCourse && (
-            <div className="space-y-4">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Usuário</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Data de Entrada</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {selectedCourse.entries.map(entry => (
-                    <TableRow key={entry.id}>
-                      <TableCell className="font-medium">{entry.userName}</TableCell>
-                      <TableCell>{entry.userEmail}</TableCell>
-                      <TableCell>
-                        {entry.joinedAt?.toDate?.()?.toLocaleDateString('pt-BR') || 'N/A'}
-                      </TableCell>
-                      <TableCell>{getStatusBadge(entry.status)}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Select
-                            value={entry.status}
-                            onValueChange={(value: string) => handleStatusChange(entry.id, value)}
-                          >
-                            <SelectTrigger className="w-32">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="active">Ativo</SelectItem>
-                              <SelectItem value="notified">Notificado</SelectItem>
-                              <SelectItem value="converted">Convertido</SelectItem>
-                              <SelectItem value="unsubscribed">Cancelado</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleRemoveFromWaitlist(entry.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+
 
       {/* Modal de Email */}
       <Dialog open={isEmailModalOpen} onOpenChange={setIsEmailModalOpen}>
@@ -516,11 +450,11 @@ export function AdminWaitlist() {
 
             <div>
               <label className="text-sm font-medium">Template do Email:</label>
-              <textarea
+              <Textarea
                 value={emailTemplate}
-                onChange={(e) => setEmailTemplate(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEmailTemplate(e.target.value)}
                 placeholder="Digite o conteúdo do email aqui..."
-                className="w-full h-32 p-3 border rounded-md mt-2 resize-none"
+                className="w-full h-32 mt-2 resize-none"
               />
             </div>
 

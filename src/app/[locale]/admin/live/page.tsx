@@ -74,8 +74,7 @@ export default function AdminLivePage() {
     const createLiveSession = async () => {
         if (!user) return;
         
-        console.log("🔍 DEBUG: Criando sessão de live...");
-        console.log("🔍 DEBUG: Dados:", { title, description, externalUrl, service, scheduledAt, isPrivate });
+        
         
         setIsLoading(true);
         try {
@@ -95,10 +94,10 @@ export default function AdminLivePage() {
                 updatedAt: new Date()
             };
             
-            console.log("🔍 DEBUG: Dados preparados:", sessionData);
+    
             
             const docRef = await addDoc(collection(db, 'liveSessions'), sessionData);
-            console.log("🔍 DEBUG: Sessão criada com ID:", docRef.id);
+    
             
             toast({ title: "Sucesso!", description: "Sessão de live criada com sucesso!" });
             resetForm();

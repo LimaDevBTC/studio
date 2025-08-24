@@ -119,11 +119,7 @@ export default function MyCoursesPage() {
         const coursesList = await Promise.all(coursesListPromises);
         const validCourses = coursesList.filter(course => course !== null) as Course[];
         
-        // DEBUG: Log dos cursos encontrados
-        console.log('🔍 === CURSOS DO USUÁRIO ===');
-        console.log('📊 Total de cursos acessíveis:', validCourses.length);
-        console.log('👤 Usuário tem assinatura ativa?', hasActiveSubscription);
-        console.log('🎯 IDs dos cursos:', coursesToFetch);
+
         
         setCourses(validCourses);
       } catch (error) {
@@ -150,10 +146,7 @@ export default function MyCoursesPage() {
                     <h1 className="text-3xl font-bold">{t('navMyCourses')}</h1>
         <p className="text-muted-foreground">{t('coursesDescription')}</p>
         
-        {/* DEBUG: Mostrar quantidade de cursos */}
-        <div className="mt-2 p-2 bg-muted/50 rounded text-sm">
-          <span className="font-medium">DEBUG:</span> {courses.length} cursos carregados
-        </div>
+
       </div>
 
       {isLoading ? (
