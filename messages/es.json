@@ -487,5 +487,28 @@
     "statsApproved": "Aprobados",
     "statsRejected": "Rechazados",
     "statsAmount": "Valor Total"
+  },
+  "CryptoPayment": {
+    "title": "Comprar {type}",
+    "courseInfo": "Información del {type}",
+    "selectPayment": "Seleccionar Método de Pago",
+    "select": "Seleccionar",
+    "payWith": "Pagar con",
+    "changeMethod": "Cambiar",
+    "sendToAddress": "Enviar a la dirección:",
+    "instructionsTitle": "Instrucciones de Pago",
+    "instruction1": "Envía exactamente el monto especificado",
+    "instruction2": "Usa la red correcta para transacciones rápidas",
+    "instruction3": "Después de enviar, haz clic en 'Ya Pagué'",
+    "confirmPayment": "Ya Pagué",
+    "processing": "Procesando...",
+    "paymentSubmitted": "¡Pago Enviado!",
+    "paymentSubmittedDesc": "Tu pago ha sido registrado y está siendo procesado.",
+    "submissionError": "Error al Enviar",
+    "submissionErrorDesc": "Fallo al registrar el pago. Inténtalo de nuevo.",
+    "addressCopied": "¡Dirección Copiada!",
+    "addressCopiedDesc": "La dirección de la wallet fue copiada al portapapeles.",
+    "copyError": "Error al Copiar",
+    "copyErrorDesc": "Fallo al copiar la dirección. Inténtalo de nuevo."
   }
 }

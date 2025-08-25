@@ -640,5 +640,28 @@
     "statsApproved": "Aprovados",
     "statsRejected": "Rejeitados",
     "statsAmount": "Valor Total"
+  },
+  "CryptoPayment": {
+    "title": "Comprar {type}",
+    "courseInfo": "Informações do {type}",
+    "selectPayment": "Selecionar Método de Pagamento",
+    "select": "Selecionar",
+    "payWith": "Pagar com",
+    "changeMethod": "Alterar",
+    "sendToAddress": "Enviar para o endereço:",
+    "instructionsTitle": "Instruções de Pagamento",
+    "instruction1": "Envie exatamente o valor especificado",
+    "instruction2": "Use a rede correta para transações rápidas",
+    "instruction3": "Após o envio, clique em 'Já Paguei'",
+    "confirmPayment": "Já Paguei",
+    "processing": "Processando...",
+    "paymentSubmitted": "Pagamento Enviado!",
+    "paymentSubmittedDesc": "Seu pagamento foi registrado e está sendo processado.",
+    "submissionError": "Erro ao Enviar",
+    "submissionErrorDesc": "Falha ao registrar o pagamento. Tente novamente.",
+    "addressCopied": "Endereço Copiado!",
+    "addressCopiedDesc": "Endereço da carteira foi copiado para a área de transferência.",
+    "copyError": "Erro ao Copiar",
+    "copyErrorDesc": "Falha ao copiar o endereço. Tente novamente."
   }
 }

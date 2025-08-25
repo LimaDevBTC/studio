@@ -129,7 +129,7 @@ export default function IntelligentSubscriptionPlans({ className }: IntelligentS
         {visiblePlans.map((plan) => (
           <Card 
             key={plan.id} 
-            className={`relative transition-all hover:shadow-lg ${
+            className={`relative transition-all hover:shadow-lg flex flex-col h-full ${
               plan.popular ? 'border-[#F7931A] shadow-lg' : 'border-border'
             }`}
           >
@@ -151,7 +151,7 @@ export default function IntelligentSubscriptionPlans({ className }: IntelligentS
               </div>
             )}
 
-            <CardHeader className="text-center pb-4">
+            <CardHeader className="text-center pb-4 flex-shrink-0">
               <CardTitle className="text-2xl font-bold text-card-foreground">
                 {plan.name}
               </CardTitle>
@@ -181,8 +181,8 @@ export default function IntelligentSubscriptionPlans({ className }: IntelligentS
               </div>
             </CardHeader>
 
-            <CardContent className="space-y-4">
-              <ul className="space-y-3">
+            <CardContent className="flex-1 flex flex-col space-y-4">
+              <ul className="space-y-3 flex-1">
                 {plan.features.map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
                     <Check className="h-4 w-4 text-[#F7931A] flex-shrink-0" />
@@ -191,7 +191,7 @@ export default function IntelligentSubscriptionPlans({ className }: IntelligentS
                 ))}
               </ul>
 
-              <div className="pt-4">
+              <div className="mt-auto pt-4">
                 <CryptoPaymentModal
                   courseId={plan.id}
                   courseTitle={plan.name}

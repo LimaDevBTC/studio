@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Copy, CheckCircle2, Loader2, QrCode, Wallet } from "lucide-react";
+import { ArrowLeft, Copy, CheckCircle2, Loader2, QrCode, Wallet } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { db } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useTranslations } from "next-intl";
+import { useCurrencyConversion } from "@/hooks/use-currency-conversion";
 
 interface PaymentMethod {
   id: string;
@@ -19,32 +20,100 @@ interface PaymentMethod {
   network: string;
   address: string;
   qrCode: string;
-  icon: string;
+  icon: string; // Caminho para a imagem do logo
   description: string;
 }
 
 const PAYMENT_METHODS: PaymentMethod[] = [
   {
-    id: "usdt-solana",
-    name: "USDT",
-    symbol: "USDT",
-    network: "Solana",
-    address: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
-    qrCode: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
-    icon: "💎",
-    description: "USDT on Solana network - Fast and low fees"
+    id: "pix",
+    name: "PIX",
+    symbol: "BRL",
+    network: "PIX",
+    address: "FLAVIA MATTOS ALVES DE CARVALHO - Banco: 104 - CAIXA ECONOMICA FEDERAL",
+    qrCode: "/images/pixqrcode.jpeg",
+    icon: "/images/pix.png",
+    description: ""
   },
   {
-    id: "bitcoin",
-    name: "Bitcoin",
-    symbol: "BTC",
-    network: "Bitcoin",
-    address: "bc1qxy2kgdygjrsqtzq2n0yf4jf2j0vwpw4hqcqw8",
-    qrCode: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bc1qxy2kgdygjrsqtzq2n0yf4jf2j0vwpw4hqcqw8",
-    icon: "₿",
-    description: "Bitcoin - The original cryptocurrency"
+    id: "usdt",
+    name: "USDT",
+    symbol: "USDT",
+    network: "Multi",
+    address: "",
+    qrCode: "",
+    icon: "/images/usdt.png",
+    description: ""
+  },
+  {
+    id: "usdc",
+    name: "USDC",
+    symbol: "USDC",
+    network: "Multi",
+    address: "",
+    qrCode: "",
+    icon: "/images/usdc.png",
+    description: ""
+  },
+  {
+    id: "solana",
+    name: "Solana",
+    symbol: "SOL",
+    network: "Solana",
+    address: "9SHsC3LiGNKcG7HporwEcujwfUu29BQHtz1oy6LHqUxn",
+    qrCode: "/images/solqrcode.jpeg",
+    icon: "/images/sol.png",
+    description: ""
   }
 ];
+
+// Métodos de rede para USDT e USDC
+const NETWORK_METHODS = {
+  usdt: [
+    {
+      id: "usdt-solana",
+      name: "USDT na Solana",
+      symbol: "USDT",
+      network: "Solana",
+      address: "9SHsC3LiGNKcG7HporwEcujwfUu29BQHtz1oy6LHqUxn",
+      qrCode: "/images/solqrcode.jpeg",
+      icon: "/images/usdt.png",
+      description: ""
+    },
+    {
+      id: "usdt-ethereum",
+      name: "USDT na Ethereum",
+      symbol: "USDT",
+      network: "Ethereum",
+      address: "0xc71adf6807c3149d8b931092da44e0c5c15e4911",
+      qrCode: "/images/ethqrcode.jpeg",
+      icon: "/images/usdt.png",
+      description: ""
+    }
+  ],
+  usdc: [
+    {
+      id: "usdc-solana",
+      name: "USDC na Solana",
+      symbol: "USDC",
+      network: "Solana",
+      address: "9SHsC3LiGNKcG7HporwEcujwfUu29BQHtz1oy6LHqUxn",
+      qrCode: "/images/solqrcode.jpeg",
+      icon: "/images/usdc.png",
+      description: ""
+    },
+    {
+      id: "usdc-ethereum",
+      name: "USDC na Ethereum",
+      symbol: "USDC",
+      network: "Ethereum",
+      address: "0xc71adf6807c3149d8b931092da44e0c5c15e4911",
+      qrCode: "/images/ethqrcode.jpeg",
+      icon: "/images/usdc.png",
+      description: ""
+    }
+  ]
+};
 
 interface CryptoPaymentModalProps {
   courseId: string;
@@ -68,6 +137,8 @@ interface TransactionData {
   courseTitle?: string;
   planId?: string;
   planName?: string;
+  originalAmountUSD?: number;
+  convertedAmount?: number;
 }
 
 interface NotificationData {
@@ -85,6 +156,8 @@ interface NotificationData {
   courseTitle?: string;
   planId?: string;
   planName?: string;
+  originalAmountUSD?: number;
+  convertedAmount?: number;
 }
 
 export default function CryptoPaymentModal({
@@ -98,10 +171,12 @@ export default function CryptoPaymentModal({
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState<PaymentMethod | null>(null);
   
   const { toast } = useToast();
   const { user, userData } = useAuth();
   const t = useTranslations("CryptoPayment");
+  const { getFormattedAmount, loading: ratesLoading, error: ratesError } = useCurrencyConversion(coursePrice);
 
   const getItemType = () => {
     if (type === 'subscription') return 'Plano';
@@ -121,6 +196,22 @@ export default function CryptoPaymentModal({
     } else {
       return 'Curso completo com todas as aulas e materiais';
     }
+  };
+
+  const handleMethodSelection = (method: PaymentMethod) => {
+    if (method.network === 'Multi') {
+      // Para USDT e USDC, mostrar seleção de rede
+      setSelectedMethod(method);
+      setSelectedNetwork(null);
+    } else {
+      // Para PIX e Solana, ir direto para detalhes
+      setSelectedMethod(method);
+      setSelectedNetwork(null);
+    }
+  };
+
+  const handleNetworkSelection = (networkMethod: PaymentMethod) => {
+    setSelectedNetwork(networkMethod);
   };
 
   const handleCopyAddress = async () => {
@@ -171,14 +262,16 @@ export default function CryptoPaymentModal({
       // Criar transação no Firestore
       const transactionData: TransactionData = {
         userId: user.uid,
-        amount: coursePrice,
-        currency: selectedMethod.symbol,
-        network: selectedMethod.network,
-        paymentAddress: selectedMethod.address,
+        amount: (selectedNetwork ? selectedNetwork.id : selectedMethod.id) === 'pix' ? parseFloat(getFormattedAmount('BRL').replace('R$ ', '')) : coursePrice,
+        currency: selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol,
+        network: selectedNetwork ? selectedNetwork.network : selectedMethod.network,
+        paymentAddress: selectedNetwork ? selectedNetwork.address : selectedMethod.address,
         status: "pending",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        type: type || "course"
+        type: type || "course",
+        originalAmountUSD: coursePrice,
+        convertedAmount: (selectedNetwork ? selectedNetwork.id : selectedMethod.id) === 'pix' ? parseFloat(getFormattedAmount('BRL').replace('R$ ', '')) : coursePrice
       };
 
       // Adicionar campos específicos baseado no tipo
@@ -204,13 +297,15 @@ export default function CryptoPaymentModal({
         userId: user.uid,
         userName: user.displayName || user.email,
         userEmail: user.email || '',
-        amount: coursePrice,
-        currency: selectedMethod.symbol,
-        network: selectedMethod.network,
+        amount: (selectedNetwork ? selectedNetwork.id : selectedMethod.id) === 'pix' ? parseFloat(getFormattedAmount('BRL').replace('R$ ', '')) : coursePrice,
+        currency: selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol,
+        network: selectedNetwork ? selectedNetwork.network : selectedMethod.network,
         status: "pending",
         createdAt: serverTimestamp(),
         type: type || "course",
-        transactionId: transactionRef.id
+        transactionId: transactionRef.id,
+        originalAmountUSD: coursePrice,
+        convertedAmount: selectedMethod.id === 'pix' ? parseFloat(getFormattedAmount('BRL').replace('R$ ', '')) : coursePrice
       };
 
       // Adicionar campos específicos baseado no tipo
@@ -254,6 +349,7 @@ export default function CryptoPaymentModal({
 
   const resetModal = () => {
     setSelectedMethod(null);
+    setSelectedNetwork(null);
     setAddressCopied(false);
     setIsSubmitting(false);
   };
@@ -274,6 +370,20 @@ export default function CryptoPaymentModal({
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Indicador de carregamento das taxas */}
+          {ratesLoading && (
+            <div className="text-center py-4">
+              <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">Carregando taxas de conversão...</p>
+            </div>
+          )}
+          
+          {ratesError && (
+            <div className="text-center py-4">
+              <p className="text-sm text-orange-600">{ratesError}</p>
+            </div>
+          )}
+          
           {/* Informações do curso */}
           <Card>
             <CardHeader>
@@ -287,9 +397,9 @@ export default function CryptoPaymentModal({
                 <p className="text-muted-foreground">{getItemDescription()}</p>
                 <div className="flex items-center gap-2">
                   <span className="text-2xl font-bold text-primary">
-                    {coursePrice}
+                    ${coursePrice}
                   </span>
-                  <span className="text-muted-foreground">{t("credits")}</span>
+                  <span className="text-muted-foreground">USD</span>
                 </div>
               </div>
             </CardContent>
@@ -307,14 +417,20 @@ export default function CryptoPaymentModal({
                     <div
                       key={method.id}
                       className="flex items-center justify-between p-4 border rounded-lg hover:border-primary/50 cursor-pointer transition-colors"
-                      onClick={() => setSelectedMethod(method)}
+                      onClick={() => handleMethodSelection(method)}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">{method.icon}</span>
+                        <div className="w-12 h-12 flex-shrink-0">
+                          <img 
+                            src={method.icon} 
+                            alt={`${method.name} logo`}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
                         <div>
                           <h4 className="font-semibold">{method.name}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {method.description}
+                          <p className="text-xs text-primary font-medium">
+                            {ratesLoading ? "Carregando..." : getFormattedAmount(method.symbol as any)}
                           </p>
                         </div>
                       </div>
@@ -326,20 +442,78 @@ export default function CryptoPaymentModal({
                 </div>
               </CardContent>
             </Card>
-          ) : (
-            /* Detalhes do pagamento */
+          ) : selectedMethod && selectedMethod.network === 'Multi' && !selectedNetwork ? (
+            /* Seleção de rede para USDT e USDC */
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  {t("payWith")} {selectedMethod.name}
+                  Escolher rede para {selectedMethod.name}
                 </CardTitle>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setSelectedMethod(null)}
-                  className="absolute right-4 top-4"
+                  className="absolute left-4 top-4"
                 >
-                  {t("changeMethod")}
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Voltar
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4">
+                  {NETWORK_METHODS[selectedMethod.id as keyof typeof NETWORK_METHODS]?.map((networkMethod) => (
+                    <div
+                      key={networkMethod.id}
+                      className="flex items-center justify-between p-4 border rounded-lg hover:border-primary/50 cursor-pointer transition-colors"
+                      onClick={() => handleNetworkSelection(networkMethod)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 flex-shrink-0">
+                          <img 
+                            src={networkMethod.icon} 
+                            alt={`${networkMethod.name} logo`}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                                                <div>
+                          <h4 className="font-semibold">{networkMethod.name}</h4>
+                          <p className="text-xs text-primary font-medium">
+                            {ratesLoading ? "Carregando..." : getFormattedAmount(networkMethod.symbol as any)}
+                          </p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        Selecionar
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            /* Detalhes do pagamento */
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">
+                  {t("payWith")} {selectedNetwork ? selectedNetwork.name : selectedMethod.name}
+                </CardTitle>
+                <div className="text-sm text-muted-foreground">
+                  Valor: {ratesLoading ? "Carregando..." : getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    if (selectedNetwork) {
+                      setSelectedNetwork(null);
+                    } else {
+                      setSelectedMethod(null);
+                    }
+                  }}
+                  className="absolute left-4 top-4"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Voltar
                 </Button>
               </CardHeader>
               <CardContent>
@@ -348,8 +522,8 @@ export default function CryptoPaymentModal({
                   <div className="text-center">
                     <div className="inline-block p-4 bg-white rounded-lg">
                       <img
-                        src={selectedMethod.qrCode}
-                        alt={`QR Code for ${selectedMethod.name}`}
+                        src={selectedNetwork ? selectedNetwork.qrCode : selectedMethod.qrCode}
+                        alt={`QR Code for ${selectedNetwork ? selectedNetwork.name : selectedMethod.name}`}
                         className="w-48 h-48"
                       />
                     </div>
@@ -362,7 +536,7 @@ export default function CryptoPaymentModal({
                     </h4>
                     <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
                       <code className="flex-1 text-sm break-all">
-                        {selectedMethod.address}
+                        {selectedNetwork ? selectedNetwork.address : selectedMethod.address}
                       </code>
                       <Button
                         size="sm"
@@ -379,14 +553,31 @@ export default function CryptoPaymentModal({
                     </div>
                   </div>
 
-                  {/* Instruções */}
+                  {/* Instruções específicas por método */}
                   <div className="space-y-2 text-sm text-muted-foreground">
-                    <h4 className="font-semibold text-foreground">{t("instructionsTitle")}</h4>
-                    <ul className="space-y-1 list-disc list-inside">
-                      <li>{t("instruction1")}</li>
-                      <li>{t("instruction2")}</li>
-                      <li>{t("instruction3")}</li>
-                    </ul>
+                    <h4 className="font-semibold text-foreground">Instruções de Pagamento</h4>
+                    {(selectedNetwork ? selectedNetwork.id : selectedMethod.id) === 'pix' ? (
+                      <ul className="space-y-1 list-disc list-inside">
+                        <li>Escaneie o QR Code ou copie os dados bancários</li>
+                        <li>Transfira exatamente {getFormattedAmount('BRL')} para a conta</li>
+                        <li>Após a transferência, clique em "Já Paguei"</li>
+                        <li>Aguarde a confirmação do administrador</li>
+                      </ul>
+                    ) : (selectedNetwork ? selectedNetwork.network : selectedMethod.network) === 'Solana' ? (
+                      <ul className="space-y-1 list-disc list-inside">
+                        <li>Envie exatamente {getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)} para o endereço</li>
+                        <li>Use a rede Solana para transações rápidas e baratas</li>
+                        <li>Após o envio, clique em "Já Paguei"</li>
+                        <li>Aguarde a confirmação na blockchain</li>
+                      </ul>
+                    ) : (
+                      <ul className="space-y-1 list-disc list-inside">
+                        <li>Envie exatamente {getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)} para o endereço</li>
+                        <li>Use a rede Ethereum para transações seguras</li>
+                        <li>Após o envio, clique em "Já Paguei"</li>
+                        <li>Aguarde a confirmação na blockchain</li>
+                      </ul>
+                    )}
                   </div>
 
                   {/* Botão de confirmação */}
@@ -399,12 +590,12 @@ export default function CryptoPaymentModal({
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {t("processing")}
+                        Processando...
                       </>
                     ) : (
                       <>
                         <CheckCircle2 className="mr-2 h-4 w-4" />
-                        {t("confirmPayment")}
+                        {selectedMethod.id === 'pix' ? 'Já Paguei' : 'Já Paguei'}
                       </>
                     )}
                   </Button>

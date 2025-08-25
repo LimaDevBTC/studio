@@ -578,5 +578,28 @@
     "statsApproved": "Approved",
     "statsRejected": "Rejected",
     "statsAmount": "Total Amount"
+  },
+  "CryptoPayment": {
+    "title": "Buy {type}",
+    "courseInfo": "{type} Information",
+    "selectPayment": "Select Payment Method",
+    "select": "Select",
+    "payWith": "Pay with",
+    "changeMethod": "Change",
+    "sendToAddress": "Send to address:",
+    "instructionsTitle": "Payment Instructions",
+    "instruction1": "Send exactly the specified amount",
+    "instruction2": "Use the correct network for fast transactions",
+    "instruction3": "After sending, click 'I Paid'",
+    "confirmPayment": "I Paid",
+    "processing": "Processing...",
+    "paymentSubmitted": "Payment Submitted!",
+    "paymentSubmittedDesc": "Your payment has been registered and is being processed.",
+    "submissionError": "Submission Error",
+    "submissionErrorDesc": "Failed to register payment. Please try again.",
+    "addressCopied": "Address Copied!",
+    "addressCopiedDesc": "Wallet address was copied to clipboard.",
+    "copyError": "Copy Error",
+    "copyErrorDesc": "Failed to copy address. Please try again."
   }
 }
