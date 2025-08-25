@@ -48,6 +48,31 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const t = useTranslations('DashboardLayout');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Proteção de rota - redirecionar para login se não estiver autenticado
+  useEffect(() => {
+    if (!authLoading && !user) {
+      console.log('🚫 Usuário não autenticado, redirecionando para login...');
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
+
+  // Mostrar loading enquanto verifica autenticação
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verificando autenticação...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Se não estiver autenticado, não renderizar nada (será redirecionado)
+  if (!user) {
+    return null;
+  }
   
   const handleLogout = () => {
     auth.signOut().then(() => {

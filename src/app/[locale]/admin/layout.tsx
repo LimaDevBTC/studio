@@ -3,7 +3,7 @@
 
 import { Link, useRouter } from "@/navigation";
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Bell,
   Home,
@@ -54,9 +54,47 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, userData, loading: authLoading } = useAuth();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Proteção de rota - redirecionar para login se não estiver autenticado
+  useEffect(() => {
+    if (!authLoading && !user) {
+      console.log('🚫 Usuário não autenticado, redirecionando para login...');
+      router.push('/login');
+      return;
+    }
+
+    // Verificar se é admin
+    if (!authLoading && user && !userData?.isAdmin) {
+      console.log('🚫 Usuário não é admin, redirecionando para dashboard...');
+      router.push('/dashboard');
+      return;
+    }
+  }, [user, userData, authLoading, router]);
+
+  // Mostrar loading enquanto verifica autenticação
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Verificando permissões...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Se não estiver autenticado, não renderizar nada (será redirecionado)
+  if (!user) {
+    return null;
+  }
+
+  // Se não for admin, não renderizar nada (será redirecionado)
+  if (!userData?.isAdmin) {
+    return null;
+  }
   
   const handleLogout = () => {
     auth.signOut().then(() => {

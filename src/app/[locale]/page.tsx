@@ -182,7 +182,7 @@ function CoursesSection() {
                     if (displayData.status === 'Published') {
                       return (
                         <Button asChild className="w-full">
-                          <Link href="/dashboard">
+                          <Link href="/login">
                             Começar Agora
                           </Link>
                         </Button>
@@ -192,7 +192,7 @@ function CoursesSection() {
                     if (displayData.status === 'Waitlist' || displayData.status === 'waitlist') {
                       return (
                         <Button asChild className="w-full">
-                          <Link href="/dashboard">
+                          <Link href="/login">
                             Entrar na Lista de Espera
                           </Link>
                         </Button>
@@ -202,7 +202,7 @@ function CoursesSection() {
                     // Status padrão
                     return (
                       <Button asChild className="w-full">
-                        <Link href="/dashboard">
+                        <Link href="/login">
                           Saiba Mais
                         </Link>
                       </Button>
