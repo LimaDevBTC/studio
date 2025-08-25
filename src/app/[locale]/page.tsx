@@ -136,8 +136,8 @@ function CoursesSection() {
           const displayData = getCourseDisplayData(course);
           
           return (
-            <Card key={course.id} className="overflow-hidden flex flex-col">
-              <CardHeader className="p-0">
+            <Card key={course.id} className="overflow-hidden flex flex-col h-full">
+              <CardHeader className="p-0 flex-shrink-0">
                 <div className="aspect-video overflow-hidden border-2 border-border/30 rounded-t-lg shadow-sm">
                   {displayData.thumbnail === '/images/logo.png' ? (
                     // Logo centralizada em fundo cinza quando não há imagem
@@ -166,47 +166,49 @@ function CoursesSection() {
                 </div>
                 <div className="p-4 pb-2">
                   <div className="mb-2">
-                    <CardTitle className="text-lg">{displayData.title}</CardTitle>
+                    <CardTitle className="text-lg line-clamp-1">{displayData.title}</CardTitle>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="flex-1 p-4 pt-0">
-                <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
+              <CardContent className="flex-1 p-4 pt-0 flex flex-col">
+                <p className="text-muted-foreground text-sm line-clamp-2 mb-4 flex-1">
                   {displayData.description}
                 </p>
                 
-                {/* CTA INTELIGENTE BASEADO NO STATUS */}
-                {(() => {
-                  
-                  if (displayData.status === 'Published') {
+                {/* CTA INTELIGENTE BASEADO NO STATUS - SEMPRE NA BASE */}
+                <div className="mt-auto">
+                  {(() => {
+                    
+                    if (displayData.status === 'Published') {
+                      return (
+                        <Button asChild className="w-full">
+                          <Link href="/dashboard">
+                            Começar Agora
+                          </Link>
+                        </Button>
+                      );
+                    }
+                    
+                    if (displayData.status === 'Waitlist' || displayData.status === 'waitlist') {
+                      return (
+                        <Button asChild className="w-full">
+                          <Link href="/dashboard">
+                            Entrar na Lista de Espera
+                          </Link>
+                        </Button>
+                      );
+                    }
+                    
+                    // Status padrão
                     return (
                       <Button asChild className="w-full">
                         <Link href="/dashboard">
-                          Começar Agora
+                          Saiba Mais
                         </Link>
                       </Button>
                     );
-                  }
-                  
-                  if (displayData.status === 'Waitlist' || displayData.status === 'waitlist') {
-                    return (
-                      <Button asChild className="w-full" variant="outline">
-                        <Link href="/dashboard">
-                          Entrar na Lista de Espera
-                        </Link>
-                      </Button>
-                    );
-                  }
-                  
-                  // Status padrão
-                  return (
-                    <Button asChild className="w-full" variant="secondary">
-                      <Link href="/dashboard">
-                        Saiba Mais
-                      </Link>
-                    </Button>
-                  );
-                })()}
+                  })()}
+                </div>
               </CardContent>
             </Card>
           );
@@ -237,16 +239,18 @@ export default function Home() {
   
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="px-4 lg:px-6 h-20 lg:h-24 flex items-center justify-between relative z-50">
-        <div className="flex-shrink-0">
-          <Logo />
+      <header className="header-fixed w-full">
+        <div className="px-4 lg:px-6 h-20 lg:h-24 flex items-center justify-between relative">
+          <div className="flex-shrink-0">
+            <Logo />
+          </div>
+          <nav className="ml-auto flex gap-2 sm:gap-4 lg:gap-6 items-center relative">
+            <AuthStatus />
+          </nav>
         </div>
-        <nav className="ml-auto flex gap-2 sm:gap-4 lg:gap-6 items-center relative z-50">
-          <AuthStatus />
-        </nav>
       </header>
-      <main className="flex-1">
-        <section className="w-full py-16 md:py-20 lg:py-24 xl:py-28 -mt-[80px]">
+              <main className="flex-1 pt-20 lg:pt-4">
+          <section className="w-full py-8 md:py-12 lg:py-16 xl:py-20">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[450px_1fr] lg:gap-6 xl:grid-cols-[550px_1fr]">
               <Image
@@ -255,12 +259,12 @@ export default function Home() {
                 width="600"
                 height="600"
                 alt="MQM Crypto - Desvende o Futuro das Finanças"
-                className="mx-auto w-full h-auto max-w-[400px] lg:max-w-[600px] object-contain -mt-[0px] lg:-mt-[50px] lg:order-first"
+                className="mx-auto w-full h-auto max-w-[400px] lg:max-w-[600px] object-contain -mt-[0px] lg:mt-8 lg:order-first"
                 priority
                 quality={100}
                 unoptimized
               />
-              <div className="flex flex-col justify-center space-y-6 lg:space-y-8 -mt-[5px] lg:-mt-[170px] lg:order-last text-center lg:text-left">
+              <div className="flex flex-col justify-center space-y-6 lg:space-y-8 -mt-[5px] lg:mt-8 lg:order-last text-center lg:text-left">
                 <div className="space-y-3 lg:space-y-4">
                   <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl lg:text-5xl xl:text-6xl/none leading-tight">
                     {t('heroTitle')}

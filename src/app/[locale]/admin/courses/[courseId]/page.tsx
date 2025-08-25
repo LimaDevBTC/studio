@@ -359,22 +359,53 @@ export default function AdminCourseEditPage() {
                 <CardContent className="space-y-6">
                     <div className="grid gap-2">
                         <Label htmlFor="title">Title</Label>
-                        <Input
-                        id="title"
-                        value={course.title}
-                        onChange={(e) => setCourse({ ...course, title: e.target.value })}
-                        placeholder="e.g. Bitcoin for Beginners"
-                        />
+                        <div className="relative">
+                            <Input
+                                id="title"
+                                value={course.title}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value.length <= 60) {
+                                        setCourse({ ...course, title: value });
+                                    }
+                                }}
+                                placeholder="e.g. Bitcoin for Beginners"
+                                className={course.title && course.title.length > 50 ? "border-orange-500" : ""}
+                            />
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+                                {course.title?.length || 0}/60
+                            </div>
+                        </div>
+                        {course.title && course.title.length > 50 && (
+                            <p className="text-xs text-orange-600">Título está ficando longo. Recomendamos máximo 60 caracteres.</p>
+                        )}
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="description">Description</Label>
-                        <Textarea
-                        id="description"
-                        value={course.description}
-                        onChange={(e) => setCourse({ ...course, description: e.target.value })}
-                        placeholder="A brief summary of what this course is about."
-                        rows={5}
-                        />
+                        <div className="relative">
+                            <Textarea
+                                id="description"
+                                value={course.description}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value.length <= 120) {
+                                        setCourse({ ...course, description: value });
+                                    }
+                                }}
+                                placeholder="A brief summary of what this course is about."
+                                rows={3}
+                                className={course.description && course.description.length > 100 ? "border-orange-500" : ""}
+                            />
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+                                {course.description?.length || 0}/120
+                            </div>
+                        </div>
+                        {course.description && course.description.length > 100 && (
+                            <p className="text-xs text-orange-600">Descrição está ficando longa. Recomendamos máximo 120 caracteres.</p>
+                        )}
+                        <p className="text-xs text-muted-foreground">
+                            A descrição será truncada automaticamente nos cards para manter a consistência visual.
+                        </p>
                     </div>
                      <div className="grid gap-2">
                         <Label htmlFor="price">Price (USD)</Label>

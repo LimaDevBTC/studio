@@ -112,7 +112,7 @@ export default function AdminCoursesPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Published": return "bg-green-100 text-green-800 border-green-200";
-      case "Waitlist": return "bg-blue-100 text-blue-800 border-blue-200";
+              case "Waitlist": return "bg-gray-100 text-gray-800 border-gray-200";
       case "Draft": return "bg-gray-100 text-gray-800 border-gray-200";
       default: return "bg-gray-100 text-gray-800 border-gray-200";
     }
@@ -258,9 +258,9 @@ export default function AdminCoursesPage() {
               open={expandedCourse === course.id}
               onOpenChange={() => toggleExpanded(course.id)}
             >
-              <Card className="overflow-hidden border-0 shadow-sm bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+                              <Card className="overflow-hidden border-0 shadow-sm bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
                 <CollapsibleTrigger asChild>
-                  <CardContent className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <CardContent className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">

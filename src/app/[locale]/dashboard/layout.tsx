@@ -82,44 +82,46 @@ export default function DashboardLayout({
   return (
     <div className="dashboard-layout min-h-screen w-full bg-background">
       {/* Header Mobile com Menu Hamburger */}
-      <header className="flex h-20 sm:h-24 items-center justify-between border-b bg-card px-4 sm:px-6 lg:hidden w-full">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleMobileMenu}
-            className="p-2 h-12 w-12"
-          >
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </Button>
-          <div className="flex flex-col">
-            <Logo />
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <Link href="/dashboard/account">
-            <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
-              <Avatar className="h-9 w-9">
-                <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'user'} />
-                <AvatarFallback>{getInitials(user?.displayName)}</AvatarFallback>
-              </Avatar>
+      <header className="header-fixed lg:hidden w-full">
+        <div className="flex h-20 sm:h-24 items-center justify-between px-4 sm:px-6 w-full">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleMobileMenu}
+              className="p-2 h-12 w-12"
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </Button>
-          </Link>
+            <div className="flex flex-col">
+              <Logo />
+            </div>
+          </div>
           
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleLogout}
-            className="flex items-center gap-2"
-          >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden xs:inline">{t('logout')}</span>
-          </Button>
+          <div className="flex items-center gap-3">
+            <Link href="/dashboard/account">
+              <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0">
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={user?.photoURL || ''} alt={user?.displayName || 'user'} />
+                  <AvatarFallback>{getInitials(user?.displayName)}</AvatarFallback>
+                </Avatar>
+              </Button>
+            </Link>
+            
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden xs:inline">{t('logout')}</span>
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -190,7 +192,7 @@ export default function DashboardLayout({
       )}
 
       {/* Layout Desktop */}
-      <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr] xl:grid-cols-[300px_1fr] overflow-hidden">
+      <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr] xl:grid-cols-[300px_1fr] overflow-hidden pt-20 sm:pt-24 lg:pt-0">
         {/* Sidebar Desktop */}
         <div className="hidden border-r bg-card lg:block w-full max-w-[300px]">
           <div className="flex h-full max-h-screen flex-col gap-2">

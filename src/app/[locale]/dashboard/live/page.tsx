@@ -75,7 +75,7 @@ export default function UserLivePage() {
 
     const getStatusColor = (status: LiveStatus) => {
         switch (status) {
-            case 'scheduled': return 'bg-blue-50 text-blue-700 border-blue-200';
+            case 'scheduled': return 'bg-gray-50 text-gray-700 border-gray-200';
             case 'live': return 'bg-[#F7931A]/10 text-[#F7931A] border-[#F7931A]/20';
             case 'finished': return 'bg-gray-50 text-gray-600 border-gray-200';
         }

@@ -46,7 +46,7 @@ export default function SubscriptionStatus({ className }: SubscriptionStatusProp
   const getPlanBadgeColor = (planName: string) => {
     const plan = planName.toLowerCase();
     if (plan.includes('anual')) return "bg-[#F7931A]/10 text-[#F7931A] border-[#F7931A]/20";
-    if (plan.includes('mensal')) return "bg-blue-50 text-blue-700 border-blue-200";
+    if (plan.includes('mensal')) return "bg-gray-50 text-gray-700 border-gray-200";
     if (plan.includes('consultoria')) return "bg-purple-50 text-purple-700 border-purple-200";
     return "bg-gray-50 text-gray-700 border-gray-200";
   };
