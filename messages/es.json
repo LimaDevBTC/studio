@@ -337,7 +337,7 @@
     "title": "Comprar Curso",
     "courseInfo": "Información del Curso",
     "courseDescription": "Curso completo con todas las lecciones y materiales",
-    "credits": "créditos",
+
     "selectPayment": "Seleccionar Método de Pago",
     "select": "Seleccionar",
     "payWith": "Pagar con",
@@ -358,7 +358,38 @@
     "instruction2": "Usa la red correcta (Solana para USDT, Bitcoin para BTC)",
     "instruction3": "Haz clic en 'Ya Hice el Pago' después de completar la transferencia",
     "notificationTitle": "Nueva Confirmación de Pago",
-    "notificationMessage": "{userName} ha confirmado el pago para {courseTitle} ({amount} {currency} en {network})"
+    "notificationMessage": "{userName} ha confirmado el pago para {courseTitle} ({amount} {currency} en {network})",
+    "loading": "Cargando...",
+    "loadingRates": "Cargando tasas de conversión...",
+    "chooseNetwork": "Elegir red para {name}",
+    "back": "Volver",
+    "value": "Valor:",
+    "paymentInstructions": "Instrucciones de Pago",
+    "pixInstructions": {
+      "scanQR": "Escanee el código QR o copie los datos bancarios",
+      "transferExact": "Transfiera exactamente {amount} a la cuenta",
+      "afterTransfer": "Después de la transferencia, haga clic en \"Ya Pagué\"",
+      "waitConfirmation": "Espere la confirmación del administrador"
+    },
+    "solanaInstructions": {
+      "sendExact": "Envíe exactamente {amount} a la dirección",
+      "useSolana": "Use la red Solana para transacciones rápidas y baratas",
+      "afterSend": "Después de enviar, haga clic en \"Ya Pagué\"",
+      "waitBlockchain": "Espere la confirmación en la blockchain"
+    },
+    "ethereumInstructions": {
+      "sendExact": "Envíe exactamente {amount} a la dirección",
+      "useEthereum": "Use la red Ethereum para transacciones seguras",
+      "afterSend": "Después de enviar, haga clic en \"Ya Pagué\"",
+      "waitBlockchain": "Espere la confirmación en la blockchain"
+    },
+    "alreadyPaid": "Ya Pagué",
+    "subscriptionType": "Plan",
+    "consultationType": "Consultoría",
+    "courseType": "Curso",
+    "subscriptionDescription": "Plan de suscripción con acceso completo a todos los cursos",
+    "consultationDescription": "Sesión de consultoría personalizada de 60 minutos",
+    "courseDescription": "Curso completo con todas las lecciones y materiales"
   },
   "AdminNotifications": {
     "title": "Notificaciones de Pago",
@@ -481,34 +512,19 @@
     "paymentRejected": "¡Pago rechazado exitosamente!",
     "errorProcessing": "Error al procesar pago",
     "refreshData": "Actualizar Datos",
-    "noNotifications": "No se encontraron notificaciones de pago.",
+    "noNotifications": "No se encontraron notificações de pago.",
     "statsTotal": "Total",
     "statsPending": "Pendientes",
     "statsApproved": "Aprobados",
     "statsRejected": "Rechazados",
     "statsAmount": "Valor Total"
   },
-  "CryptoPayment": {
-    "title": "Comprar {type}",
-    "courseInfo": "Información del {type}",
-    "selectPayment": "Seleccionar Método de Pago",
-    "select": "Seleccionar",
-    "payWith": "Pagar con",
-    "changeMethod": "Cambiar",
-    "sendToAddress": "Enviar a la dirección:",
-    "instructionsTitle": "Instrucciones de Pago",
-    "instruction1": "Envía exactamente el monto especificado",
-    "instruction2": "Usa la red correcta para transacciones rápidas",
-    "instruction3": "Después de enviar, haz clic en 'Ya Pagué'",
-    "confirmPayment": "Ya Pagué",
-    "processing": "Procesando...",
-    "paymentSubmitted": "¡Pago Enviado!",
-    "paymentSubmittedDesc": "Tu pago ha sido registrado y está siendo procesado.",
-    "submissionError": "Error al Enviar",
-    "submissionErrorDesc": "Fallo al registrar el pago. Inténtalo de nuevo.",
-    "addressCopied": "¡Dirección Copiada!",
-    "addressCopiedDesc": "La dirección de la wallet fue copiada al portapapeles.",
-    "copyError": "Error al Copiar",
-    "copyErrorDesc": "Fallo al copiar la dirección. Inténtalo de nuevo."
+  "SubscriptionAlert": {
+    "expiredTitle": "Plan Expirado",
+    "expiredMessage": "Tu plan {planName} expiró el {expiryDate}. Renueva tu suscripción para continuar accediendo a todos los cursos.",
+    "renewSubscription": "Renovar Suscripción",
+    "expiringTitle": "Plan Expirando",
+    "expiringMessage": "Tu plan {planName} expira en {daysUntilExpiry} día{daysUntilExpiry > 1 ? 's' : ''}. Renueva para no perder el acceso a los cursos.",
+    "renewNow": "Renovar Ahora"
   }
 }

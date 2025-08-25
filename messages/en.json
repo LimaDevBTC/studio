@@ -353,8 +353,7 @@
   "CryptoPayment": {
     "title": "Purchase Course",
     "courseInfo": "Course Information",
-    "courseDescription": "Complete course with all lessons and materials",
-    "credits": "credits",
+
     "selectPayment": "Select Payment Method",
     "select": "Select",
     "payWith": "Pay with",
@@ -375,7 +374,38 @@
     "instruction2": "Use the correct network (Solana for USDT, Bitcoin for BTC)",
     "instruction3": "Click 'I've Made the Payment' after completing the transfer",
     "notificationTitle": "New Payment Confirmation",
-    "notificationMessage": "{userName} has confirmed payment for {courseTitle} ({amount} {currency} on {network})"
+    "notificationMessage": "{userName} has confirmed payment for {courseTitle} ({amount} {currency} on {network})",
+    "loading": "Loading...",
+    "loadingRates": "Loading conversion rates...",
+    "chooseNetwork": "Choose network for {name}",
+    "back": "Back",
+    "value": "Value:",
+    "paymentInstructions": "Payment Instructions",
+    "pixInstructions": {
+      "scanQR": "Scan the QR Code or copy the bank details",
+      "transferExact": "Transfer exactly {amount} to the account",
+      "afterTransfer": "After the transfer, click \"I Already Paid\"",
+      "waitConfirmation": "Wait for administrator confirmation"
+    },
+    "solanaInstructions": {
+      "sendExact": "Send exactly {amount} to the address",
+      "useSolana": "Use the Solana network for fast and cheap transactions",
+      "afterSend": "After sending, click \"I Already Paid\"",
+      "waitBlockchain": "Wait for blockchain confirmation"
+    },
+    "ethereumInstructions": {
+      "sendExact": "Send exactly {amount} to the address",
+      "useEthereum": "Use the Ethereum network for secure transactions",
+      "afterSend": "After sending, click \"I Already Paid\"",
+      "waitBlockchain": "Wait for blockchain confirmation"
+    },
+    "alreadyPaid": "I Already Paid",
+    "subscriptionType": "Plan",
+    "consultationType": "Consultation",
+    "courseType": "Course",
+    "subscriptionDescription": "Subscription plan with complete access to all courses",
+    "consultationDescription": "Personalized consultation session of 60 minutes",
+    "courseDescription": "Complete course with all lessons and materials"
   },
   "AdminNotifications": {
     "title": "Payment Notifications",
@@ -579,27 +609,12 @@
     "statsRejected": "Rejected",
     "statsAmount": "Total Amount"
   },
-  "CryptoPayment": {
-    "title": "Buy {type}",
-    "courseInfo": "{type} Information",
-    "selectPayment": "Select Payment Method",
-    "select": "Select",
-    "payWith": "Pay with",
-    "changeMethod": "Change",
-    "sendToAddress": "Send to address:",
-    "instructionsTitle": "Payment Instructions",
-    "instruction1": "Send exactly the specified amount",
-    "instruction2": "Use the correct network for fast transactions",
-    "instruction3": "After sending, click 'I Paid'",
-    "confirmPayment": "I Paid",
-    "processing": "Processing...",
-    "paymentSubmitted": "Payment Submitted!",
-    "paymentSubmittedDesc": "Your payment has been registered and is being processed.",
-    "submissionError": "Submission Error",
-    "submissionErrorDesc": "Failed to register payment. Please try again.",
-    "addressCopied": "Address Copied!",
-    "addressCopiedDesc": "Wallet address was copied to clipboard.",
-    "copyError": "Copy Error",
-    "copyErrorDesc": "Failed to copy address. Please try again."
+  "SubscriptionAlert": {
+    "expiredTitle": "Plan Expired",
+    "expiredMessage": "Your {planName} plan expired on {expiryDate}. Renew your subscription to continue accessing all courses.",
+    "renewSubscription": "Renew Subscription",
+    "expiringTitle": "Plan Expiring",
+    "expiringMessage": "Your {planName} plan expires in {daysUntilExpiry} day{daysUntilExpiry > 1 ? 's' : ''}. Renew to avoid losing access to courses.",
+    "renewNow": "Renew Now"
   }
 }

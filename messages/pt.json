@@ -354,7 +354,7 @@
     "title": "Comprar {type}",
     "courseInfo": "Informações do {type}",
     "courseDescription": "{type} completo com todas as aulas e materiais",
-    "credits": "créditos",
+
     "selectPayment": "Selecionar Método de Pagamento",
     "select": "Selecionar",
     "payWith": "Pagar com",
@@ -375,7 +375,38 @@
     "instruction2": "Use a rede correta (Solana para USDT, Bitcoin para BTC)",
     "instruction3": "Clique em 'Já Fiz o Pagamento' após completar a transferência",
     "notificationTitle": "Nova Confirmação de Pagamento",
-    "notificationMessage": "{userName} confirmou pagamento para {itemTitle} ({amount} {currency} na {network})"
+    "notificationMessage": "{userName} confirmou pagamento para {itemTitle} ({amount} {currency} na {network})",
+    "loading": "Carregando...",
+    "loadingRates": "Carregando taxas de conversão...",
+    "chooseNetwork": "Escolher rede para {name}",
+    "back": "Voltar",
+    "value": "Valor:",
+    "paymentInstructions": "Instruções de Pagamento",
+    "pixInstructions": {
+      "scanQR": "Escaneie o QR Code ou copie os dados bancários",
+      "transferExact": "Transfira exatamente {amount} para a conta",
+      "afterTransfer": "Após a transferência, clique em \"Já Paguei\"",
+      "waitConfirmation": "Aguarde a confirmação do administrador"
+    },
+    "solanaInstructions": {
+      "sendExact": "Envie exatamente {amount} para o endereço",
+      "useSolana": "Use a rede Solana para transações rápidas e baratas",
+      "afterSend": "Após o envio, clique em \"Já Paguei\"",
+      "waitBlockchain": "Aguarde a confirmação na blockchain"
+    },
+    "ethereumInstructions": {
+      "sendExact": "Envie exatamente {amount} para o endereço",
+      "useEthereum": "Use a rede Ethereum para transações seguras",
+      "afterSend": "Após o envio, clique em \"Já Paguei\"",
+      "waitBlockchain": "Aguarde a confirmação na blockchain"
+    },
+    "alreadyPaid": "Já Paguei",
+    "subscriptionType": "Plano",
+    "consultationType": "Consultoria",
+    "courseType": "Curso",
+    "subscriptionDescription": "Plano de assinatura com acesso completo a todos os cursos",
+    "consultationDescription": "Sessão de consultoria personalizada de 60 minutos",
+    "courseDescription": "Curso completo com todas as aulas e materiais"
   },
   "AdminNotifications": {
     "title": "Central de Notificações e Transações",
@@ -641,27 +672,12 @@
     "statsRejected": "Rejeitados",
     "statsAmount": "Valor Total"
   },
-  "CryptoPayment": {
-    "title": "Comprar {type}",
-    "courseInfo": "Informações do {type}",
-    "selectPayment": "Selecionar Método de Pagamento",
-    "select": "Selecionar",
-    "payWith": "Pagar com",
-    "changeMethod": "Alterar",
-    "sendToAddress": "Enviar para o endereço:",
-    "instructionsTitle": "Instruções de Pagamento",
-    "instruction1": "Envie exatamente o valor especificado",
-    "instruction2": "Use a rede correta para transações rápidas",
-    "instruction3": "Após o envio, clique em 'Já Paguei'",
-    "confirmPayment": "Já Paguei",
-    "processing": "Processando...",
-    "paymentSubmitted": "Pagamento Enviado!",
-    "paymentSubmittedDesc": "Seu pagamento foi registrado e está sendo processado.",
-    "submissionError": "Erro ao Enviar",
-    "submissionErrorDesc": "Falha ao registrar o pagamento. Tente novamente.",
-    "addressCopied": "Endereço Copiado!",
-    "addressCopiedDesc": "Endereço da carteira foi copiado para a área de transferência.",
-    "copyError": "Erro ao Copiar",
-    "copyErrorDesc": "Falha ao copiar o endereço. Tente novamente."
+  "SubscriptionAlert": {
+    "expiredTitle": "Plano Expirado",
+    "expiredMessage": "Seu plano {planName} expirou em {expiryDate}. Renove sua assinatura para continuar acessando todos os cursos.",
+    "renewSubscription": "Renovar Assinatura",
+    "expiringTitle": "Plano Expirando",
+    "expiringMessage": "Seu plano {planName} expira em {daysUntilExpiry} dia{daysUntilExpiry > 1 ? 's' : ''}. Renove para não perder o acesso aos cursos.",
+    "renewNow": "Renovar Agora"
   }
 }

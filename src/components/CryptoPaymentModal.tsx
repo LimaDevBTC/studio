@@ -179,9 +179,9 @@ export default function CryptoPaymentModal({
   const { getFormattedAmount, loading: ratesLoading, error: ratesError } = useCurrencyConversion(coursePrice);
 
   const getItemType = () => {
-    if (type === 'subscription') return 'Plano';
-    if (type === 'consultation') return 'Consultoria';
-    return 'Curso';
+    if (type === 'subscription') return t('subscriptionType');
+    if (type === 'consultation') return t('consultationType');
+    return t('courseType');
   };
 
   const getItemTitle = () => {
@@ -190,11 +190,11 @@ export default function CryptoPaymentModal({
 
   const getItemDescription = () => {
     if (type === 'subscription') {
-      return 'Plano de assinatura com acesso completo a todos os cursos';
+      return t('subscriptionDescription');
     } else if (type === 'consultation') {
-      return 'Sessão de consultoria personalizada de 60 minutos';
+      return t('consultationDescription');
     } else {
-      return 'Curso completo com todas as aulas e materiais';
+      return t('courseDescription');
     }
   };
 
@@ -374,7 +374,7 @@ export default function CryptoPaymentModal({
           {ratesLoading && (
             <div className="text-center py-4">
               <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">Carregando taxas de conversão...</p>
+              <p className="text-sm text-muted-foreground">{t("loadingRates")}</p>
             </div>
           )}
           
@@ -447,7 +447,7 @@ export default function CryptoPaymentModal({
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  Escolher rede para {selectedMethod.name}
+                  {t("chooseNetwork", { name: selectedMethod.name })}
                 </CardTitle>
                 <Button
                   variant="ghost"
@@ -555,7 +555,7 @@ export default function CryptoPaymentModal({
 
                   {/* Instruções específicas por método */}
                   <div className="space-y-2 text-sm text-muted-foreground">
-                    <h4 className="font-semibold text-foreground">Instruções de Pagamento</h4>
+                    <h4 className="font-semibold text-foreground">{t("paymentInstructions")}</h4>
                     {(selectedNetwork ? selectedNetwork.id : selectedMethod.id) === 'pix' ? (
                       <ul className="space-y-1 list-disc list-inside">
                         <li>Escaneie o QR Code ou copie os dados bancários</li>
@@ -590,12 +590,12 @@ export default function CryptoPaymentModal({
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Processando...
+                        {t("processing")}
                       </>
                     ) : (
                       <>
                         <CheckCircle2 className="mr-2 h-4 w-4" />
-                        {selectedMethod.id === 'pix' ? 'Já Paguei' : 'Já Paguei'}
+                        Já Paguei
                       </>
                     )}
                   </Button>

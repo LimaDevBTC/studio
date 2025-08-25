@@ -189,9 +189,9 @@ export default function CourseOverviewPage() {
                                         </p>
                                         <div className="flex items-center justify-center gap-2 mb-3">
                                             <span className="text-2xl font-bold text-primary">
-                                                {course.price}
+                                                ${course.price}
                                             </span>
-                                            <span className="text-muted-foreground">credits</span>
+                                            <span className="text-muted-foreground">USD</span>
                                         </div>
                                     </div>
                                     

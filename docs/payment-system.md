@@ -8,7 +8,7 @@ Este sistema permite que usuários comprem cursos usando criptomoedas (USDT na r
 
 ### 1. Seleção do Curso
 - Usuário navega para a página do curso
-- Vê o preço em "credits" (sistema interno de pontuação)
+- Vê o preço em dólares (USD)
 - Clica no botão "Buy Course"
 
 ### 2. Modal de Pagamento
@@ -143,7 +143,7 @@ export const PAYMENT_METHODS: PaymentMethod[] = [
 
 ### Modificar Preços
 - Os preços são definidos no campo `price` de cada curso
-- Sistema usa "credits" como unidade interna
+- Sistema usa dólares (USD) como moeda base
 - Conversão para criptomoedas é feita pelo usuário
 
 ### Alterar Endereços
