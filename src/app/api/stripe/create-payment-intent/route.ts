@@ -2,16 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 // Verificar se a chave do Stripe existe
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY não está configurada');
-}
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+let stripe: Stripe | null = null;
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-12-18.acacia',
-});
+if (stripeSecretKey) {
+  stripe = new Stripe(stripeSecretKey, {
+    apiVersion: '2024-12-18.acacia',
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar se o Stripe está configurado
+    if (!stripe) {
+      return NextResponse.json(
+        { error: 'Stripe não está configurado. Apenas pagamentos em cripto estão disponíveis.' },
+        { status: 503 }
+      );
+    }
+
     const { amount, currency, metadata } = await request.json();
 
     if (!amount || amount <= 0) {

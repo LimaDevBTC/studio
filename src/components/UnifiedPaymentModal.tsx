@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, CreditCard, Coins, Loader2 } from "lucide-react";
+import { ArrowLeft, CreditCard, Coins, Loader2, AlertCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CryptoPaymentModal from "./CryptoPaymentModal";
 import StripePaymentModal from "./StripePaymentModal";
+import { isStripeConfigured } from "@/lib/stripe";
 
 interface UnifiedPaymentModalProps {
   courseId: string;
@@ -27,6 +28,7 @@ export default function UnifiedPaymentModal({
 }: UnifiedPaymentModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations('CryptoPayment');
+  const stripeConfigured = isStripeConfigured();
 
   const handleClose = () => {
     setIsOpen(false);
@@ -96,33 +98,54 @@ export default function UnifiedPaymentModal({
                   type={type}
                 />
 
-                {/* Opção PIX e Cartão - Modal direto */}
-                <StripePaymentModal
-                  courseId={courseId}
-                  courseTitle={courseTitle}
-                  coursePrice={coursePrice}
-                  trigger={
-                    <Card className="cursor-pointer hover:border-orange-500/50 transition-colors">
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                            <CreditCard className="h-6 w-6 text-white" />
+                {/* Opção PIX e Cartão - Modal direto (apenas se Stripe configurado) */}
+                {stripeConfigured ? (
+                  <StripePaymentModal
+                    courseId={courseId}
+                    courseTitle={courseTitle}
+                    coursePrice={coursePrice}
+                    trigger={
+                      <Card className="cursor-pointer hover:border-orange-500/50 transition-colors">
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                              <CreditCard className="h-6 w-6 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-semibold">Pagar em PIX ou Cartão de Crédito</h4>
+                              <p className="text-sm text-muted-foreground">
+                                PIX instantâneo ou Visa, Mastercard, Amex
+                              </p>
+                            </div>
+                            <div className="text-orange-500">
+                              <ArrowLeft className="h-4 w-4 rotate-180" />
+                            </div>
                           </div>
-                          <div className="flex-1">
-                            <h4 className="font-semibold">Pagar em PIX ou Cartão de Crédito</h4>
-                            <p className="text-sm text-muted-foreground">
-                              PIX instantâneo ou Visa, Mastercard, Amex
-                            </p>
-                          </div>
-                          <div className="text-orange-500">
-                            <ArrowLeft className="h-4 w-4 rotate-180" />
-                          </div>
+                        </CardContent>
+                      </Card>
+                    }
+                    type={type}
+                  />
+                ) : (
+                  <Card className="opacity-50 cursor-not-allowed">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-lg bg-gray-400 flex items-center justify-center">
+                          <CreditCard className="h-6 w-6 text-white" />
                         </div>
-                      </CardContent>
-                    </Card>
-                  }
-                  type={type}
-                />
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-500">PIX e Cartão de Crédito</h4>
+                          <p className="text-sm text-gray-400">
+                            Em breve - Apenas pagamentos em cripto disponíveis
+                          </p>
+                        </div>
+                        <div className="text-gray-400">
+                          <AlertCircle className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             </div>
             
