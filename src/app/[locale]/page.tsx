@@ -209,8 +209,8 @@ function CoursesSection() {
                     {displayData.title}
                   </h3>
                   <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 text-sm line-clamp-2">
-                    {displayData.description}
-                  </p>
+                  {displayData.description}
+                </p>
                 </div>
                 
                 <div className="mt-6 space-y-4">
@@ -392,6 +392,97 @@ export default function Home() {
             }}
           />
           
+          {/* ===== CAMADAS MOBILE ===== */}
+          {/* Mobile: Camada 1: Fundação - base sólida (90% a 100%) - posicionada acima da metade da tela */}
+          <div 
+            className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center 100px',
+              backgroundSize: 'contain',
+              animation: 'buildFoundationLayerMobile 2.5s ease-out forwards'
+            }}
+          />
+          
+          {/* Mobile: Camada 2: Muralhas de base (75% a 90%) */}
+          <div 
+            className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center 100px',
+              backgroundSize: 'contain',
+              animation: 'buildBaseWallsLayerMobile 2.5s ease-out forwards 0.1s'
+            }}
+          />
+          
+          {/* Mobile: Camada 3: Muralhas laterais (55% a 75%) */}
+          <div 
+            className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center 100px',
+              backgroundSize: 'contain',
+              animation: 'buildWallsLayerMobile 2.5s ease-out forwards 0.2s'
+            }}
+          />
+          
+          {/* Mobile: Camada 4: Torres de base (40% a 55%) */}
+          <div 
+            className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center 100px',
+              backgroundSize: 'contain',
+              animation: 'buildBaseTowersLayerMobile 2.5s ease-out forwards 0.3s'
+            }}
+          />
+          
+          {/* Mobile: Camada 5: Torres laterais (20% a 40%) */}
+          <div 
+            className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center 100px',
+              backgroundSize: 'contain',
+              animation: 'buildTowersLayerMobile 2.5s ease-out forwards 0.4s'
+            }}
+          />
+          
+          {/* Mobile: Camada 6: Torre central - base (10% a 20%) */}
+          <div 
+            className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center 100px',
+              backgroundSize: 'contain',
+              animation: 'buildCentralTowerBaseLayerMobile 2.5s ease-out forwards 0.5s'
+            }}
+          />
+          
+          {/* Mobile: Camada 7: Torre central - corpo (5% a 10%) */}
+          <div 
+            className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center 100px',
+              backgroundSize: 'contain',
+              animation: 'buildCentralTowerLayerMobile 2.5s ease-out forwards 0.6s'
+            }}
+          />
+          
+          {/* Mobile: Camada 8: Detalhes arquitetônicos (2% a 5%) */}
+          <div 
+            className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center 100px',
+              backgroundSize: 'contain',
+              animation: 'buildArchitecturalDetailsLayerMobile 2.5s ease-out forwards 0.7s'
+            }}
+          />
+          
+          {/* Mobile: Camada 9: Acabamentos finais (0% a 2%) */}
+          <div 
+            className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center 100px',
+              backgroundSize: 'contain',
+              animation: 'buildFinalDetailsLayerMobile 2.5s ease-out forwards 0.8s'
+            }}
+          />
+          
           <div className="container px-4 md:px-6 relative z-20">
             <div className="grid gap-6 lg:grid-cols-[450px_1fr] lg:gap-6 xl:grid-cols-[550px_1fr]">
               <Image
@@ -402,7 +493,7 @@ export default function Home() {
                 alt="MQM Crypto - Desvende o Futuro das Finanças"
                 className="mx-auto w-full h-auto max-w-[300px] lg:max-w-[500px] object-contain -mt-[0px] lg:mt-8 lg:order-first"
                 style={{
-                  animation: 'fadeIn 0.5s ease-out 0s both'
+                  animation: 'fadeIn 0.3s ease-out 0s both'
                 }}
                 priority
                 quality={100}
@@ -411,14 +502,14 @@ export default function Home() {
               <div 
                 className="flex flex-col justify-center space-y-6 lg:space-y-8 -mt-[240px] lg:-mt-[220px] lg:order-last text-center lg:text-left lg:-ml-8"
                 style={{
-                  animation: 'fadeIn 0.5s ease-out 0.1s both'
+                  animation: 'fadeIn 0.3s ease-out 0.1s both'
                 }}
               >
                 <div className="space-y-3 lg:space-y-4">
                   <h1 
                     className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl leading-tight"
                     style={{
-                      animation: 'fadeIn 0.5s ease-out 0.2s both'
+                      animation: 'fadeIn 0.3s ease-out 0.2s both'
                     }}
                   >
                     {t('heroTitle')}

@@ -429,3 +429,180 @@
   }
 }
 
+/* ===== ANIMAÇÕES MOBILE ===== */
+/* Mobile: Camada 1: Fundação - base sólida (90% a 100%) - posicionada acima da metade da tela */
+@keyframes buildFoundationLayerMobile {
+  0% {
+    opacity: 0;
+    clip-path: polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%);
+    filter: brightness(0.2) contrast(0.3) saturate(0.2);
+  }
+  30% {
+    opacity: 0.4;
+    clip-path: polygon(0% 96%, 0% 100%, 100% 100%, 100% 96%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+  60% {
+    opacity: 0.5;
+    clip-path: polygon(0% 94%, 0% 100%, 100% 100%, 100% 94%);
+    filter: brightness(0.5) contrast(0.6) saturate(0.5);
+  }
+  100% {
+    opacity: 0.2;
+    clip-path: polygon(0% 90%, 0% 100%, 100% 100%, 100% 90%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+}
+
+/* Mobile: Camada 2: Muralhas de base (75% a 90%) */
+@keyframes buildBaseWallsLayerMobile {
+  0% {
+    opacity: 0;
+    clip-path: polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%);
+    filter: brightness(0.2) contrast(0.3) saturate(0.2);
+  }
+  50% {
+    opacity: 0.4;
+    clip-path: polygon(0% 90%, 0% 100%, 20% 100%, 20% 90%, 80% 90%, 80% 100%, 100% 100%, 100% 90%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+  100% {
+    opacity: 0.2;
+    clip-path: polygon(0% 80%, 0% 100%, 20% 100%, 20% 80%, 80% 80%, 80% 100%, 100% 100%, 100% 80%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+}
+
+/* Mobile: Camada 3: Muralhas laterais (55% a 75%) */
+@keyframes buildWallsLayerMobile {
+  0% {
+    opacity: 0;
+    clip-path: polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%);
+    filter: brightness(0.2) contrast(0.3) saturate(0.2);
+  }
+  50% {
+    opacity: 0.4;
+    clip-path: polygon(0% 80%, 0% 100%, 15% 100%, 15% 80%, 25% 80%, 25% 90%, 75% 90%, 75% 80%, 85% 80%, 85% 100%, 100% 100%, 100% 80%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+  100% {
+    opacity: 0.2;
+    clip-path: polygon(0% 60%, 0% 100%, 15% 100%, 15% 60%, 25% 60%, 25% 80%, 75% 80%, 75% 60%, 85% 60%, 85% 100%, 100% 100%, 100% 60%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+}
+
+/* Mobile: Camada 4: Torres de base (40% a 55%) */
+@keyframes buildBaseTowersLayerMobile {
+  0% {
+    opacity: 0;
+    clip-path: polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%);
+    filter: brightness(0.2) contrast(0.3) saturate(0.2);
+  }
+  50% {
+    opacity: 0.4;
+    clip-path: polygon(0% 70%, 0% 100%, 10% 100%, 10% 70%, 20% 70%, 20% 75%, 30% 75%, 30% 70%, 40% 70%, 40% 100%, 60% 100%, 60% 70%, 70% 70%, 70% 75%, 80% 75%, 80% 70%, 90% 70%, 90% 100%, 100% 100%, 100% 70%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+  100% {
+    opacity: 0.2;
+    clip-path: polygon(0% 50%, 0% 100%, 10% 100%, 10% 50%, 20% 50%, 20% 55%, 30% 55%, 30% 50%, 40% 50%, 40% 100%, 60% 100%, 60% 50%, 70% 50%, 70% 55%, 80% 55%, 80% 50%, 90% 50%, 90% 100%, 100% 100%, 100% 50%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+}
+
+/* Mobile: Camada 5: Torres laterais (20% a 40%) */
+@keyframes buildTowersLayerMobile {
+  0% {
+    opacity: 0;
+    clip-path: polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%);
+    filter: brightness(0.2) contrast(0.3) saturate(0.2);
+  }
+  50% {
+    opacity: 0.4;
+    clip-path: polygon(0% 60%, 0% 100%, 5% 100%, 5% 60%, 15% 60%, 15% 65%, 25% 65%, 25% 60%, 35% 60%, 35% 100%, 65% 100%, 65% 60%, 75% 60%, 75% 65%, 85% 65%, 85% 60%, 95% 60%, 95% 100%, 100% 100%, 100% 60%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+  100% {
+    opacity: 0.2;
+    clip-path: polygon(0% 40%, 0% 100%, 5% 100%, 5% 40%, 15% 40%, 15% 45%, 25% 45%, 25% 40%, 35% 40%, 35% 100%, 65% 100%, 65% 40%, 75% 40%, 75% 45%, 85% 45%, 85% 40%, 95% 40%, 95% 100%, 100% 100%, 100% 40%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+}
+
+/* Mobile: Camada 6: Torre central - base (10% a 20%) */
+@keyframes buildCentralTowerBaseLayerMobile {
+  0% {
+    opacity: 0;
+    clip-path: polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%);
+    filter: brightness(0.2) contrast(0.3) saturate(0.2);
+  }
+  50% {
+    opacity: 0.4;
+    clip-path: polygon(0% 50%, 0% 100%, 30% 100%, 30% 50%, 70% 50%, 70% 100%, 100% 100%, 100% 50%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+  100% {
+    opacity: 0.2;
+    clip-path: polygon(0% 30%, 0% 100%, 30% 100%, 30% 30%, 70% 30%, 70% 100%, 100% 100%, 100% 30%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+}
+
+/* Mobile: Camada 7: Torre central - corpo (5% a 10%) */
+@keyframes buildCentralTowerLayerMobile {
+  0% {
+    opacity: 0;
+    clip-path: polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%);
+    filter: brightness(0.2) contrast(0.3) saturate(0.2);
+  }
+  50% {
+    opacity: 0.4;
+    clip-path: polygon(0% 40%, 0% 100%, 35% 100%, 35% 40%, 65% 40%, 65% 100%, 100% 100%, 100% 40%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+  100% {
+    opacity: 0.2;
+    clip-path: polygon(0% 20%, 0% 100%, 35% 100%, 35% 20%, 65% 20%, 65% 100%, 100% 100%, 100% 20%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+}
+
+/* Mobile: Camada 8: Detalhes arquitetônicos (2% a 5%) */
+@keyframes buildArchitecturalDetailsLayerMobile {
+  0% {
+    opacity: 0;
+    clip-path: polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%);
+    filter: brightness(0.2) contrast(0.3) saturate(0.2);
+  }
+  50% {
+    opacity: 0.4;
+    clip-path: polygon(0% 30%, 0% 100%, 40% 100%, 40% 30%, 60% 30%, 60% 100%, 100% 100%, 100% 30%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+  100% {
+    opacity: 0.2;
+    clip-path: polygon(0% 10%, 0% 100%, 40% 100%, 40% 10%, 60% 10%, 60% 100%, 100% 100%, 100% 10%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+}
+
+/* Mobile: Camada 9: Acabamentos finais (0% a 2%) */
+@keyframes buildFinalDetailsLayerMobile {
+  0% {
+    opacity: 0;
+    clip-path: polygon(0% 100%, 0% 100%, 100% 100%, 100% 100%);
+    filter: brightness(0.2) contrast(0.3) saturate(0.2);
+  }
+  50% {
+    opacity: 0.4;
+    clip-path: polygon(0% 20%, 0% 100%, 100% 100%, 100% 20%);
+    filter: brightness(0.4) contrast(0.5) saturate(0.4);
+  }
+  100% {
+    opacity: 0.15;
+    clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
+    filter: brightness(0.3) contrast(0.4) saturate(0.3);
+  }
+}
+
