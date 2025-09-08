@@ -189,8 +189,16 @@ export default function AdminNotifications() {
       console.log("🚀 Aprovando pagamento:", {
         notificationId: notification.id,
         type: notification.type,
-        userId: notification.userId
+        userId: notification.userId,
+        courseId: notification.courseId,
+        courseTitle: notification.courseTitle,
+        transactionId: notification.transactionId
       });
+
+      // Verificar se todos os campos necessários estão presentes
+      if (notification.type === 'course' && (!notification.courseId || !notification.courseTitle)) {
+        throw new Error(`Campos obrigatórios ausentes para curso: courseId=${notification.courseId}, courseTitle=${notification.courseTitle}`);
+      }
 
       // Atualizar status da notificação
       await updateDoc(doc(db, "adminNotifications", notification.id), {
@@ -202,17 +210,31 @@ export default function AdminNotifications() {
 
       // ATUALIZAR STATUS DA TRANSAÇÃO CORRESPONDENTE
       if (notification.transactionId) {
-        await updateDoc(doc(db, "transactions", notification.transactionId), {
-          status: "approved",
-          updatedAt: serverTimestamp(),
-          approvedBy: user?.uid,
-          approvedAt: serverTimestamp()
-        });
-        console.log("✅ Status da transação atualizado para 'approved'!");
+        console.log("🔄 Atualizando transação:", notification.transactionId);
+        try {
+          await updateDoc(doc(db, "transactions", notification.transactionId), {
+            status: "approved",
+            updatedAt: serverTimestamp(),
+            approvedBy: user?.uid,
+            approvedAt: serverTimestamp()
+          });
+          console.log("✅ Status da transação atualizado para 'approved'!");
+        } catch (error) {
+          console.error("❌ Erro ao atualizar transação:", error);
+          throw error;
+        }
+      } else {
+        console.warn("⚠️ Nenhum transactionId encontrado na notificação");
       }
 
       // LIBERAR ACESSO AUTOMATICAMENTE
       if (notification.type === 'course') {
+        console.log("📚 Liberando acesso ao curso:", {
+          userId: notification.userId,
+          courseId: notification.courseId,
+          courseTitle: notification.courseTitle
+        });
+        
         // Adicionar acesso ao curso
         const accessRef = doc(db, "userCourseAccess", `${notification.userId}_${notification.courseId}`);
         await setDoc(accessRef, {
@@ -221,9 +243,9 @@ export default function AdminNotifications() {
           courseTitle: notification.courseTitle,
           status: "active",
           grantedAt: serverTimestamp(),
-          transactionId: notification.transactionId
+          transactionId: notification.transactionId || notification.id // Usar notification.id como fallback
         });
-        console.log("✅ Acesso ao curso liberado!");
+        console.log("✅ Acesso ao curso liberado com sucesso!");
       } else if (notification.type === 'subscription') {
         // Criar/atualizar assinatura
         const subscriptionRef = doc(db, "userSubscriptions", notification.userId);
@@ -234,12 +256,16 @@ export default function AdminNotifications() {
           status: "active",
           startDate: serverTimestamp(),
           lastPayment: serverTimestamp(),
-          transactionId: notification.transactionId
+          transactionId: notification.transactionId || notification.id // Usar notification.id como fallback
         }, { merge: true });
         console.log("✅ Assinatura criada/atualizada!");
       } else if (notification.type === 'consultation') {
         // Consultoria aprovada - acesso será verificado pelo hook useConsultationAccess
         console.log("✅ Consultoria aprovada - usuário pode agendar!");
+        console.log("🔍 Verificando se transação foi atualizada:", {
+          transactionId: notification.transactionId,
+          userId: notification.userId
+        });
       }
 
       toast({

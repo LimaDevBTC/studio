@@ -1,10 +1,9 @@
-require('dotenv').config();
-import type {NextConfig} from 'next';
+import 'dotenv/config';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
-const nextConfig: NextConfig = {
+const nextConfig = {
 
   typescript: {
     ignoreBuildErrors: true,

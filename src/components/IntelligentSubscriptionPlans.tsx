@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Star, TrendingUp, Users, BookOpen } from "lucide-react";
 import { useSubscriptionLogic } from '@/hooks/use-subscription-logic';
 import { useTranslations } from 'next-intl';
-import CryptoPaymentModal from './CryptoPaymentModal';
+import UnifiedPaymentModal from './UnifiedPaymentModal';
 
 interface IntelligentSubscriptionPlansProps {
   className?: string;
@@ -192,7 +192,7 @@ export default function IntelligentSubscriptionPlans({ className }: IntelligentS
               </ul>
 
               <div className="mt-auto pt-4">
-                <CryptoPaymentModal
+                <UnifiedPaymentModal
                   courseId={plan.id}
                   courseTitle={plan.name}
                   coursePrice={plan.price}

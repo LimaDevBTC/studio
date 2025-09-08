@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Lock, BookOpen, Crown } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import UnifiedPaymentModal from './UnifiedPaymentModal';
 
 interface CourseAccessGuardProps {
   courseId: string;

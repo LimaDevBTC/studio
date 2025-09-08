@@ -26,16 +26,6 @@ interface PaymentMethod {
 
 const PAYMENT_METHODS: PaymentMethod[] = [
   {
-    id: "pix",
-    name: "PIX",
-    symbol: "BRL",
-    network: "PIX",
-    address: "FLAVIA MATTOS ALVES DE CARVALHO - Banco: 104 - CAIXA ECONOMICA FEDERAL",
-    qrCode: "/images/pixqrcode.jpeg",
-    icon: "/images/pix.png",
-    description: ""
-  },
-  {
     id: "usdt",
     name: "USDT",
     symbol: "USDT",
@@ -320,6 +310,9 @@ export default function CryptoPaymentModal({
         notificationData.courseTitle = courseTitle;
       }
 
+      // Adicionar transactionId à notificação
+      notificationData.transactionId = transactionRef.id;
+
       await addDoc(collection(db, "adminNotifications"), notificationData);
 
       // Atualizar a transação com o ID da notificação (optional, but good for linking)
@@ -335,6 +328,10 @@ export default function CryptoPaymentModal({
 
       setIsOpen(false);
       setSelectedMethod(null); // Reset selected method after submission
+      // Forçar atualização da página para mostrar o status de pagamento
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error("Error submitting payment:", error);
       toast({
@@ -430,7 +427,11 @@ export default function CryptoPaymentModal({
                         <div>
                           <h4 className="font-semibold">{method.name}</h4>
                           <p className="text-xs text-primary font-medium">
-                            {ratesLoading ? "Carregando..." : getFormattedAmount(method.symbol as any)}
+                            {ratesLoading ? "Carregando..." : 
+                              method.symbol === 'USDT' || method.symbol === 'USDC' 
+                                ? `${coursePrice} ${method.symbol}` 
+                                : getFormattedAmount(method.symbol as any)
+                            }
                           </p>
                         </div>
                       </div>
@@ -478,7 +479,11 @@ export default function CryptoPaymentModal({
                                                 <div>
                           <h4 className="font-semibold">{networkMethod.name}</h4>
                           <p className="text-xs text-primary font-medium">
-                            {ratesLoading ? "Carregando..." : getFormattedAmount(networkMethod.symbol as any)}
+                            {ratesLoading ? "Carregando..." : 
+                              networkMethod.symbol === 'USDT' || networkMethod.symbol === 'USDC' 
+                                ? `${coursePrice} ${networkMethod.symbol}` 
+                                : getFormattedAmount(networkMethod.symbol as any)
+                            }
                           </p>
                         </div>
                       </div>
@@ -498,7 +503,12 @@ export default function CryptoPaymentModal({
                   {t("payWith")} {selectedNetwork ? selectedNetwork.name : selectedMethod.name}
                 </CardTitle>
                 <div className="text-sm text-muted-foreground">
-                  Valor: {ratesLoading ? "Carregando..." : getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)}
+                  Valor: {ratesLoading ? "Carregando..." : 
+                    (selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) === 'USDT' || 
+                    (selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) === 'USDC'
+                      ? `${coursePrice} ${selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol}`
+                      : getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)
+                  }
                 </div>
                 <Button
                   variant="ghost"
@@ -565,14 +575,24 @@ export default function CryptoPaymentModal({
                       </ul>
                     ) : (selectedNetwork ? selectedNetwork.network : selectedMethod.network) === 'Solana' ? (
                       <ul className="space-y-1 list-disc list-inside">
-                        <li>Envie exatamente {getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)} para o endereço</li>
+                        <li>Envie exatamente {
+                          (selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) === 'USDT' || 
+                          (selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) === 'USDC'
+                            ? `${coursePrice} ${selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol}`
+                            : getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)
+                        } para o endereço</li>
                         <li>Use a rede Solana para transações rápidas e baratas</li>
                         <li>Após o envio, clique em "Já Paguei"</li>
                         <li>Aguarde a confirmação na blockchain</li>
                       </ul>
                     ) : (
                       <ul className="space-y-1 list-disc list-inside">
-                        <li>Envie exatamente {getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)} para o endereço</li>
+                        <li>Envie exatamente {
+                          (selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) === 'USDT' || 
+                          (selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) === 'USDC'
+                            ? `${coursePrice} ${selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol}`
+                            : getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)
+                        } para o endereço</li>
                         <li>Use a rede Ethereum para transações seguras</li>
                         <li>Após o envio, clique em "Já Paguei"</li>
                         <li>Aguarde a confirmação na blockchain</li>

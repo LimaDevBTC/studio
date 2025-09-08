@@ -36,6 +36,8 @@ service cloud.firestore {
       allow read: if request.auth != null && request.auth.uid == resource.data.userId;
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
       allow update: if request.auth != null && request.auth.uid == resource.data.userId;
+      // Admin pode atualizar transações para aprovar pagamentos
+      allow update: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
       allow delete: if false; // Ninguém pode deletar transações
     }
 
@@ -47,16 +49,20 @@ service cloud.firestore {
       allow delete: if false; // Ninguém pode deletar notificações
     }
 
-    // Regras para acesso aos cursos - CORRIGIDO: apenas proprietário pode acessar
+    // Regras para acesso aos cursos - Admin pode criar acesso para qualquer usuário
     match /userCourseAccess/{accessId} {
       allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      // Admin pode criar acesso para qualquer usuário
+      allow create: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
     }
 
-    // Regras para assinaturas dos usuários - CORRIGIDO: apenas proprietário pode acessar
+    // Regras para assinaturas dos usuários - Admin pode criar assinatura para qualquer usuário
     match /userSubscriptions/{subscriptionId} {
       allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      // Admin pode criar assinatura para qualquer usuário
+      allow create: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
     }
 
     // Regras para status da live atual - REMOVIDO (não será usado)

@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, ShieldCheck, BarChart, Users, CheckCircle, ArrowRight, Clock, Users as UsersIcon, Mail, Globe, Phone, UserCheck, Shield, Brain, TrendingUp, GraduationCap, Lock } from "lucide-react";
+import { BookOpen, ShieldCheck, BarChart, Users, CheckCircle, ArrowRight, Clock, Users as UsersIcon, Mail, Globe, Phone } from "lucide-react";
+import { IconUserCheck, IconShieldCheck, IconBrain, IconTrendingUp, IconSchool, IconKey } from "@tabler/icons-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AuthStatus } from "@/components/AuthStatus";
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
@@ -18,34 +19,52 @@ import { PublicCourse } from '@/hooks/use-public-courses';
 
 const features = [
   {
-    icon: <UserCheck className="w-8 h-8 text-primary" />,
+    icon: <IconUserCheck className="w-12 h-12 text-primary" stroke={2} />,
     title: "feature1Title",
     description: "feature1Desc",
+    gradient: "from-yellow-500/20 to-orange-500/20",
+    borderColor: "border-yellow-500/30",
+    iconBg: "bg-yellow-500/10",
   },
   {
-    icon: <Shield className="w-8 h-8 text-primary" />,
+    icon: <IconShieldCheck className="w-12 h-12 text-primary" stroke={2} />,
     title: "feature2Title",
     description: "feature2Desc",
+    gradient: "from-orange-500/20 to-red-500/20",
+    borderColor: "border-orange-500/30",
+    iconBg: "bg-orange-500/10",
   },
   {
-    icon: <Brain className="w-8 h-8 text-primary" />,
+    icon: <IconBrain className="w-12 h-12 text-primary" stroke={2} />,
     title: "feature3Title",
     description: "feature3Desc",
+    gradient: "from-amber-500/20 to-orange-500/20",
+    borderColor: "border-amber-500/30",
+    iconBg: "bg-amber-500/10",
   },
   {
-    icon: <TrendingUp className="w-8 h-8 text-primary" />,
+    icon: <IconTrendingUp className="w-12 h-12 text-primary" stroke={2} />,
     title: "feature4Title",
     description: "feature4Desc",
+    gradient: "from-red-500/20 to-red-600/20",
+    borderColor: "border-red-500/30",
+    iconBg: "bg-red-500/10",
   },
   {
-    icon: <GraduationCap className="w-8 h-8 text-primary" />,
+    icon: <IconSchool className="w-12 h-12 text-primary" stroke={2} />,
     title: "feature5Title",
     description: "feature5Desc",
+    gradient: "from-yellow-400/20 to-red-500/20",
+    borderColor: "border-yellow-400/30",
+    iconBg: "bg-yellow-400/10",
   },
   {
-    icon: <Lock className="w-8 h-8 text-primary" />,
+    icon: <IconKey className="w-12 h-12 text-primary" stroke={2} />,
     title: "feature6Title",
     description: "feature6Desc",
+    gradient: "from-orange-400/20 to-red-600/20",
+    borderColor: "border-orange-400/30",
+    iconBg: "bg-orange-400/10",
   },
 ];
 
@@ -136,9 +155,13 @@ function CoursesSection() {
           const displayData = getCourseDisplayData(course);
           
           return (
-            <Card key={course.id} className="overflow-hidden flex flex-col h-full">
-              <CardHeader className="p-0 flex-shrink-0">
-                <div className="aspect-video overflow-hidden border-2 border-border/30 rounded-t-lg shadow-sm">
+            <div 
+              key={course.id} 
+              className="group relative overflow-hidden rounded-2xl backdrop-blur-sm bg-white/[0.02] border border-white/5 hover:border-orange-500/20 hover:bg-white/[0.04] transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/10 flex flex-col h-full"
+            >
+              {/* Imagem do curso */}
+              <div className="relative flex-shrink-0">
+                <div className="aspect-video overflow-hidden rounded-t-2xl">
                   {displayData.thumbnail === '/images/logo.png' ? (
                     // Logo centralizada em fundo cinza quando não há imagem
                     <div className="w-full h-full bg-muted flex items-center justify-center p-4">
@@ -160,30 +183,44 @@ function CoursesSection() {
                       alt={displayData.title}
                       width={400}
                       height={225}
-                      className="w-auto h-auto max-w-full max-h-full object-contain"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   )}
                 </div>
-                <div className="p-4 pb-2">
-                  <div className="mb-2">
-                    <CardTitle className="text-lg line-clamp-1">{displayData.title}</CardTitle>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-1 p-4 pt-0 flex flex-col">
-                <p className="text-muted-foreground text-sm line-clamp-2 mb-4 flex-1">
-                  {displayData.description}
-                </p>
                 
-                {/* CTA INTELIGENTE BASEADO NO STATUS - SEMPRE NA BASE */}
-                <div className="mt-auto">
+                {/* Badge de status */}
+                <div className="absolute top-3 right-3">
+                  <Badge 
+                    className={`${
+                      displayData.status === 'Published' 
+                        ? 'bg-primary text-primary-foreground group-hover:bg-orange-500' 
+                        : 'bg-white/10 text-white backdrop-blur-sm border-white/20'
+                    } transition-colors duration-300`}
+                  >
+                    {displayData.status === 'Published' ? t('courseAvailable') : t('courseComingSoon')}
+                  </Badge>
+                </div>
+              </div>
+              
+              {/* Conteúdo do card */}
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="space-y-4 flex-1">
+                  <h3 className="text-xl font-semibold text-primary group-hover:text-orange-500 transition-colors duration-300 leading-tight">
+                    {displayData.title}
+                  </h3>
+                  <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 text-sm line-clamp-2">
+                    {displayData.description}
+                  </p>
+                </div>
+                
+                <div className="mt-6 space-y-4">
                   {(() => {
-                    
                     if (displayData.status === 'Published') {
                       return (
-                        <Button asChild className="w-full">
-                          <Link href="/login">
-                            Começar Agora
+                        <Button asChild className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300">
+                          <Link href="/signup">
+                            {t('courseStartNow')}
+                            <ArrowRight className="ml-2 h-4 w-4" />
                           </Link>
                         </Button>
                       );
@@ -191,9 +228,10 @@ function CoursesSection() {
                     
                     if (displayData.status === 'Waitlist' || displayData.status === 'waitlist') {
                       return (
-                        <Button asChild className="w-full">
-                          <Link href="/login">
-                            Entrar na Lista de Espera
+                        <Button asChild className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300">
+                          <Link href="/signup">
+                            {t('courseJoinWaitlist')}
+                            <ArrowRight className="ml-2 h-4 w-4" />
                           </Link>
                         </Button>
                       );
@@ -201,16 +239,17 @@ function CoursesSection() {
                     
                     // Status padrão
                     return (
-                      <Button asChild className="w-full">
-                        <Link href="/login">
-                          Saiba Mais
+                      <Button asChild className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300">
+                        <Link href="/signup">
+                          {t('courseLearnMore')}
+                          <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
                       </Button>
                     );
                   })()}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           );
         })}
       </div>
@@ -238,7 +277,12 @@ export default function Home() {
   const { courses, loading, error } = usePublicCourses();
   
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div 
+      className="flex flex-col min-h-screen"
+      style={{
+        backgroundColor: '#0a0a0a'
+      }}
+    >
       <header className="header-fixed w-full">
         <div className="px-4 lg:px-6 h-20 lg:h-24 flex items-center justify-between relative">
           <div className="flex-shrink-0">
@@ -250,31 +294,151 @@ export default function Home() {
         </div>
       </header>
               <main className="flex-1 pt-20 lg:pt-4">
-          <section className="w-full py-8 md:py-12 lg:py-16 xl:py-20">
-          <div className="container px-4 md:px-6">
+        <section
+          className="w-full py-8 md:py-12 lg:py-16 xl:py-20 relative bg-no-repeat overflow-hidden"
+          style={{
+            backgroundColor: '#0a0a0a'
+          }}
+        >
+          {/* Construção do império usando bg.png - múltiplas camadas de baixo para cima */}
+          
+          {/* Camada 1: Fundação - base sólida (90% a 100%) */}
+          <div 
+            className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center -100px',
+              backgroundSize: 'cover',
+              animation: 'buildFoundationLayer 2s ease-out forwards'
+            }}
+          />
+          
+          {/* Camada 2: Muralhas de base (75% a 90%) */}
+          <div 
+            className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center -100px',
+              backgroundSize: 'cover',
+              animation: 'buildBaseWallsLayer 2s ease-out forwards 0.5s'
+            }}
+          />
+          
+          {/* Camada 3: Muralhas laterais (55% a 75%) */}
+          <div 
+            className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center -100px',
+              backgroundSize: 'cover',
+              animation: 'buildWallsLayer 2s ease-out forwards 1s'
+            }}
+          />
+          
+          {/* Camada 4: Torres de base (40% a 55%) */}
+          <div 
+            className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center -100px',
+              backgroundSize: 'cover',
+              animation: 'buildBaseTowersLayer 2s ease-out forwards 1.5s'
+            }}
+          />
+          
+          {/* Camada 5: Torres laterais (20% a 40%) */}
+          <div 
+            className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center -100px',
+              backgroundSize: 'cover',
+              animation: 'buildTowersLayer 2s ease-out forwards 2s'
+            }}
+          />
+          
+          {/* Camada 6: Torre central - base (10% a 20%) */}
+          <div 
+            className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center -100px',
+              backgroundSize: 'cover',
+              animation: 'buildCentralTowerBaseLayer 2s ease-out forwards 2.5s'
+            }}
+          />
+          
+          {/* Camada 7: Torre central - corpo (5% a 10%) */}
+          <div 
+            className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center -100px',
+              backgroundSize: 'cover',
+              animation: 'buildCentralTowerLayer 2s ease-out forwards 3s'
+            }}
+          />
+          
+          {/* Camada 8: Detalhes arquitetônicos (2% a 5%) */}
+          <div 
+            className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center -100px',
+              backgroundSize: 'cover',
+              animation: 'buildArchitecturalDetailsLayer 2s ease-out forwards 3.5s'
+            }}
+          />
+          
+          {/* Camada 9: Acabamentos finais (0% a 2%) */}
+          <div 
+            className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
+            style={{
+              backgroundPosition: 'center -100px',
+              backgroundSize: 'cover',
+              animation: 'buildFinalDetailsLayer 2s ease-out forwards 4s'
+            }}
+          />
+          
+          <div className="container px-4 md:px-6 relative z-20">
             <div className="grid gap-6 lg:grid-cols-[450px_1fr] lg:gap-6 xl:grid-cols-[550px_1fr]">
               <Image
                 src="/images/pose.png"
                 data-ai-hint="MQM Crypto pose"
-                width="600"
-                height="600"
+                width="500"
+                height="500"
                 alt="MQM Crypto - Desvende o Futuro das Finanças"
-                className="mx-auto w-full h-auto max-w-[400px] lg:max-w-[600px] object-contain -mt-[0px] lg:mt-8 lg:order-first"
+                className="mx-auto w-full h-auto max-w-[300px] lg:max-w-[500px] object-contain -mt-[0px] lg:mt-8 lg:order-first"
+                style={{
+                  animation: 'fadeIn 0.5s ease-out 0s both'
+                }}
                 priority
                 quality={100}
                 unoptimized
               />
-              <div className="flex flex-col justify-center space-y-6 lg:space-y-8 -mt-[5px] lg:mt-8 lg:order-last text-center lg:text-left">
+              <div 
+                className="flex flex-col justify-center space-y-6 lg:space-y-8 -mt-[240px] lg:-mt-[220px] lg:order-last text-center lg:text-left lg:-ml-8"
+                style={{
+                  animation: 'fadeIn 0.5s ease-out 0.1s both'
+                }}
+              >
                 <div className="space-y-3 lg:space-y-4">
-                  <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl lg:text-5xl xl:text-6xl/none leading-tight">
+                  <h1 
+                    className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl leading-tight"
+                    style={{
+                      animation: 'fadeIn 0.5s ease-out 0.2s both'
+                    }}
+                  >
                     {t('heroTitle')}
                   </h1>
-                  <p className="max-w-full lg:max-w-[500px] text-muted-foreground text-lg lg:md:text-xl xl:text-2xl leading-relaxed text-center lg:text-left">
+                  <p 
+                    className="max-w-full lg:max-w-[600px] text-muted-foreground text-2xl lg:text-3xl xl:text-4xl leading-relaxed text-center lg:text-left"
+                    style={{
+                      animation: 'fadeIn 0.5s ease-out 0.3s both'
+                    }}
+                  >
                     {t('heroSubtitle')}
                   </p>
                 </div>
-                <div className="flex flex-col gap-3 min-[400px]:flex-row justify-center lg:justify-start">
-                  <Button size="lg" className="px-6 py-4 lg:px-8 lg:py-6 text-base lg:text-lg font-semibold" asChild>
+                <div 
+                  className="flex flex-col gap-3 min-[400px]:flex-row justify-center lg:justify-start"
+                  style={{
+                    animation: 'fadeIn 0.5s ease-out 0.4s both'
+                  }}
+                >
+                  <Button size="lg" className="px-6 py-4 lg:px-8 lg:py-6 text-xl lg:text-2xl font-semibold" asChild>
                     <Link href="/signup">{t('startFreeTrial')}</Link>
                   </Button>
                 </div>
@@ -283,7 +447,91 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="features" className="w-full py-16 md:py-20 lg:py-24">
+        {/* Consultoria Personalizada Banner */}
+        <section 
+          className="w-full py-8 md:py-16 lg:py-20"
+          style={{
+            backgroundColor: '#111111'
+          }}
+        >
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{t('consultationTitle')}</h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  {t('consultationSubtitle')}
+                </p>
+              </div>
+            </div>
+            
+            <div className="max-w-4xl mx-auto mt-12">
+              <div className="group relative overflow-hidden rounded-2xl backdrop-blur-sm bg-white/[0.02] border border-white/5 p-8 hover:border-orange-500/20 hover:bg-white/[0.04] transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/10">
+                <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="text-primary group-hover:text-orange-500 transition-colors duration-300">
+                        <Users className="w-8 h-8" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-primary group-hover:text-orange-500 transition-colors duration-300 leading-tight">
+                          {t('consultationIndividualTitle')}
+                        </h3>
+                        <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 text-sm mt-2">
+                          {t('consultationIndividualDesc')}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-4 h-4 text-primary" />
+                        <span className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationFeature1')}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-4 h-4 text-primary" />
+                        <span className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationFeature2')}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-4 h-4 text-primary" />
+                        <span className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationFeature3')}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-4 h-4 text-primary" />
+                        <span className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationFeature4')}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center space-y-6">
+                    <div className="bg-white/[0.02] rounded-xl p-6 border border-white/5 group-hover:border-orange-500/20 transition-all duration-300">
+                      <div className="text-4xl font-bold text-primary group-hover:text-orange-500 transition-colors duration-300 mb-2">$39.00</div>
+                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationPrice')}</div>
+                    </div>
+                    
+                    <Button asChild size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                      <Link href="/signup">
+                        {t('consultationButton')}
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </Link>
+                    </Button>
+                    
+                    <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+                      {t('consultationSessionInfo')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section 
+          id="features" 
+          className="w-full py-16 md:py-20 lg:py-24"
+          style={{
+            backgroundColor: '#0a0a0a'
+          }}
+        >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
               <div className="space-y-4">
@@ -300,110 +548,39 @@ export default function Home() {
               {features.map((feature, index) => (
                 <div 
                   key={index} 
-                  className="group relative overflow-hidden rounded-2xl bg-card border border-border p-8 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1"
+                  className="group relative overflow-hidden rounded-2xl backdrop-blur-sm bg-white/[0.02] border border-white/5 p-8 hover:border-orange-500/20 hover:bg-white/[0.04] transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/10"
                 >
-                  {/* Background gradient effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   
-                  {/* Icon container */}
+                  {/* Icon - Apple style minimal */}
                   <div className="relative z-10 mb-6">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300">
+                    <div className="text-primary group-hover:text-orange-500 transition-colors duration-300">
                       {feature.icon}
                     </div>
                   </div>
                   
-                  {/* Content */}
+                  {/* Content - Apple style clean typography */}
                   <div className="relative z-10 space-y-4">
-                    <h3 className="text-xl font-bold text-card-foreground group-hover:text-primary transition-colors duration-300">
+                    <h3 className="text-xl font-semibold text-primary group-hover:text-primary transition-colors duration-300 leading-tight">
                       {t(feature.title)}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed group-hover:text-card-foreground transition-colors duration-300">
+                    <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 text-sm">
                       {t(feature.description)}
                     </p>
                   </div>
                   
-                  {/* Hover indicator */}
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Consultoria Personalizada Banner */}
-        <section className="w-full py-8 md:py-16 lg:py-20 bg-secondary">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{t('consultationTitle')}</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  {t('consultationSubtitle')}
-                </p>
-              </div>
-            </div>
-            
-            <div className="max-w-4xl mx-auto mt-12">
-              <Card className="bg-card border-border shadow-lg">
-                <CardContent className="p-8">
-                  <div className="grid md:grid-cols-2 gap-8 items-center">
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
-                          <Users className="w-6 h-6 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-bold text-card-foreground">{t('consultationIndividualTitle')}</h3>
-                          <p className="text-muted-foreground">{t('consultationIndividualDesc')}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5 text-primary" />
-                          <span className="text-card-foreground">{t('consultationFeature1')}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5 text-primary" />
-                          <span className="text-card-foreground">{t('consultationFeature2')}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5 text-primary" />
-                          <span className="text-card-foreground">{t('consultationFeature3')}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5 text-primary" />
-                          <span className="text-card-foreground">{t('consultationFeature4')}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="text-center space-y-6">
-                      <div className="bg-muted rounded-xl p-6 border border-border">
-                        <div className="text-4xl font-bold text-card-foreground mb-2">USD$39,00</div>
-                        <div className="text-muted-foreground">{t('consultationPrice')}</div>
-                      </div>
-                      
-                      <Button asChild size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                        <Link href="/login">
-                          {t('consultationButton')}
-                          <ArrowRight className="ml-2 w-4 h-4" />
-                        </Link>
-                      </Button>
-                      
-                      <p className="text-sm text-muted-foreground">
-                        {t('consultationSessionInfo')}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        <section id="courses" className="w-full py-8 md:py-16 lg:py-20 bg-background">
+        <section 
+          id="courses" 
+          className="w-full py-8 md:py-16 lg:py-20"
+          style={{
+            backgroundColor: '#111111'
+          }}
+        >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -416,6 +593,7 @@ export default function Home() {
             <div className="mt-12">
               <CoursesSection />
             </div>
+            
           </div>
         </section>
 
@@ -431,7 +609,7 @@ export default function Home() {
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
               <Button asChild size="lg" className="w-full">
-                <Link href="/login">{t('viewSubscriptions')}</Link>
+                <Link href="/signup">{t('viewSubscriptions')}</Link>
               </Button>
             </div>
           </div>
@@ -439,7 +617,12 @@ export default function Home() {
       </main>
 
       {/* Footer Light */}
-      <footer className="bg-muted/50 border-t border-border">
+      <footer 
+        className="border-t border-border"
+        style={{
+          backgroundColor: '#0a0a0a'
+        }}
+      >
         <div className="container px-4 md:px-6 py-12">
           <div className="grid gap-8 md:grid-cols-4">
             {/* Logo e Descrição */}

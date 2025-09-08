@@ -36,6 +36,14 @@ export function useConsultationAccess() {
 
     // Buscar transações de consultoria aprovadas para este usuário
     const transactionsRef = collection(db, 'transactions');
+    // Primeiro, buscar TODAS as transações de consultoria para debug
+    const allTransactionsQuery = query(
+      transactionsRef,
+      where('userId', '==', user.uid),
+      where('type', '==', 'consultation')
+    );
+    
+    // Query específica para transações aprovadas
     const q = query(
       transactionsRef,
       where('userId', '==', user.uid),
@@ -43,8 +51,27 @@ export function useConsultationAccess() {
       where('status', '==', 'approved')
     );
 
+    // Primeiro, verificar todas as transações de consultoria para debug
+    const unsubscribeAll = onSnapshot(allTransactionsQuery, (allSnapshot) => {
+      console.log('🔍 TODAS as transações de consultoria:', {
+        size: allSnapshot.size,
+        transactions: allSnapshot.docs.map(doc => ({
+          id: doc.id,
+          status: doc.data().status,
+          createdAt: doc.data().createdAt
+        }))
+      });
+    });
+
     const unsubscribe = onSnapshot(q, async (snapshot) => {
+      console.log('🔍 useConsultationAccess - Snapshot recebido:', {
+        size: snapshot.size,
+        empty: snapshot.empty,
+        userId: user?.uid
+      });
+      
       if (snapshot.empty) {
+        console.log('❌ Nenhuma transação aprovada encontrada');
         // Nenhuma transação aprovada encontrada
         setConsultationAccess({
           hasAccess: false,
@@ -56,6 +83,7 @@ export function useConsultationAccess() {
           isBlocked: false
         });
       } else {
+        console.log('✅ Transação aprovada encontrada!');
         // Transação aprovada encontrada - pegar a mais recente
         const transactions = snapshot.docs.map(doc => ({
           id: doc.id,
@@ -113,7 +141,10 @@ export function useConsultationAccess() {
       setConsultationAccess(prev => ({ ...prev, isLoading: false }));
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      unsubscribeAll();
+    };
   }, [user]);
 
   return consultationAccess;

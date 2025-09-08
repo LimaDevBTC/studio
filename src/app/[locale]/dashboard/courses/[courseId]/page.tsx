@@ -12,7 +12,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlayCircle, CheckCircle2, Lock, Loader2, ArrowLeft, ShoppingCart } from "lucide-react";
-import CryptoPaymentModal from "@/components/CryptoPaymentModal";
+import UnifiedPaymentModal from "@/components/UnifiedPaymentModal";
 import { WaitlistButton } from "@/components/WaitlistButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -195,7 +195,7 @@ export default function CourseOverviewPage() {
                                         </div>
                                     </div>
                                     
-                                    <CryptoPaymentModal
+                                    <UnifiedPaymentModal
                                         courseId={course.id}
                                         courseTitle={course.title}
                                         coursePrice={course.price}
@@ -205,6 +205,7 @@ export default function CourseOverviewPage() {
                                                 Buy Course
                                             </Button>
                                         }
+                                        type="course"
                                     />
                                 </div>
                             )}
