@@ -393,13 +393,13 @@ export default function Home() {
           />
           
           {/* ===== CAMADAS MOBILE ===== */}
-          {/* Mobile: Camada 1: Fundação - base sólida (90% a 100%) - posicionada acima da metade da tela */}
+          {/* Mobile: Camada 1: Fundação - base sólida (90% a 100%) - usando borda direita da imagem */}
           <div 
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center 100px',
-              backgroundSize: 'contain',
-              animation: 'buildFoundationLayerMobile 2.5s ease-out forwards'
+              backgroundPosition: 'right 0px',
+              backgroundSize: 'cover',
+              animation: 'buildFoundationLayerMobile 5s ease-out forwards'
             }}
           />
           
@@ -407,9 +407,9 @@ export default function Home() {
           <div 
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center 100px',
-              backgroundSize: 'contain',
-              animation: 'buildBaseWallsLayerMobile 2.5s ease-out forwards 0.1s'
+              backgroundPosition: 'right 0px',
+              backgroundSize: 'cover',
+              animation: 'buildBaseWallsLayerMobile 5s ease-out forwards 0.1s'
             }}
           />
           
@@ -417,9 +417,9 @@ export default function Home() {
           <div 
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center 100px',
-              backgroundSize: 'contain',
-              animation: 'buildWallsLayerMobile 2.5s ease-out forwards 0.2s'
+              backgroundPosition: 'right 0px',
+              backgroundSize: 'cover',
+              animation: 'buildWallsLayerMobile 5s ease-out forwards 0.2s'
             }}
           />
           
@@ -427,9 +427,9 @@ export default function Home() {
           <div 
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center 100px',
-              backgroundSize: 'contain',
-              animation: 'buildBaseTowersLayerMobile 2.5s ease-out forwards 0.3s'
+              backgroundPosition: 'right 0px',
+              backgroundSize: 'cover',
+              animation: 'buildBaseTowersLayerMobile 5s ease-out forwards 0.3s'
             }}
           />
           
@@ -437,9 +437,9 @@ export default function Home() {
           <div 
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center 100px',
-              backgroundSize: 'contain',
-              animation: 'buildTowersLayerMobile 2.5s ease-out forwards 0.4s'
+              backgroundPosition: 'right 0px',
+              backgroundSize: 'cover',
+              animation: 'buildTowersLayerMobile 5s ease-out forwards 0.4s'
             }}
           />
           
@@ -447,9 +447,9 @@ export default function Home() {
           <div 
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center 100px',
-              backgroundSize: 'contain',
-              animation: 'buildCentralTowerBaseLayerMobile 2.5s ease-out forwards 0.5s'
+              backgroundPosition: 'right 0px',
+              backgroundSize: 'cover',
+              animation: 'buildCentralTowerBaseLayerMobile 5s ease-out forwards 0.5s'
             }}
           />
           
@@ -457,9 +457,9 @@ export default function Home() {
           <div 
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center 100px',
-              backgroundSize: 'contain',
-              animation: 'buildCentralTowerLayerMobile 2.5s ease-out forwards 0.6s'
+              backgroundPosition: 'right 0px',
+              backgroundSize: 'cover',
+              animation: 'buildCentralTowerLayerMobile 5s ease-out forwards 0.6s'
             }}
           />
           
@@ -467,9 +467,9 @@ export default function Home() {
           <div 
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center 100px',
-              backgroundSize: 'contain',
-              animation: 'buildArchitecturalDetailsLayerMobile 2.5s ease-out forwards 0.7s'
+              backgroundPosition: 'right 0px',
+              backgroundSize: 'cover',
+              animation: 'buildArchitecturalDetailsLayerMobile 5s ease-out forwards 0.7s'
             }}
           />
           
@@ -477,9 +477,9 @@ export default function Home() {
           <div 
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center 100px',
-              backgroundSize: 'contain',
-              animation: 'buildFinalDetailsLayerMobile 2.5s ease-out forwards 0.8s'
+              backgroundPosition: 'right 0px',
+              backgroundSize: 'cover',
+              animation: 'buildFinalDetailsLayerMobile 5s ease-out forwards 0.8s'
             }}
           />
           
@@ -502,7 +502,8 @@ export default function Home() {
               <div 
                 className="flex flex-col justify-center space-y-6 lg:space-y-8 -mt-[240px] lg:-mt-[220px] lg:order-last text-center lg:text-left lg:-ml-8"
                 style={{
-                  animation: 'fadeIn 0.3s ease-out 0.1s both'
+                  animation: 'fadeIn 0.3s ease-out 0.1s both',
+                  transform: 'translateY(-25px)'
                 }}
               >
                 <div className="space-y-3 lg:space-y-4">
@@ -526,7 +527,8 @@ export default function Home() {
                 <div 
                   className="flex flex-col gap-3 min-[400px]:flex-row justify-center lg:justify-start"
                   style={{
-                    animation: 'fadeIn 0.5s ease-out 0.4s both'
+                    animation: 'fadeIn 0.5s ease-out 0.4s both',
+                    transform: 'translateY(-10px)'
                   }}
                 >
                   <Button size="lg" className="px-6 py-4 lg:px-8 lg:py-6 text-xl lg:text-2xl font-semibold" asChild>
