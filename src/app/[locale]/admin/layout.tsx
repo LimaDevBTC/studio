@@ -170,7 +170,7 @@ export default function AdminLayout({
             <div className="flex-1 overflow-auto py-4">
               <nav className="grid items-start px-4 text-sm font-medium space-y-2">
                 {navItems.map(item => {
-                  const isActive = pathname.endsWith(item.href as string);
+                  const isActive = pathname?.endsWith(item.href as string) || false;
                   return (
                     <Link
                       key={item.label}
@@ -193,7 +193,7 @@ export default function AdminLayout({
                 <div className="grid items-start px-4 text-sm font-medium">
 
                                   {secondaryNavItems.map(item => {
-                  const isActive = pathname.endsWith(item.href as string);
+                  const isActive = pathname?.endsWith(item.href as string) || false;
                   return (
                     <Link
                       key={item.label}
@@ -218,9 +218,9 @@ export default function AdminLayout({
       )}
 
       {/* Layout Desktop Otimizado */}
-      <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr] xl:grid-cols-[300px_1fr] overflow-hidden pt-20 sm:pt-24 lg:pt-0">
+      <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr] xl:grid-cols-[300px_1fr] overflow-hidden">
         {/* Sidebar Desktop */}
-        <div className="hidden border-r bg-card lg:block w-full max-w-[300px] lg:pt-20 xl:pt-24">
+        <div className="hidden border-r bg-card lg:block w-full max-w-[300px]">
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex h-20 sm:h-24 items-center border-b px-6">
               <div className="flex flex-col">
@@ -231,7 +231,7 @@ export default function AdminLayout({
             <div className="flex-1 overflow-auto py-4">
               <nav className="grid items-start px-4 text-sm font-medium space-y-2">
                 {navItems.map(item => {
-                  const isActive = pathname.endsWith(item.href as string);
+                  const isActive = pathname?.endsWith(item.href as string) || false;
                   return (
                     <Link
                       key={item.label}
@@ -253,7 +253,7 @@ export default function AdminLayout({
               <div className="grid items-start px-4 text-sm font-medium">
 
                 {secondaryNavItems.map(item => {
-                  const isActive = pathname.endsWith(item.href as string);
+                  const isActive = pathname?.endsWith(item.href as string) || false;
                   return (
                     <Link
                       key={item.label}
@@ -275,7 +275,7 @@ export default function AdminLayout({
         </div>
 
         {/* Conteúdo Principal Otimizado */}
-        <div className="flex flex-col w-full overflow-hidden lg:pt-20 xl:pt-24">
+        <div className="flex flex-col w-full overflow-hidden">
           {/* Header Desktop */}
           <header className="hidden h-20 sm:h-24 items-center gap-4 border-b bg-card px-6 lg:flex w-full">
             <div className="w-full flex-1">

@@ -74,34 +74,58 @@ export default function AdminCoursesPage() {
 
   const deleteCourseAndSubcollections = async (courseId: string) => {
     try {
-        const storage = getStorage();
-        const courseStorageRef = ref(storage, `courses/${courseId}`);
-        const allItems = await listAll(courseStorageRef);
-
-        const deletePromises: Promise<any>[] = [];
+        console.log("🗑️ Iniciando exclusão do curso:", courseId);
         
-        // Delete folders and files in Storage
-        const deleteFolderContents = async (folderRef: any) => {
-            const folderItems = await listAll(folderRef);
-            folderItems.items.forEach(itemRef => deletePromises.push(deleteObject(itemRef)));
-            folderItems.prefixes.forEach(subfolderRef => deleteFolderContents(subfolderRef));
-        }
-        await deleteFolderContents(courseStorageRef);
-        await Promise.all(deletePromises);
-      
-        // Delete lessons subcollection
+        // Delete lessons subcollection first
+        console.log("📚 Excluindo lições...");
         const lessonsCollectionRef = collection(db, 'courses', courseId, 'lessons');
         const lessonsSnapshot = await getDocs(lessonsCollectionRef);
-        lessonsSnapshot.forEach(doc => deleteDoc(doc.ref));
+        console.log(`📚 Encontradas ${lessonsSnapshot.size} lições para excluir`);
+        
+        const lessonDeletePromises = lessonsSnapshot.docs.map(doc => {
+            console.log("📚 Excluindo lição:", doc.id);
+            return deleteDoc(doc.ref);
+        });
+        await Promise.all(lessonDeletePromises);
+        console.log("✅ Lições excluídas com sucesso");
 
         // Delete course document
+        console.log("📄 Excluindo documento do curso...");
         await deleteDoc(doc(db, "courses", courseId));
+        console.log("✅ Documento do curso excluído com sucesso");
 
-        toast({ title: "Course deleted successfully!" });
+        // Try to delete storage files (optional, might not exist)
+        try {
+            console.log("💾 Tentando excluir arquivos do storage...");
+            const storage = getStorage();
+            const courseStorageRef = ref(storage, `courses/${courseId}`);
+            const allItems = await listAll(courseStorageRef);
+
+            const deletePromises: Promise<any>[] = [];
+            
+            // Delete folders and files in Storage
+            const deleteFolderContents = async (folderRef: any) => {
+                const folderItems = await listAll(folderRef);
+                folderItems.items.forEach(itemRef => deletePromises.push(deleteObject(itemRef)));
+                folderItems.prefixes.forEach(subfolderRef => deleteFolderContents(subfolderRef));
+            }
+            await deleteFolderContents(courseStorageRef);
+            await Promise.all(deletePromises);
+            console.log("✅ Arquivos do storage excluídos com sucesso");
+        } catch (storageError) {
+            console.log("⚠️ Erro ao excluir arquivos do storage (pode não existir):", storageError);
+            // Continue even if storage deletion fails
+        }
+
+        toast({ title: "Curso excluído com sucesso!" });
         fetchCourses();
     } catch (error) {
-        console.error("Error deleting course: ", error);
-        toast({ title: "Error deleting course", variant: "destructive" });
+        console.error("❌ Erro ao excluir curso:", error);
+        toast({ 
+            title: "Erro ao excluir curso", 
+            description: error instanceof Error ? error.message : "Erro desconhecido",
+            variant: "destructive" 
+        });
     }
   };
 
@@ -159,7 +183,7 @@ export default function AdminCoursesPage() {
           </p>
         </div>
         <Button asChild>
-          <Link href="/admin/courses/new">
+          <Link href="/admin/courses" as="/admin/courses">
             <PlusCircle className="mr-2 h-4 w-4" />
             Add Course
           </Link>
@@ -207,7 +231,7 @@ export default function AdminCoursesPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem asChild>
-                            <Link href={`/admin/courses/${course.id}`}>Edit</Link>
+                            <Link href="/admin/courses" as="/admin/courses">Edit</Link>
                           </DropdownMenuItem>
                           <AlertDialogTrigger asChild>
                             <DropdownMenuItem className="text-destructive cursor-pointer">
@@ -296,7 +320,7 @@ export default function AdminCoursesPage() {
                       </p>
                       <div className="flex gap-2">
                         <Button asChild size="sm" variant="outline" className="flex-1">
-                          <Link href={`/admin/courses/${course.id}`}>
+                          <Link href="/admin/courses" as="/admin/courses">
                             <Edit className="h-3 w-3 mr-1" />
                             Edit
                           </Link>

@@ -1,22 +1,31 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Calendar, 
   Clock, 
   User, 
-  Mail, 
   CheckCircle, 
-  ChevronDown,
-  ChevronRight,
-  Check
+  Check,
+  Plus,
+  Loader2,
+  Lock,
+  Video,
+  ExternalLink
 } from "lucide-react";
 import { db } from '@/lib/firebase';
-import { collection, query, onSnapshot, doc, updateDoc, serverTimestamp, where, getDoc, setDoc } from 'firebase/firestore';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { collection, query, onSnapshot, doc, updateDoc, serverTimestamp, where, getDoc, setDoc, addDoc, getDocs, orderBy } from 'firebase/firestore';
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
+import { LiveSession, LiveService, LiveStatus } from "@/types/live";
+import UserSelector from "@/components/UserSelector";
 
 interface Consultation {
   id: string;
@@ -35,7 +44,69 @@ export default function AdminConsultationsPage() {
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingConsultation, setUpdatingConsultation] = useState<string | null>(null);
-  const [expandedConsultation, setExpandedConsultation] = useState<string | null>(null);
+  
+  // Estados para criação de consultoria
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [editingSession, setEditingSession] = useState<LiveSession | null>(null);
+  
+  // Form states
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [externalUrl, setExternalUrl] = useState("");
+  const [service, setService] = useState<LiveService>("meet");
+  const [scheduledAt, setScheduledAt] = useState("");
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [allowedUsers, setAllowedUsers] = useState<string[]>([]);
+  const [consultationType, setConsultationType] = useState<'public' | 'private'>('public');
+  
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setExternalUrl("");
+    setService("meet");
+    setScheduledAt("");
+    setIsPrivate(false);
+    setAllowedUsers([]);
+    setEditingSession(null);
+    setShowCreateForm(false);
+  };
+
+  const createConsultationSession = async () => {
+    if (!user) return;
+    
+    setIsLoading(true);
+    try {
+      const sessionData = {
+        title,
+        description,
+        externalUrl,
+        service,
+        status: 'scheduled' as LiveStatus,
+        scheduledAt: new Date(scheduledAt),
+        adminId: user.uid,
+        isPrivate,
+        allowedUsers: isPrivate ? allowedUsers : [],
+        consultationType: isPrivate ? 'private' : 'public',
+        maxParticipants: isPrivate ? allowedUsers.length : undefined,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const docRef = await addDoc(collection(db, 'liveSessions'), sessionData);
+      
+      toast({ title: "Sucesso!", description: "Consultoria criada com sucesso!" });
+      resetForm();
+    } catch (error: any) {
+      console.error("❌ ERRO ao criar consultoria:", error);
+      toast({ variant: "destructive", title: "Erro", description: error.message });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Buscar todas as consultorias
   useEffect(() => {
@@ -157,34 +228,31 @@ export default function AdminConsultationsPage() {
     }
   };
 
-  const toggleExpanded = (consultationId: string) => {
-    setExpandedConsultation(expandedConsultation === consultationId ? null : consultationId);
-  };
 
   const getStatusInfo = (status: string) => {
     switch (status) {
       case 'available':
         return { 
           label: 'Aguardando', 
-          color: 'bg-gray-100 text-gray-800 border-gray-200',
+          color: 'bg-gray-50 text-gray-700 border-gray-200',
           icon: Clock
         };
       case 'scheduled':
         return { 
           label: 'Agendada', 
-          color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+          color: 'bg-yellow-50 text-yellow-700 border-yellow-200',
           icon: Calendar
         };
       case 'completed':
         return { 
           label: 'Realizada', 
-          color: 'bg-green-100 text-green-800 border-green-200',
+          color: 'bg-gray-50 text-gray-600 border-gray-200',
           icon: CheckCircle
         };
       default:
         return { 
           label: 'Desconhecido', 
-          color: 'bg-gray-100 text-gray-800 border-gray-200',
+          color: 'bg-gray-50 text-gray-700 border-gray-200',
           icon: Clock
         };
     }
@@ -205,12 +273,23 @@ export default function AdminConsultationsPage() {
     <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-6 lg:py-8">
       {/* Header Otimizado */}
       <div className="mb-4 sm:mb-6 lg:mb-8">
-        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-2 sm:mb-3 lg:mb-4">
-          Gerenciar Consultorias
-        </h1>
-        <p className="text-sm sm:text-base md:text-lg text-muted-foreground">
-          Visualize e gerencie todas as consultorias compradas pelos usuários
-        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-2 sm:mb-3 lg:mb-4">
+              Gerenciar Consultorias
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground">
+              Visualize e gerencie todas as consultorias compradas pelos usuários
+            </p>
+          </div>
+          <Button 
+            onClick={() => setShowCreateForm(true)}
+            className="flex items-center gap-2 w-full sm:w-auto bg-[#F7931A] hover:bg-[#F7931A]/90 text-gray-800"
+          >
+            <Plus className="h-4 w-4" />
+            Nova Consultoria
+          </Button>
+        </div>
       </div>
 
       {/* Estatísticas Responsivas */}
@@ -252,100 +331,204 @@ export default function AdminConsultationsPage() {
         </Card>
       </div>
 
-      {/* Lista de Consultorias - Estilo Netflix */}
-      <div className="space-y-3">
+      {/* Formulário de criação/edição */}
+      {showCreateForm && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>
+              {editingSession ? 'Editar Consultoria' : 'Nova Consultoria'}
+            </CardTitle>
+            <CardDescription>
+              Configure os detalhes da sua consultoria.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="title">Título da Consultoria</Label>
+                <Input
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Ex: Consultoria de Criptomoedas"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="service">Serviço</Label>
+                <Select value={service} onValueChange={(value: LiveService) => setService(value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="meet">Google Meet</SelectItem>
+                    <SelectItem value="zoom">Zoom</SelectItem>
+                    <SelectItem value="youtube">YouTube</SelectItem>
+                    <SelectItem value="other">Outro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Descrição</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Descreva o conteúdo da consultoria..."
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="externalUrl">Link da Consultoria</Label>
+              <Input
+                id="externalUrl"
+                value={externalUrl}
+                onChange={(e) => setExternalUrl(e.target.value)}
+                placeholder="https://meet.google.com/..."
+                type="url"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="scheduledAt">Data e Hora</Label>
+                <Input
+                  id="scheduledAt"
+                  value={scheduledAt}
+                  onChange={(e) => setScheduledAt(e.target.value)}
+                  type="datetime-local"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Lock className="h-4 w-4" />
+                  Consultoria Privada
+                </Label>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="isPrivate"
+                    checked={isPrivate}
+                    onChange={(e) => setIsPrivate(e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="isPrivate">Consultoria privada</Label>
+                </div>
+              </div>
+            </div>
+
+            {isPrivate && (
+              <div className="space-y-2">
+                <Label htmlFor="allowedUsers">Usuários Permitidos</Label>
+                <UserSelector
+                  selectedUsers={allowedUsers}
+                  onUsersChange={setAllowedUsers}
+                />
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <Button
+                onClick={createConsultationSession}
+                disabled={isLoading || !title || !externalUrl || !scheduledAt}
+                className="flex-1"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  'Criar Consultoria'
+                )}
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={resetForm}
+                disabled={isLoading}
+              >
+                Cancelar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Lista de Consultorias */}
+      <div className="space-y-4">
         {consultations.map((consultation) => {
           const statusInfo = getStatusInfo(consultation.status);
           const StatusIcon = statusInfo.icon;
           
           return (
-            <Collapsible 
-              key={consultation.id} 
-              open={expandedConsultation === consultation.id}
-              onOpenChange={() => toggleExpanded(consultation.id)}
-            >
-                              <Card className="overflow-hidden border-0 shadow-sm bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
-                <CollapsibleTrigger asChild>
-                  <CardContent className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <User className="h-4 w-4 text-gray-500" />
-                          <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">
-                            {consultation.userName}
-                          </h3>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge className={`text-xs px-2 py-1 border ${statusInfo.color}`}>
-                            <StatusIcon className="h-3 w-3 mr-1" />
-                            {statusInfo.label}
-                          </Badge>
-                          <span className="text-xs text-gray-500">
-                            {consultation.userEmail}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="ml-3 flex-shrink-0">
-                        {expandedConsultation === consultation.id ? (
-                          <ChevronDown className="h-5 w-5 text-gray-400" />
-                        ) : (
-                          <ChevronRight className="h-5 w-5 text-gray-400" />
-                        )}
-                      </div>
+            <Card key={consultation.id}>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-3">
+                      <CardTitle className="text-lg">{consultation.userName}</CardTitle>
+                      <Badge className={statusInfo.color}>
+                        <StatusIcon className="h-3 w-3 mr-1" />
+                        {statusInfo.label}
+                      </Badge>
                     </div>
-                  </CardContent>
-                </CollapsibleTrigger>
-                
-                <CollapsibleContent>
-                  <div className="px-4 pb-4 space-y-3">
-                    <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                      <div className="space-y-2 mb-3">
-                        <p className="text-xs text-gray-500">
-                          Criada em {consultation.createdAt?.toLocaleDateString('pt-BR')}
-                        </p>
-                        
-                        {consultation.status === 'scheduled' && consultation.scheduledAt && (
-                          <p className="text-xs text-gray-500">
-                            Agendada para {consultation.scheduledAt.toLocaleString('pt-BR')}
-                          </p>
+                    <CardDescription>{consultation.userEmail}</CardDescription>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    {consultation.status !== 'completed' && (
+                      <Button
+                        size="sm"
+                        onClick={() => markAsCompleted(consultation.id)}
+                        className="bg-green-600 hover:bg-green-700"
+                        disabled={updatingConsultation === consultation.id}
+                      >
+                        {updatingConsultation === consultation.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <>
+                            <Check className="h-4 w-4" />
+                            Marcar como Realizada
+                          </>
                         )}
-
-                        {consultation.status === 'completed' && consultation.completedAt && (
-                          <p className="text-xs text-gray-500">
-                            Realizada em {consultation.completedAt.toLocaleDateString('pt-BR')}
-                          </p>
-                        )}
-                      </div>
-                      
-                      {consultation.status !== 'completed' && (
-                        <Button
-                          size="sm"
-                          onClick={() => markAsCompleted(consultation.id)}
-                          className="w-full text-xs sm:text-sm h-8 sm:h-9"
-                          disabled={updatingConsultation === consultation.id}
-                        >
-                          {updatingConsultation === consultation.id ? (
-                            <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-primary mx-auto"></div>
-                          ) : (
-                            <>
-                              <Check className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                              Marcar como Realizada
-                            </>
-                          )}
-                        </Button>
-                      )}
-                      
-                      {consultation.status === 'completed' && (
-                        <div className="text-center text-xs sm:text-sm text-green-600 py-2 bg-green-50 dark:bg-green-900/20 rounded-md">
-                          <CheckCircle className="h-4 w-4 mx-auto mb-1" />
-                          Consultoria concluída
-                        </div>
-                      )}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </CardHeader>
+              
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
+                    <User className="h-4 w-4 text-[#F7931A]" />
+                    <div>
+                      <span className="font-medium text-card-foreground">Cliente</span>
+                      <div className="text-card-foreground">{consultation.userName}</div>
                     </div>
                   </div>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
+                  
+                  <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
+                    <Calendar className="h-4 w-4 text-[#F7931A]" />
+                    <div>
+                      <span className="font-medium text-card-foreground">Criada em</span>
+                      <div className="text-card-foreground">
+                        {consultation.createdAt?.toLocaleDateString('pt-BR')}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 p-3 bg-card rounded-lg border border-border">
+                    <StatusIcon className="h-4 w-4 text-[#F7931A]" />
+                    <div>
+                      <span className="font-medium text-card-foreground">Status</span>
+                      <div className="text-card-foreground">{statusInfo.label}</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           );
         })}
       </div>
