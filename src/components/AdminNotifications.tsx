@@ -29,6 +29,7 @@ interface AdminNotification {
   status: "pending" | "approved" | "rejected";
   createdAt: any;
   type: string;
+  paymentMethod?: string; // PIX, USDT, USDC, BTC, SOL, etc.
 }
 
 interface Transaction {
@@ -400,6 +401,78 @@ export default function AdminNotifications() {
 
 
 
+  const getPaymentMethodInfo = (notification: AdminNotification) => {
+    // Se temos paymentMethod específico, usar ele
+    if (notification.paymentMethod) {
+      return {
+        method: notification.paymentMethod,
+        icon: getPaymentMethodIcon(notification.paymentMethod),
+        color: getPaymentMethodColor(notification.paymentMethod)
+      };
+    }
+
+    // Caso contrário, determinar baseado na currency e network
+    const currency = notification.currency?.toUpperCase();
+    const network = notification.network?.toLowerCase();
+
+    if (currency === 'BRL' || network === 'pix') {
+      return {
+        method: 'PIX',
+        icon: '🏦',
+        color: 'text-green-600'
+      };
+    }
+
+    if (currency === 'USDT' || currency === 'USDC') {
+      return {
+        method: `${currency} (${network?.toUpperCase() || 'Ethereum'})`,
+        icon: '💎',
+        color: 'text-blue-600'
+      };
+    }
+
+    if (currency === 'BTC') {
+      return {
+        method: 'Bitcoin',
+        icon: '₿',
+        color: 'text-orange-600'
+      };
+    }
+
+    if (currency === 'SOL') {
+      return {
+        method: 'Solana',
+        icon: '☀️',
+        color: 'text-purple-600'
+      };
+    }
+
+    // Fallback
+    return {
+      method: `${currency} (${network?.toUpperCase() || 'Unknown'})`,
+      icon: '💰',
+      color: 'text-gray-600'
+    };
+  };
+
+  const getPaymentMethodIcon = (method: string) => {
+    const methodLower = method.toLowerCase();
+    if (methodLower.includes('pix')) return '🏦';
+    if (methodLower.includes('usdt') || methodLower.includes('usdc')) return '💎';
+    if (methodLower.includes('btc') || methodLower.includes('bitcoin')) return '₿';
+    if (methodLower.includes('sol') || methodLower.includes('solana')) return '☀️';
+    return '💰';
+  };
+
+  const getPaymentMethodColor = (method: string) => {
+    const methodLower = method.toLowerCase();
+    if (methodLower.includes('pix')) return 'text-green-600';
+    if (methodLower.includes('usdt') || methodLower.includes('usdc')) return 'text-blue-600';
+    if (methodLower.includes('btc') || methodLower.includes('bitcoin')) return 'text-orange-600';
+    if (methodLower.includes('sol') || methodLower.includes('solana')) return 'text-purple-600';
+    return 'text-gray-600';
+  };
+
   const getStatusBadge = (status: string, compact: boolean = false) => {
     const baseClasses = "flex items-center gap-1.5 px-2 py-1 rounded-full border";
     
@@ -596,16 +669,30 @@ export default function AdminNotifications() {
                       </p>
                     </div>
 
-                    {/* Valor e Rede */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-primary">
-                          {notification.amount || 0} {notification.currency || "USD"}
+                    {/* Valor e Modalidade de Pagamento */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-bold text-primary">
+                            {notification.amount || 0} {notification.currency || "USD"}
+                          </span>
+                        </div>
+                        <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                          {notification.network || "N/A"}
                         </span>
                       </div>
-                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-                        {notification.network || "N/A"}
-                      </span>
+                      
+                      {/* Modalidade de Pagamento */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          Pagamento via:
+                        </span>
+                        <div className={`px-2 py-1 rounded-full bg-muted/50 ${getPaymentMethodInfo(notification).color}`}>
+                          <span className="text-xs font-medium">
+                            {getPaymentMethodInfo(notification).method}
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Data de Criação */}
@@ -622,14 +709,65 @@ export default function AdminNotifications() {
                       }
                     </div>
 
-                    {/* Ações */}
+                    {/* Botões de Ação Diretos */}
                     <div className="flex gap-2 pt-2">
+                      {notification.status === "pending" ? (
+                        <>
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRejectPayment(notification);
+                            }}
+                            disabled={isProcessing}
+                            variant="destructive"
+                            className="flex-1"
+                            size="sm"
+                          >
+                            {isProcessing ? (
+                              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                            ) : (
+                              <XCircle className="h-4 w-4 mr-1" />
+                            )}
+                            Negar
+                          </Button>
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleApprovePayment(notification);
+                            }}
+                            disabled={isProcessing}
+                            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                            size="sm"
+                          >
+                            {isProcessing ? (
+                              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                            ) : (
+                              <CheckCircle2 className="h-4 w-4 mr-1" />
+                            )}
+                            Aprovar
+                          </Button>
+                        </>
+                      ) : (
+                        <div className="flex-1 text-center">
+                          <span className={`text-sm font-medium ${
+                            notification.status === "approved" 
+                              ? "text-green-600" 
+                              : "text-red-600"
+                          }`}>
+                            {notification.status === "approved" ? "✅ Aprovado" : "❌ Rejeitado"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Botão para Ver Detalhes */}
+                    <div className="pt-2">
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button
                             variant="outline"
                             size="sm"
-                            className="flex-1"
+                            className="w-full"
                             onClick={() => handleViewDetails(notification)}
                           >
                             <Eye className="h-4 w-4 mr-1" />
@@ -690,44 +828,14 @@ export default function AdminNotifications() {
                               </code>
                             </div>
 
-                            {notification.status === "pending" && (
-                              <div className="flex flex-col sm:flex-row gap-2 pt-4">
-                                <Button
-                                  onClick={() => handleApprovePayment(notification)}
-                                  disabled={isProcessing}
-                                  className="flex-1"
-                                >
-                                  {isProcessing ? (
-                                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                  ) : (
-                                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                                  )}
-                                  {t("approvePayment")}
-                                </Button>
-                                <Button
-                                  onClick={() => handleRejectPayment(notification)}
-                                  disabled={isProcessing}
-                                  variant="destructive"
-                                  className="flex-1"
-                                >
-                                  {isProcessing ? (
-                                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                  ) : (
-                                    <XCircle className="h-4 w-4 mr-2" />
-                                  )}
-                                  {t("rejectPayment")}
-                                </Button>
-                              </div>
-                            )}
-
-                            {notification.status !== "pending" && (
-                              <div className="pt-4 text-center text-sm text-muted-foreground">
-                                {notification.status === "approved" 
+                            <div className="pt-4 text-center text-sm text-muted-foreground">
+                              {notification.status === "pending" 
+                                ? "Use os botões 'Aprovar' ou 'Negar' no card da notificação para processar este pagamento."
+                                : notification.status === "approved" 
                                   ? "Esta notificação já foi processada e aprovada."
                                   : "Esta notificação já foi processada e rejeitada."
-                                }
-                              </div>
-                            )}
+                              }
+                            </div>
                           </div>
                         </DialogContent>
                       </Dialog>

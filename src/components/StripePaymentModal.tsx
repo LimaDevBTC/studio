@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, CreditCard, Loader2, CheckCircle2, Copy } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle2, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { db } from "@/lib/firebase";
@@ -93,7 +93,8 @@ export default function StripePaymentModal({
   const [isLoading, setIsLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
   const [transactionId, setTransactionId] = useState<string | null>(null);
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
+  // Sempre usar PIX como método selecionado
+  const selectedMethod = PAYMENT_METHODS[0]; // PIX
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { user } = useAuth();
@@ -158,8 +159,10 @@ export default function StripePaymentModal({
         courseTitle: courseTitle,
         amount: parseFloat(getFormattedAmount('BRL').replace('R$ ', '')),
         currency: 'BRL',
+        network: 'PIX',
         status: 'pending',
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        paymentMethod: 'PIX'
       };
 
       // Adicionar courseId apenas se for um curso
@@ -184,7 +187,6 @@ export default function StripePaymentModal({
         setIsOpen(false);
         setPaymentStatus('idle');
         setTransactionId(null);
-        setSelectedMethod(null);
         // Forçar atualização da página para mostrar o status de pagamento
         window.location.reload();
       }, 2000);
@@ -364,7 +366,9 @@ export default function StripePaymentModal({
       case 'error':
         return <div className="h-6 w-6 rounded-full bg-red-500" />;
       default:
-        return <CreditCard className="h-6 w-6 text-orange-500" />;
+        return <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">
+          <span className="text-white font-bold text-xs">PIX</span>
+        </div>;
     }
   };
 
@@ -377,7 +381,7 @@ export default function StripePaymentModal({
       case 'error':
         return "Erro no pagamento";
       default:
-        return "Pagamento com Cartão";
+        return "Pagamento via PIX";
     }
   };
 
@@ -410,73 +414,6 @@ export default function StripePaymentModal({
           </CardHeader>
           
           <CardContent className="space-y-6">
-            {paymentStatus === 'idle' && !selectedMethod && (
-              <>
-                <div className="space-y-4">
-                  <h4 className="font-semibold">Escolha sua forma de pagamento:</h4>
-                  
-                  <div className="grid gap-3">
-                    {/* Opção PIX */}
-                    <Card 
-                      className="cursor-pointer hover:border-orange-500/50 transition-colors"
-                      onClick={() => setSelectedMethod(PAYMENT_METHODS[0])}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">PIX</span>
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-semibold">PIX</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Pagamento instantâneo - {getFormattedAmount('BRL')}
-                            </p>
-                          </div>
-                          <div className="text-orange-500">
-                            <ArrowLeft className="h-4 w-4 rotate-180" />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Opção Cartão */}
-                    <Card 
-                      className="cursor-pointer hover:border-orange-500/50 transition-colors"
-                      onClick={() => handleStripePayment()}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                            <CreditCard className="h-5 w-5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-semibold">Cartão de Crédito</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Visa, Mastercard, American Express - ${coursePrice}
-                            </p>
-                          </div>
-                          <div className="text-orange-500">
-                            <ArrowLeft className="h-4 w-4 rotate-180" />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-                
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsOpen(false)}
-                    className="flex-1"
-                  >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Cancelar
-                  </Button>
-                </div>
-              </>
-            )}
-
             {paymentStatus === 'idle' && selectedMethod && (
               <>
                 <div className="space-y-4">
@@ -484,7 +421,7 @@ export default function StripePaymentModal({
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setSelectedMethod(null)}
+                      onClick={() => setIsOpen(false)}
                       className="p-2"
                     >
                       <ArrowLeft className="h-4 w-4" />
@@ -570,7 +507,7 @@ export default function StripePaymentModal({
                 <div className="flex gap-3">
                   <Button
                     variant="outline"
-                    onClick={() => setSelectedMethod(null)}
+                    onClick={() => setIsOpen(false)}
                     className="flex-1"
                   >
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -579,7 +516,7 @@ export default function StripePaymentModal({
                   <Button
                     onClick={handlePixPayment}
                     disabled={isSubmitting}
-                    className="flex-1 bg-green-500 hover:bg-green-600"
+                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
                   >
                     {isSubmitting ? (
                       <>

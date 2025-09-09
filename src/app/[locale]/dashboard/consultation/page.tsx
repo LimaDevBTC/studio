@@ -346,7 +346,7 @@ export default function ConsultationPage() {
               Consultoria Personalizada
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Agende sua consultoria personalizada com nosso especialista
+              Agende sua consultoria personalizada com o mQm
             </p>
           </div>
         </div>

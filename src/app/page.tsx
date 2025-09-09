@@ -217,7 +217,7 @@ export default function LandingPage() {
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Aprenda com especialistas, participe de lives exclusivas e tenha acesso a 
+            Aprenda com o mQm, participe de lives exclusivas e tenha acesso a 
             consultorias personalizadas para maximizar seus investimentos.
           </p>
           
@@ -273,7 +273,7 @@ export default function LandingPage() {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 text-foreground">Consultoria Personalizada</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Receba orientação individual de especialistas para maximizar seus investimentos em criptomoedas
+              Receba orientação individual do mQm para maximizar seus investimentos em criptomoedas
             </p>
           </div>
           
@@ -288,7 +288,7 @@ export default function LandingPage() {
                       </div>
                       <div>
                         <h3 className="text-2xl font-bold text-foreground">Atendimento Individual</h3>
-                        <p className="text-muted-foreground">Sessão personalizada com especialista</p>
+                        <p className="text-muted-foreground">Sessão personalizada com o mQm</p>
                       </div>
                     </div>
                     
@@ -303,7 +303,7 @@ export default function LandingPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-5 h-5 text-green-600" />
-                        <span>Suporte direto com especialista</span>
+                        <span>Suporte direto do mQm</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-5 h-5 text-green-600" />
@@ -324,7 +324,7 @@ export default function LandingPage() {
                     </Button>
                     
                     <p className="text-sm text-muted-foreground">
-                      Sessão única de 60 minutos com especialista certificado
+                      Sessão única de 60 minutos com o mQm
                     </p>
                   </div>
                 </div>
@@ -351,7 +351,7 @@ export default function LandingPage() {
             </Link>
             <Link href="/contact">
               <Button size="lg" variant="outline" className="border-border text-card-foreground hover:bg-accent text-lg px-8 py-6">
-                Falar com Especialista
+                Falar com o mQm
               </Button>
             </Link>
           </div>

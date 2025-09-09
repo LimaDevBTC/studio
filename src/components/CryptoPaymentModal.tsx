@@ -148,6 +148,7 @@ interface NotificationData {
   planName?: string;
   originalAmountUSD?: number;
   convertedAmount?: number;
+  paymentMethod?: string;
 }
 
 export default function CryptoPaymentModal({
@@ -295,7 +296,8 @@ export default function CryptoPaymentModal({
         type: type || "course",
         transactionId: transactionRef.id,
         originalAmountUSD: coursePrice,
-        convertedAmount: selectedMethod.id === 'pix' ? parseFloat(getFormattedAmount('BRL').replace('R$ ', '')) : coursePrice
+        convertedAmount: selectedMethod.id === 'pix' ? parseFloat(getFormattedAmount('BRL').replace('R$ ', '')) : coursePrice,
+        paymentMethod: selectedNetwork ? selectedNetwork.name : selectedMethod.name
       };
 
       // Adicionar campos específicos baseado no tipo
@@ -359,61 +361,55 @@ export default function CryptoPaymentModal({
       <DialogTrigger asChild>
         {trigger}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-center">
-            {t("title", { type: getItemType() })}
+          <DialogTitle className="flex items-center gap-2">
+            <div className="h-6 w-6 rounded-full bg-orange-500 flex items-center justify-center">
+              <span className="text-white font-bold text-xs">₿</span>
+            </div>
+            Pagamento em Criptomoedas
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
-          {/* Indicador de carregamento das taxas */}
-          {ratesLoading && (
-            <div className="text-center py-4">
-              <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">{t("loadingRates")}</p>
-            </div>
-          )}
-          
-          {ratesError && (
-            <div className="text-center py-4">
-              <p className="text-sm text-orange-600">{ratesError}</p>
-            </div>
-          )}
-          
-          {/* Informações do curso */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">
-                {t("courseInfo", { type: getItemType() })}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <h3 className="font-semibold text-lg">{getItemTitle()}</h3>
-                <p className="text-muted-foreground">{getItemDescription()}</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-primary">
-                    ${coursePrice}
-                  </span>
-                  <span className="text-muted-foreground">USD</span>
-                </div>
+        <Card className="border-0 shadow-none">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">{getItemTitle()}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {getItemDescription()}
+                </p>
               </div>
-            </CardContent>
-          </Card>
+              <Badge variant="secondary" className="text-lg font-bold">
+                ${coursePrice}
+              </Badge>
+            </div>
+          </CardHeader>
+          
+          <CardContent className="space-y-6">
+            {/* Indicador de carregamento das taxas */}
+            {ratesLoading && (
+              <div className="text-center py-4">
+                <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">{t("loadingRates")}</p>
+              </div>
+            )}
+            
+            {ratesError && (
+              <div className="text-center py-4">
+                <p className="text-sm text-orange-600">{ratesError}</p>
+              </div>
+            )}
 
-          {/* Seleção do método de pagamento */}
-          {!selectedMethod ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">{t("selectPayment")}</CardTitle>
-              </CardHeader>
-              <CardContent>
+            {/* Seleção do método de pagamento */}
+            {!selectedMethod ? (
+              <div className="space-y-4">
+                <h4 className="font-semibold">Escolha sua criptomoeda:</h4>
                 <div className="grid gap-4">
                   {PAYMENT_METHODS.map((method) => (
                     <div
                       key={method.id}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:border-primary/50 cursor-pointer transition-colors"
+                      className="flex items-center justify-between p-4 border rounded-lg hover:border-orange-500/50 cursor-pointer transition-colors"
                       onClick={() => handleMethodSelection(method)}
                     >
                       <div className="flex items-center gap-3">
@@ -426,7 +422,7 @@ export default function CryptoPaymentModal({
                         </div>
                         <div>
                           <h4 className="font-semibold">{method.name}</h4>
-                          <p className="text-xs text-primary font-medium">
+                          <p className="text-xs text-orange-500 font-medium">
                             {ratesLoading ? "Carregando..." : 
                               method.symbol === 'USDT' || method.symbol === 'USDC' 
                                 ? `${coursePrice} ${method.symbol}` 
@@ -441,31 +437,39 @@ export default function CryptoPaymentModal({
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+                
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsOpen(false)}
+                    className="flex-1"
+                  >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Voltar
+                  </Button>
+                </div>
+              </div>
           ) : selectedMethod && selectedMethod.network === 'Multi' && !selectedNetwork ? (
-            /* Seleção de rede para USDT e USDC */
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  {t("chooseNetwork", { name: selectedMethod.name })}
-                </CardTitle>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedMethod(null)}
-                  className="absolute left-4 top-4"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Voltar
-                </Button>
-              </CardHeader>
-              <CardContent>
+              /* Seleção de rede para USDT e USDC */
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedMethod(null)}
+                    className="p-2"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <h4 className="font-semibold">
+                    {t("chooseNetwork", { name: selectedMethod.name })}
+                  </h4>
+                </div>
                 <div className="grid gap-4">
                   {NETWORK_METHODS[selectedMethod.id as keyof typeof NETWORK_METHODS]?.map((networkMethod) => (
                     <div
                       key={networkMethod.id}
-                      className="flex items-center justify-between p-4 border rounded-lg hover:border-primary/50 cursor-pointer transition-colors"
+                      className="flex items-center justify-between p-4 border rounded-lg hover:border-orange-500/50 cursor-pointer transition-colors"
                       onClick={() => handleNetworkSelection(networkMethod)}
                     >
                       <div className="flex items-center gap-3">
@@ -476,9 +480,9 @@ export default function CryptoPaymentModal({
                             className="w-full h-full object-contain"
                           />
                         </div>
-                                                <div>
+                        <div>
                           <h4 className="font-semibold">{networkMethod.name}</h4>
-                          <p className="text-xs text-primary font-medium">
+                          <p className="text-xs text-orange-500 font-medium">
                             {ratesLoading ? "Carregando..." : 
                               networkMethod.symbol === 'USDT' || networkMethod.symbol === 'USDC' 
                                 ? `${coursePrice} ${networkMethod.symbol}` 
@@ -493,16 +497,42 @@ export default function CryptoPaymentModal({
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          ) : (
-            /* Detalhes do pagamento */
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  {t("payWith")} {selectedNetwork ? selectedNetwork.name : selectedMethod.name}
-                </CardTitle>
-                <div className="text-sm text-muted-foreground">
+                
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setSelectedMethod(null)}
+                    className="flex-1"
+                  >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Voltar
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              /* Detalhes do pagamento */
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      if (selectedNetwork) {
+                        setSelectedNetwork(null);
+                      } else {
+                        setSelectedMethod(null);
+                      }
+                    }}
+                    className="p-2"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <h4 className="font-semibold">
+                    {t("payWith")} {selectedNetwork ? selectedNetwork.name : selectedMethod.name}
+                  </h4>
+                </div>
+                
+                <div className="text-center text-sm text-muted-foreground mb-4">
                   Valor: {ratesLoading ? "Carregando..." : 
                     (selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) === 'USDT' || 
                     (selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) === 'USDC'
@@ -510,23 +540,6 @@ export default function CryptoPaymentModal({
                       : getFormattedAmount((selectedNetwork ? selectedNetwork.symbol : selectedMethod.symbol) as any)
                   }
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    if (selectedNetwork) {
-                      setSelectedNetwork(null);
-                    } else {
-                      setSelectedMethod(null);
-                    }
-                  }}
-                  className="absolute left-4 top-4"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Voltar
-                </Button>
-              </CardHeader>
-              <CardContent>
                 <div className="space-y-6">
                   {/* QR Code */}
                   <div className="text-center">
@@ -600,30 +613,45 @@ export default function CryptoPaymentModal({
                     )}
                   </div>
 
-                  {/* Botão de confirmação */}
-                  <Button
-                    onClick={handlePaymentConfirmation}
-                    disabled={isSubmitting}
-                    className="w-full"
-                    size="lg"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {t("processing")}
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle2 className="mr-2 h-4 w-4" />
-                        Já Paguei
-                      </>
-                    )}
-                  </Button>
+                  {/* Botões de ação */}
+                  <div className="flex gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        if (selectedNetwork) {
+                          setSelectedNetwork(null);
+                        } else {
+                          setSelectedMethod(null);
+                        }
+                      }}
+                      className="flex-1"
+                    >
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Voltar
+                    </Button>
+                    <Button
+                      onClick={handlePaymentConfirmation}
+                      disabled={isSubmitting}
+                      className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t("processing")}
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 className="mr-2 h-4 w-4" />
+                          Já Paguei
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </DialogContent>
     </Dialog>
   );
