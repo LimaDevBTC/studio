@@ -601,11 +601,13 @@ export default function Home() {
                       <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationPrice')}</div>
                     </div>
                     
-                    <Button asChild size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                      <Link href="/signup">
-                        {t('consultationButton')}
-                        <ArrowRight className="ml-2 w-4 h-4" />
-                      </Link>
+                    <Button 
+                      size="lg" 
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                      onClick={() => window.location.href = '/signup?redirect=consultation'}
+                    >
+                      {t('consultationButton')}
+                      <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                     
                     <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300">

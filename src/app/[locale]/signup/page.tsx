@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +19,7 @@ import Image from 'next/image';
 
 export default function SignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const t = useTranslations('SignupPage');
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
@@ -25,16 +27,20 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  // Capturar parâmetro de redirect
+  const redirectParam = searchParams?.get('redirect');
 
   // Redirecionar usuários já autenticados
   useEffect(() => {
-
     if (user && !authLoading) {
-      console.log('🔄 Usuário já autenticado, redirecionando para dashboard...');
-      // Usar window.location para evitar problemas de roteamento
-      window.location.href = '/dashboard';
+      console.log('🔄 Usuário já autenticado, redirecionando...');
+      
+      // Redirecionar para consultoria por padrão (único produto funcionando)
+      console.log('🎯 Redirecionando para página de consultoria...');
+      window.location.href = '/dashboard/consultation';
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, redirectParam]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();

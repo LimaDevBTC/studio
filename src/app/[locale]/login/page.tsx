@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,30 +19,36 @@ import Image from 'next/image';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const t = useTranslations('LoginPage');
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  // Capturar parâmetro de redirect
+  const redirectParam = searchParams?.get('redirect');
 
   // Redirecionar usuários já autenticados
   useEffect(() => {
-
     if (user && !authLoading) {
-      console.log('🔄 Usuário já autenticado, redirecionando para dashboard...');
-      // Usar window.location para evitar problemas de roteamento
-      window.location.href = '/dashboard';
+      console.log('🔄 Usuário já autenticado, redirecionando...');
+      
+      // Redirecionar para consultoria por padrão (único produto funcionando)
+      console.log('🎯 Redirecionando para página de consultoria...');
+      window.location.href = '/dashboard/consultation';
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, redirectParam]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Redirecionamento direto sem toast de sucesso
-      window.location.href = '/dashboard';
+      // Redirecionamento para consultoria por padrão (único produto funcionando)
+      console.log('🎯 Login bem-sucedido, redirecionando para consultoria...');
+      window.location.href = '/dashboard/consultation';
     } catch (error: any) {
       console.error("Error signing in:", error);
       let errorMessage = "Erro ao fazer login. Tente novamente.";
@@ -72,8 +79,9 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // Redirecionamento direto sem toast de sucesso
-      window.location.href = '/dashboard';
+      // Redirecionamento para consultoria por padrão (único produto funcionando)
+      console.log('🎯 Login Google bem-sucedido, redirecionando para consultoria...');
+      window.location.href = '/dashboard/consultation';
     } catch (error: any) {
       console.error("Error signing in with Google:", error);
       let errorMessage = "Erro ao fazer login com Google. Tente novamente.";
