@@ -20,51 +20,30 @@ import { PublicCourse } from '@/hooks/use-public-courses';
 const features = [
   {
     icon: <IconUserCheck className="w-12 h-12 text-primary" stroke={2} />,
-    title: "feature1Title",
-    description: "feature1Desc",
+    title: "featureBeginnerTitle",
+    description: "featureBeginnerDesc",
+    level: "INICIANTE",
     gradient: "from-yellow-500/20 to-orange-500/20",
     borderColor: "border-yellow-500/30",
     iconBg: "bg-yellow-500/10",
   },
   {
     icon: <IconShieldCheck className="w-12 h-12 text-primary" stroke={2} />,
-    title: "feature2Title",
-    description: "feature2Desc",
+    title: "featureIntermediateTitle",
+    description: "featureIntermediateDesc",
+    level: "INTERMEDIÁRIO",
     gradient: "from-orange-500/20 to-red-500/20",
     borderColor: "border-orange-500/30",
     iconBg: "bg-orange-500/10",
   },
   {
-    icon: <IconBrain className="w-12 h-12 text-primary" stroke={2} />,
-    title: "feature3Title",
-    description: "feature3Desc",
-    gradient: "from-amber-500/20 to-orange-500/20",
-    borderColor: "border-amber-500/30",
-    iconBg: "bg-amber-500/10",
-  },
-  {
     icon: <IconTrendingUp className="w-12 h-12 text-primary" stroke={2} />,
-    title: "feature4Title",
-    description: "feature4Desc",
+    title: "featureAdvancedTitle",
+    description: "featureAdvancedDesc",
+    level: "AVANÇADO",
     gradient: "from-red-500/20 to-red-600/20",
     borderColor: "border-red-500/30",
     iconBg: "bg-red-500/10",
-  },
-  {
-    icon: <IconSchool className="w-12 h-12 text-primary" stroke={2} />,
-    title: "feature5Title",
-    description: "feature5Desc",
-    gradient: "from-yellow-400/20 to-red-500/20",
-    borderColor: "border-yellow-400/30",
-    iconBg: "bg-yellow-400/10",
-  },
-  {
-    icon: <IconKey className="w-12 h-12 text-primary" stroke={2} />,
-    title: "feature6Title",
-    description: "feature6Desc",
-    gradient: "from-orange-400/20 to-red-600/20",
-    borderColor: "border-orange-400/30",
-    iconBg: "bg-orange-400/10",
   },
 ];
 
@@ -217,33 +196,36 @@ function CoursesSection() {
                   {(() => {
                     if (displayData.status === 'Published') {
                       return (
-                        <Button asChild className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300">
-                          <Link href="/signup">
-                            {t('courseStartNow')}
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </Link>
+                        <Button 
+                          className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300"
+                          onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                        >
+                          Fale com o mQm sobre este curso
+                          <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       );
                     }
                     
                     if (displayData.status === 'Waitlist' || displayData.status === 'waitlist') {
                       return (
-                        <Button asChild className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300">
-                          <Link href="/signup">
-                            {t('courseJoinWaitlist')}
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </Link>
+                        <Button 
+                          className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300"
+                          onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                        >
+                          Fale com o mQm sobre este curso
+                          <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       );
                     }
                     
                     // Status padrão
                     return (
-                      <Button asChild className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300">
-                        <Link href="/signup">
-                          {t('courseLearnMore')}
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
+                      <Button 
+                        className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300"
+                        onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                      >
+                        Fale com o mQm sobre este curso
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     );
                   })()}
@@ -531,8 +513,12 @@ export default function Home() {
                     transform: 'translateY(-10px)'
                   }}
                 >
-                  <Button size="lg" className="px-6 py-4 lg:px-8 lg:py-6 text-xl lg:text-2xl font-semibold" asChild>
-                    <Link href="/signup">{t('startFreeTrial')}</Link>
+                  <Button 
+                    size="lg" 
+                    className="px-6 py-4 lg:px-8 lg:py-6 text-xl lg:text-2xl font-semibold"
+                    onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                  >
+                    Fale com o mQm no WhatsApp
                   </Button>
                 </div>
               </div>
@@ -604,9 +590,9 @@ export default function Home() {
                     <Button 
                       size="lg" 
                       className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                      onClick={() => window.location.href = '/signup?redirect=consultation'}
+                      onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
                     >
-                      {t('consultationButton')}
+                      Agende sua consultoria direto com o mQm
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                     
@@ -631,7 +617,7 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl lg:text-5xl xl:text-6xl">
-                  {t('featuresTitle')}
+                  Temos o que você precisa
                 </h2>
                 <p className="max-w-3xl mx-auto text-muted-foreground text-lg lg:text-xl xl:text-2xl leading-relaxed">
                   {t('featuresSubtitle')}
@@ -639,12 +625,19 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="mx-auto grid max-w-7xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-3">
               {features.map((feature, index) => (
                 <div 
                   key={index} 
                   className="group relative overflow-hidden rounded-2xl backdrop-blur-sm bg-white/[0.02] border border-white/5 p-8 hover:border-orange-500/20 hover:bg-white/[0.04] transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/10"
                 >
+                  
+                  {/* Level Badge */}
+                  <div className="absolute top-4 right-4">
+                    <span className="px-3 py-1 text-xs font-semibold bg-primary/10 text-primary rounded-full border border-primary/20">
+                      {feature.level}
+                    </span>
+                  </div>
                   
                   {/* Icon - Apple style minimal */}
                   <div className="relative z-10 mb-6">
@@ -703,8 +696,12 @@ export default function Home() {
               </p>
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
-              <Button asChild size="lg" className="w-full">
-                <Link href="/signup">{t('viewSubscriptions')}</Link>
+              <Button 
+                size="lg" 
+                className="w-full"
+                onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+              >
+                Fale com o mQm sobre preços
               </Button>
             </div>
           </div>
