@@ -699,7 +699,7 @@ export default function Home() {
               <Button 
                 size="lg" 
                 className="w-full"
-                onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank')}
+                onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20contratar%20uma%20mentoria%20completa%20e%20exclusiva%20com%20você%20mQm.', '_blank')}
               >
                 {t('viewSubscriptions')}
               </Button>
