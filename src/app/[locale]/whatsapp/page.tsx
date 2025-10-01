@@ -12,14 +12,14 @@ export default function WhatsAppRedirect() {
   useEffect(() => {
     // Redirecionar automaticamente após 5 segundos
     const timer = setTimeout(() => {
-      window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank');
+      window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank');
     }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
 
   const handleWhatsAppClick = () => {
-    window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank');
+    window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank');
   };
 
   return (

@@ -172,7 +172,7 @@ function CoursesSection() {
                   <Badge 
                     className={`${
                       displayData.status === 'Published' 
-                        ? 'bg-primary text-primary-foreground group-hover:bg-orange-500' 
+                        ? 'bg-primary text-primary-foreground group-hover:bg-primary/90' 
                         : 'bg-white/10 text-white backdrop-blur-sm border-white/20'
                     } transition-colors duration-300`}
                   >
@@ -184,7 +184,7 @@ function CoursesSection() {
               {/* Conteúdo do card */}
               <div className="p-6 flex-1 flex flex-col">
                 <div className="space-y-4 flex-1">
-                  <h3 className="text-xl font-semibold text-primary group-hover:text-orange-500 transition-colors duration-300 leading-tight">
+                  <h3 className="text-xl font-semibold text-primary group-hover:text-primary/80 transition-colors duration-300 leading-tight">
                     {displayData.title}
                   </h3>
                   <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 text-sm line-clamp-2">
@@ -197,10 +197,10 @@ function CoursesSection() {
                     if (displayData.status === 'Published') {
                       return (
                         <Button 
-                          className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300"
-                          onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-300"
+                          onClick={() => window.open(`https://wa.me/5511977486383?text=Tenho%20interesse%20no%20curso%20${encodeURIComponent(displayData.title)}%20mQm`, '_blank')}
                         >
-                          Fale com o mQm sobre este curso
+                          {t('courseStartNow')}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       );
@@ -209,10 +209,10 @@ function CoursesSection() {
                     if (displayData.status === 'Waitlist' || displayData.status === 'waitlist') {
                       return (
                         <Button 
-                          className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300"
-                          onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-300"
+                          onClick={() => window.open(`https://wa.me/5511977486383?text=Tenho%20interesse%20no%20curso%20${encodeURIComponent(displayData.title)}%20mQm`, '_blank')}
                         >
-                          Fale com o mQm sobre este curso
+                          {t('courseStartNow')}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       );
@@ -221,8 +221,8 @@ function CoursesSection() {
                     // Status padrão
                     return (
                       <Button 
-                        className="w-full bg-primary hover:bg-orange-500 text-primary-foreground transition-colors duration-300"
-                        onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-300"
+                        onClick={() => window.open(`https://wa.me/5511977486383?text=Tenho%20interesse%20no%20curso%20${encodeURIComponent(displayData.title)}%20mQm`, '_blank')}
                       >
                         Fale com o mQm sobre este curso
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -516,9 +516,9 @@ export default function Home() {
                   <Button 
                     size="lg" 
                     className="px-6 py-4 lg:px-8 lg:py-6 text-xl lg:text-2xl font-semibold"
-                    onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                    onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank')}
                   >
-                    Fale com o mQm no WhatsApp
+                    {t('startFreeTrial')}
                   </Button>
                 </div>
               </div>
@@ -548,11 +548,11 @@ export default function Home() {
                 <div className="grid md:grid-cols-2 gap-8 items-center">
                   <div className="space-y-6">
                     <div className="flex items-center gap-4">
-                      <div className="text-primary group-hover:text-orange-500 transition-colors duration-300">
+                      <div className="text-primary group-hover:text-primary/80 transition-colors duration-300">
                         <Users className="w-8 h-8" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-primary group-hover:text-orange-500 transition-colors duration-300 leading-tight">
+                        <h3 className="text-xl font-semibold text-primary group-hover:text-primary/80 transition-colors duration-300 leading-tight">
                           {t('consultationIndividualTitle')}
                         </h3>
                         <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 text-sm mt-2">
@@ -583,16 +583,16 @@ export default function Home() {
                   
                   <div className="text-center space-y-6">
                     <div className="bg-white/[0.02] rounded-xl p-6 border border-white/5 group-hover:border-orange-500/20 transition-all duration-300">
-                      <div className="text-4xl font-bold text-primary group-hover:text-orange-500 transition-colors duration-300 mb-2">$39.00</div>
+                      <div className="text-4xl font-bold text-primary group-hover:text-primary/80 transition-colors duration-300 mb-2">$39.00</div>
                       <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationPrice')}</div>
                     </div>
                     
                     <Button 
                       size="lg" 
                       className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                      onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                      onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank')}
                     >
-                      Agende sua consultoria direto com o mQm
+                      {t('consultationButton')}
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                     
@@ -641,7 +641,7 @@ export default function Home() {
                   
                   {/* Icon - Apple style minimal */}
                   <div className="relative z-10 mb-6">
-                    <div className="text-primary group-hover:text-orange-500 transition-colors duration-300">
+                    <div className="text-primary group-hover:text-primary/80 transition-colors duration-300">
                       {feature.icon}
                     </div>
                   </div>
@@ -699,9 +699,9 @@ export default function Home() {
               <Button 
                 size="lg" 
                 className="w-full"
-                onClick={() => window.open('https://chat.whatsapp.com/IYWC2IRJOoV7SblZKLiIZS', '_blank')}
+                onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank')}
               >
-                Fale com o mQm sobre preços
+                {t('viewSubscriptions')}
               </Button>
             </div>
           </div>

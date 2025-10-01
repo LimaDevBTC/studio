@@ -237,26 +237,7 @@ export default function DashboardPage() {
               </Button>
             </CardFooter>
           </Card>
-        ) : (
-          <Card className="flex flex-col">
-            <CardHeader className="p-0">
-              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Carregando...</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1 pt-6">
-              <Skeleton className="h-6 w-3/4 mb-3" />
-              <Skeleton className="h-4 w-full mb-1" />
-              <Skeleton className="h-4 w-5/6" />
-            </CardContent>
-            <CardFooter>
-              <Skeleton className="h-10 w-full" />
-            </CardFooter>
-          </Card>
-        )}
+        ) : null}
 
         {/* Card 3: Segundo Curso Recomendado */}
         {loading ? (
@@ -305,26 +286,7 @@ export default function DashboardPage() {
               </Button>
             </CardFooter>
           </Card>
-        ) : (
-          <Card className="flex flex-col">
-            <CardHeader className="p-0">
-              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Carregando...</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1 pt-6">
-              <Skeleton className="h-6 w-3/4 mb-3" />
-              <Skeleton className="h-4 w-full mb-1" />
-              <Skeleton className="h-4 w-5/6" />
-            </CardContent>
-            <CardFooter>
-              <Skeleton className="h-10 w-full" />
-            </CardFooter>
-          </Card>
-        )}
+        ) : null}
 
         {/* SEGUNDA LINHA: Mais Cursos Recomendados */}
         
@@ -375,26 +337,7 @@ export default function DashboardPage() {
               </Button>
             </CardFooter>
           </Card>
-        ) : (
-          <Card className="flex flex-col">
-            <CardHeader className="p-0">
-              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Carregando...</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1 pt-6">
-              <Skeleton className="h-6 w-3/4 mb-3" />
-              <Skeleton className="h-4 w-full mb-1" />
-              <Skeleton className="h-4 w-5/6" />
-            </CardContent>
-            <CardFooter>
-              <Skeleton className="h-10 w-full" />
-            </CardFooter>
-          </Card>
-        )}
+        ) : null}
 
         {/* Card 5: Quarto Curso Recomendado */}
         {loading ? (
@@ -443,26 +386,7 @@ export default function DashboardPage() {
               </Button>
             </CardFooter>
           </Card>
-        ) : (
-          <Card className="flex flex-col">
-            <CardHeader className="p-0">
-              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Carregando...</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1 pt-6">
-              <Skeleton className="h-6 w-3/4 mb-3" />
-              <Skeleton className="h-4 w-full mb-1" />
-              <Skeleton className="h-4 w-5/6" />
-            </CardContent>
-            <CardFooter>
-              <Skeleton className="h-10 w-full" />
-            </CardFooter>
-          </Card>
-        )}
+        ) : null}
 
         {/* Card 6: Quinto Curso Recomendado */}
         {loading ? (
@@ -511,26 +435,7 @@ export default function DashboardPage() {
               </Button>
             </CardFooter>
           </Card>
-        ) : (
-          <Card className="flex flex-col">
-            <CardHeader className="p-0">
-              <div className="rounded-t-lg aspect-video bg-muted flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Carregando...</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-1 pt-6">
-              <Skeleton className="h-6 w-3/4 mb-3" />
-              <Skeleton className="h-4 w-full mb-1" />
-              <Skeleton className="h-4 w-5/6" />
-            </CardContent>
-            <CardFooter>
-              <Skeleton className="h-10 w-full" />
-            </CardFooter>
-          </Card>
-        )}
+        ) : null}
 
       </div>
 

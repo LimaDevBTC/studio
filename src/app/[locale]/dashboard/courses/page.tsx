@@ -30,8 +30,9 @@ interface Course {
 export default function MyCoursesPage() {
   const t = useTranslations('DashboardLayout');
   const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { user, userData, loading: authLoading } = useAuth();
+
 
   // Lógica de acesso será controlada pelo hook useCourseAccess
 
@@ -41,7 +42,10 @@ export default function MyCoursesPage() {
         setLoading(false);
         return;
       }
+      
+      console.log('🔄 Iniciando busca de cursos...');
       setLoading(true);
+      
       try {
         // IMPORTANTE: Buscar apenas cursos que o usuário TEM ACESSO
         // 1. Cursos comprados individualmente
@@ -77,11 +81,19 @@ export default function MyCoursesPage() {
         }
         
         // 4. Buscar dados dos cursos acessíveis
+        if (coursesToFetch.length === 0) {
+          setCourses([]);
+          setLoading(false);
+          return;
+        }
+        
         const coursesListPromises = coursesToFetch.map(async (courseId) => {
           const courseRef = doc(db, "courses", courseId);
           const courseSnap = await getDoc(courseRef);
           
-          if (!courseSnap.exists()) return null;
+          if (!courseSnap.exists()) {
+            return null;
+          }
           
           const courseData = courseSnap.data();
           
@@ -119,17 +131,20 @@ export default function MyCoursesPage() {
         const coursesList = await Promise.all(coursesListPromises);
         const validCourses = coursesList.filter(course => course !== null) as Course[];
         
-
-        
+        console.log('✅ Cursos carregados:', validCourses.length);
         setCourses(validCourses);
       } catch (error) {
-        console.error("Erro ao buscar cursos do usuário:", error);
+        console.error("❌ Erro ao buscar cursos do usuário:", error);
+        setCourses([]);
       } finally {
+        console.log('🏁 Finalizando loading...');
         setLoading(false);
       }
     };
 
-    fetchUserCourses();
+    if (user && userData) {
+      fetchUserCourses();
+    }
   }, [user, userData]);
 
   const getButtonText = (progress?: number) => {
@@ -138,35 +153,35 @@ export default function MyCoursesPage() {
     return "Continuar Curso";
   }
 
-  const isLoading = loading || authLoading;
+  // Só mostrar loading se estiver realmente carregando dados
+  const isLoading = loading;
+  
+  // Debug temporário
+  console.log('🔍 Debug States:', { 
+    loading, 
+    authLoading, 
+    isLoading, 
+    coursesCount: courses.length,
+    user: !!user,
+    userData: !!userData,
+    shouldShowLoading: isLoading,
+    shouldShowCourses: courses.length > 0
+  });
 
   return (
     <div className="space-y-8">
       <div>
-                    <h1 className="text-3xl font-bold">{t('navMyCourses')}</h1>
+        <h1 className="text-3xl font-bold">{t('navMyCourses')}</h1>
         <p className="text-muted-foreground">{t('coursesDescription')}</p>
         
-
       </div>
 
-      {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <Card key={index} className="flex flex-col">
-              <CardHeader className='p-0'>
-                <Skeleton className="rounded-t-lg aspect-video" />
-              </CardHeader>
-              <CardContent className="flex-1 pt-6 space-y-3">
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-5/6" />
-                <Skeleton className="h-2 w-full mt-2" />
-              </CardContent>
-              <CardFooter>
-                <Skeleton className="h-10 w-full" />
-              </CardFooter>
-            </Card>
-          ))}
+      {loading && courses.length === 0 ? (
+        <div className="flex items-center justify-center py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Carregando cursos...</p>
+          </div>
         </div>
       ) : courses.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -203,7 +218,7 @@ export default function MyCoursesPage() {
                     </Button>
                   ) : (
                     <Button asChild className="w-full">
-                      <Link href={`/dashboard/courses/${course.id}`}>{getButtonText(course.progress)}</Link>
+                      <Link href={`/dashboard/courses/${course.id}` as any}>{getButtonText(course.progress)}</Link>
                     </Button>
                   )}
                 </CardFooter>
@@ -218,16 +233,19 @@ export default function MyCoursesPage() {
                 <Sparkles className="w-8 h-8 text-primary"/>
                </div>
              </div>
-                            <CardTitle className="text-2xl">Desbloqueie todos os cursos</CardTitle>
+             <CardTitle className="text-2xl">Nenhum curso disponível</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              Você está atualmente no Teste Gratuito. Para ter acesso aos nossos cursos premium, por favor, atualize seu plano.
+              No momento não há cursos disponíveis para você. Entre em contato conosco para saber mais sobre nossos cursos.
             </p>
           </CardContent>
           <CardFooter className="flex-col gap-4">
-            <Button asChild className="w-full">
-              <Link href="/dashboard/subscription">Ver Planos de Assinatura</Link>
+            <Button 
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank')}
+            >
+              Fale com o mQm no WhatsApp
             </Button>
              <Button variant="ghost" asChild>
                 <Link href="/dashboard">Voltar ao Painel</Link>
