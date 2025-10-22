@@ -490,7 +490,7 @@ export default function Home() {
               >
                 <div className="space-y-3 lg:space-y-4">
                   <h1 
-                    className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl leading-tight"
+                    className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl leading-tight"
                     style={{
                       animation: 'fadeIn 0.3s ease-out 0.2s both'
                     }}
@@ -498,28 +498,13 @@ export default function Home() {
                     {t('heroTitle')}
                   </h1>
                   <p 
-                    className="max-w-full lg:max-w-[600px] text-muted-foreground text-2xl lg:text-3xl xl:text-4xl leading-relaxed text-center lg:text-left"
+                    className="max-w-full lg:max-w-[700px] text-muted-foreground text-3xl lg:text-4xl xl:text-5xl leading-relaxed text-center lg:text-left"
                     style={{
                       animation: 'fadeIn 0.5s ease-out 0.3s both'
                     }}
                   >
                     {t('heroSubtitle')}
                   </p>
-                </div>
-                <div 
-                  className="flex flex-col gap-3 min-[400px]:flex-row justify-center lg:justify-start"
-                  style={{
-                    animation: 'fadeIn 0.5s ease-out 0.4s both',
-                    transform: 'translateY(-10px)'
-                  }}
-                >
-                  <Button 
-                    size="lg" 
-                    className="px-8 py-4 lg:px-10 lg:py-5 text-lg lg:text-xl font-semibold"
-                    onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank')}
-                  >
-                    Fale no WhatsApp
-                  </Button>
                 </div>
               </div>
             </div>
