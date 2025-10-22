@@ -129,7 +129,7 @@ function CoursesSection() {
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className={`grid gap-6 ${courses.length === 1 ? 'justify-center max-w-md mx-auto' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
         {courses.map((course) => {
           const displayData = getCourseDisplayData(course);
           
@@ -515,10 +515,10 @@ export default function Home() {
                 >
                   <Button 
                     size="lg" 
-                    className="px-6 py-4 lg:px-8 lg:py-6 text-xl lg:text-2xl font-semibold"
+                    className="px-8 py-4 lg:px-10 lg:py-5 text-lg lg:text-xl font-semibold"
                     onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank')}
                   >
-                    {t('startFreeTrial')}
+                    Fale no WhatsApp
                   </Button>
                 </div>
               </div>
@@ -582,17 +582,12 @@ export default function Home() {
                   </div>
                   
                   <div className="text-center space-y-6">
-                    <div className="bg-white/[0.02] rounded-xl p-6 border border-white/5 group-hover:border-orange-500/20 transition-all duration-300">
-                      <div className="text-4xl font-bold text-primary group-hover:text-primary/80 transition-colors duration-300 mb-2">$39.00</div>
-                      <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationPrice')}</div>
-                    </div>
-                    
                     <Button 
                       size="lg" 
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                      className="w-full px-8 py-4 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
                       onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank')}
                     >
-                      {t('consultationButton')}
+                      Fale no WhatsApp
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                     
