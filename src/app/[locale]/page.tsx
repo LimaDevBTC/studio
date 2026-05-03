@@ -489,7 +489,7 @@ export default function Home() {
                     className="px-8 py-6 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
                     onClick={() => window.open(LASTLINK_URL, '_blank')}
                   >
-                    Quero Acessar Agora
+                    {t('heroCta')}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </div>
@@ -558,10 +558,10 @@ export default function Home() {
           <div className="container grid items-center justify-center gap-6 px-4 text-center md:px-6">
             <div className="space-y-3">
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                Entre na comunidade que mais cresce no mercado crypto
+                {t('communityTitle')}
               </h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Faça parte do grupo que está construindo riqueza com inteligência, estratégia e visão de longo prazo.
+                {t('communitySubtitle')}
               </p>
             </div>
             <div className="mx-auto w-full max-w-sm">
@@ -570,7 +570,7 @@ export default function Home() {
                 className="w-full px-8 py-6 text-lg font-semibold"
                 onClick={() => window.open(LASTLINK_URL, '_blank')}
               >
-                Quero Entrar Agora
+                {t('communityCta')}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
