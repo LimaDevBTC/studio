@@ -2,31 +2,31 @@ import { NextRequest, NextResponse } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
 import { locales, pathnames } from './config';
 
-// Middleware de internacionalização
+const LASTLINK_URL = 'https://lastlink.com/p/C9020FF58/checkout-payment/';
+
+const PLATFORM_PATH_REGEX =
+  /^\/(?:[a-z]{2}\/)?(login|iniciar-sesion|signup|cadastro|registro|dashboard|admin|create-admin|test-payment|whatsapp|contact)(?:\/|$)/i;
+
 const intlMiddleware = createIntlMiddleware({
   defaultLocale: 'en',
   locales,
   pathnames,
 });
 
-// Middleware simplificado - apenas internacionalização
-// A autenticação será controlada pelos componentes React
 export default function middleware(request: NextRequest) {
-  // Aplicar apenas internacionalização
+  const { pathname } = request.nextUrl;
+
+  if (PLATFORM_PATH_REGEX.test(pathname)) {
+    return NextResponse.redirect(LASTLINK_URL);
+  }
+
   return intlMiddleware(request);
 }
 
 export const config = {
   matcher: [
-    // Enable a redirect to a matching locale at the root
     '/',
-
-    // Set a cookie to remember the previous locale for
-    // all requests that have a locale prefix
     '/(pt|es|en)/:path*',
-
-    // Enable redirects that add a locale prefix
-    // (e.g. `/pathnames` -> `/en/pathnames`)
-    '/((?!_next|_vercel|.*\\..*).*)'
+    '/((?!_next|_vercel|api|.*\\..*).*)'
   ]
 };

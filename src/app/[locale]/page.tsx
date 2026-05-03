@@ -9,12 +9,13 @@ import { Badge } from "@/components/ui/badge";
 import { BookOpen, ShieldCheck, BarChart, Users, CheckCircle, ArrowRight, Clock, Users as UsersIcon, Mail, Globe, Phone } from "lucide-react";
 import { IconUserCheck, IconShieldCheck, IconBrain, IconTrendingUp, IconSchool, IconKey } from "@tabler/icons-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { AuthStatus } from "@/components/AuthStatus";
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Link } from '@/navigation';
 import { usePublicCourses } from "@/hooks/use-public-courses";
 import { useEffect } from 'react';
 import { PublicCourse } from '@/hooks/use-public-courses';
+
+const LASTLINK_URL = "https://lastlink.com/p/C9020FF58/checkout-payment/";
 
 
 const features = [
@@ -193,42 +194,13 @@ function CoursesSection() {
                 </div>
                 
                 <div className="mt-6 space-y-4">
-                  {(() => {
-                    if (displayData.status === 'Published') {
-                      return (
-                        <Button 
-                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-300"
-                          onClick={() => window.open(`https://wa.me/5511977486383?text=Tenho%20interesse%20no%20curso%20${encodeURIComponent(displayData.title)}%20mQm`, '_blank')}
-                        >
-                          {t('courseStartNow')}
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      );
-                    }
-                    
-                    if (displayData.status === 'Waitlist' || displayData.status === 'waitlist') {
-                      return (
-                        <Button 
-                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-300"
-                          onClick={() => window.open(`https://wa.me/5511977486383?text=Tenho%20interesse%20no%20curso%20${encodeURIComponent(displayData.title)}%20mQm`, '_blank')}
-                        >
-                          {t('courseStartNow')}
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      );
-                    }
-                    
-                    // Status padrão
-                    return (
-                      <Button 
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-300"
-                        onClick={() => window.open(`https://wa.me/5511977486383?text=Tenho%20interesse%20no%20curso%20${encodeURIComponent(displayData.title)}%20mQm`, '_blank')}
-                      >
-                        Fale com o mQm sobre este curso
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    );
-                  })()}
+                  <Button
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-300"
+                    onClick={() => window.open(LASTLINK_URL, '_blank')}
+                  >
+                    {t('courseStartNow')}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </div>
@@ -271,13 +243,13 @@ export default function Home() {
             <Logo />
           </div>
           <nav className="ml-auto flex gap-2 sm:gap-4 lg:gap-6 items-center relative">
-            <AuthStatus />
+            <LocaleSwitcher />
           </nav>
         </div>
       </header>
               <main className="flex-1 pt-20 lg:pt-4">
         <section
-          className="w-full py-8 md:py-12 lg:py-16 xl:py-20 relative bg-no-repeat overflow-hidden"
+          className="w-full pt-8 pb-16 md:pt-12 md:pb-24 lg:pt-16 lg:pb-32 xl:pt-20 xl:pb-40 relative bg-no-repeat overflow-hidden md:min-h-[48vw]"
           style={{
             backgroundColor: '#0a0a0a'
           }}
@@ -288,8 +260,8 @@ export default function Home() {
           <div 
             className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center -100px',
-              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
+              backgroundSize: '100% auto',
               animation: 'buildFoundationLayer 2s ease-out forwards'
             }}
           />
@@ -298,8 +270,8 @@ export default function Home() {
           <div 
             className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center -100px',
-              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
+              backgroundSize: '100% auto',
               animation: 'buildBaseWallsLayer 2s ease-out forwards 0.5s'
             }}
           />
@@ -308,8 +280,8 @@ export default function Home() {
           <div 
             className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center -100px',
-              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
+              backgroundSize: '100% auto',
               animation: 'buildWallsLayer 2s ease-out forwards 1s'
             }}
           />
@@ -318,8 +290,8 @@ export default function Home() {
           <div 
             className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center -100px',
-              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
+              backgroundSize: '100% auto',
               animation: 'buildBaseTowersLayer 2s ease-out forwards 1.5s'
             }}
           />
@@ -328,8 +300,8 @@ export default function Home() {
           <div 
             className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center -100px',
-              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
+              backgroundSize: '100% auto',
               animation: 'buildTowersLayer 2s ease-out forwards 2s'
             }}
           />
@@ -338,8 +310,8 @@ export default function Home() {
           <div 
             className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center -100px',
-              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
+              backgroundSize: '100% auto',
               animation: 'buildCentralTowerBaseLayer 2s ease-out forwards 2.5s'
             }}
           />
@@ -348,8 +320,8 @@ export default function Home() {
           <div 
             className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center -100px',
-              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
+              backgroundSize: '100% auto',
               animation: 'buildCentralTowerLayer 2s ease-out forwards 3s'
             }}
           />
@@ -358,8 +330,8 @@ export default function Home() {
           <div 
             className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center -100px',
-              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
+              backgroundSize: '100% auto',
               animation: 'buildArchitecturalDetailsLayer 2s ease-out forwards 3.5s'
             }}
           />
@@ -368,8 +340,8 @@ export default function Home() {
           <div 
             className="absolute inset-0 md:bg-[url('/images/bg.png')] bg-no-repeat bg-cover opacity-0"
             style={{
-              backgroundPosition: 'center -100px',
-              backgroundSize: 'cover',
+              backgroundPosition: 'center bottom',
+              backgroundSize: '100% auto',
               animation: 'buildFinalDetailsLayer 2s ease-out forwards 4s'
             }}
           />
@@ -380,7 +352,7 @@ export default function Home() {
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
               backgroundPosition: 'right 0px',
-              backgroundSize: 'cover',
+              backgroundSize: '100% auto',
               animation: 'buildFoundationLayerMobile 5s ease-out forwards'
             }}
           />
@@ -390,7 +362,7 @@ export default function Home() {
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
               backgroundPosition: 'right 0px',
-              backgroundSize: 'cover',
+              backgroundSize: '100% auto',
               animation: 'buildBaseWallsLayerMobile 5s ease-out forwards 0.1s'
             }}
           />
@@ -400,7 +372,7 @@ export default function Home() {
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
               backgroundPosition: 'right 0px',
-              backgroundSize: 'cover',
+              backgroundSize: '100% auto',
               animation: 'buildWallsLayerMobile 5s ease-out forwards 0.2s'
             }}
           />
@@ -410,7 +382,7 @@ export default function Home() {
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
               backgroundPosition: 'right 0px',
-              backgroundSize: 'cover',
+              backgroundSize: '100% auto',
               animation: 'buildBaseTowersLayerMobile 5s ease-out forwards 0.3s'
             }}
           />
@@ -420,7 +392,7 @@ export default function Home() {
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
               backgroundPosition: 'right 0px',
-              backgroundSize: 'cover',
+              backgroundSize: '100% auto',
               animation: 'buildTowersLayerMobile 5s ease-out forwards 0.4s'
             }}
           />
@@ -430,7 +402,7 @@ export default function Home() {
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
               backgroundPosition: 'right 0px',
-              backgroundSize: 'cover',
+              backgroundSize: '100% auto',
               animation: 'buildCentralTowerBaseLayerMobile 5s ease-out forwards 0.5s'
             }}
           />
@@ -440,7 +412,7 @@ export default function Home() {
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
               backgroundPosition: 'right 0px',
-              backgroundSize: 'cover',
+              backgroundSize: '100% auto',
               animation: 'buildCentralTowerLayerMobile 5s ease-out forwards 0.6s'
             }}
           />
@@ -450,7 +422,7 @@ export default function Home() {
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
               backgroundPosition: 'right 0px',
-              backgroundSize: 'cover',
+              backgroundSize: '100% auto',
               animation: 'buildArchitecturalDetailsLayerMobile 5s ease-out forwards 0.7s'
             }}
           />
@@ -460,7 +432,7 @@ export default function Home() {
             className="absolute inset-0 bg-[url('/images/bg.png')] md:hidden bg-no-repeat bg-cover opacity-0"
             style={{
               backgroundPosition: 'right 0px',
-              backgroundSize: 'cover',
+              backgroundSize: '100% auto',
               animation: 'buildFinalDetailsLayerMobile 5s ease-out forwards 0.8s'
             }}
           />
@@ -497,7 +469,7 @@ export default function Home() {
                   >
                     {t('heroTitle')}
                   </h1>
-                  <p 
+                  <p
                     className="max-w-full lg:max-w-[700px] text-muted-foreground text-3xl lg:text-4xl xl:text-5xl leading-relaxed text-center lg:text-left"
                     style={{
                       animation: 'fadeIn 0.5s ease-out 0.3s both'
@@ -506,80 +478,20 @@ export default function Home() {
                     {t('heroSubtitle')}
                   </p>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Consultoria Personalizada Banner */}
-        <section 
-          className="w-full py-8 md:py-16 lg:py-20"
-          style={{
-            backgroundColor: '#111111'
-          }}
-        >
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{t('consultationTitle')}</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  {t('consultationSubtitle')}
-                </p>
-              </div>
-            </div>
-            
-            <div className="max-w-4xl mx-auto mt-12">
-              <div className="group relative overflow-hidden rounded-2xl backdrop-blur-sm bg-white/[0.02] border border-white/5 p-8 hover:border-orange-500/20 hover:bg-white/[0.04] transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/10">
-                <div className="grid md:grid-cols-2 gap-8 items-center">
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-4">
-                      <div className="text-primary group-hover:text-primary/80 transition-colors duration-300">
-                        <Users className="w-8 h-8" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold text-primary group-hover:text-primary/80 transition-colors duration-300 leading-tight">
-                          {t('consultationIndividualTitle')}
-                        </h3>
-                        <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 text-sm mt-2">
-                          {t('consultationIndividualDesc')}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3">
-                        <CheckCircle className="w-4 h-4 text-primary" />
-                        <span className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationFeature1')}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <CheckCircle className="w-4 h-4 text-primary" />
-                        <span className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationFeature2')}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <CheckCircle className="w-4 h-4 text-primary" />
-                        <span className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationFeature3')}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <CheckCircle className="w-4 h-4 text-primary" />
-                        <span className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 text-sm">{t('consultationFeature4')}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center space-y-6">
-                    <Button 
-                      size="lg" 
-                      className="w-full px-8 py-4 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
-                      onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20a%20consultoria%20exclusiva%20com%20você%20mQm.', '_blank')}
-                    >
-                      Fale no WhatsApp
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                    
-                    <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-                      {t('consultationSessionInfo')}
-                    </p>
-                  </div>
+                <div
+                  className="flex justify-center lg:justify-start"
+                  style={{
+                    animation: 'fadeIn 0.5s ease-out 0.5s both'
+                  }}
+                >
+                  <Button
+                    size="lg"
+                    className="px-8 py-6 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
+                    onClick={() => window.open(LASTLINK_URL, '_blank')}
+                  >
+                    Quero Acessar Agora
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
                 </div>
               </div>
             </div>
@@ -642,46 +554,24 @@ export default function Home() {
           </div>
         </section>
 
-        <section 
-          id="courses" 
-          className="w-full py-8 md:py-16 lg:py-20"
-          style={{
-            backgroundColor: '#111111'
-          }}
-        >
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">{t('coursesAvailableTitle')}</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  {t('coursesAvailableSubtitle')}
-                </p>
-              </div>
-            </div>
-            <div className="mt-12">
-              <CoursesSection />
-            </div>
-            
-          </div>
-        </section>
-
-        <section id="pricing" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
+        <section id="community" className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container grid items-center justify-center gap-6 px-4 text-center md:px-6">
             <div className="space-y-3">
-                              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                {t('pricingTitle')}
+              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                Entre na comunidade que mais cresce no mercado crypto
               </h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                {t('pricingSubtitle')}
+                Faça parte do grupo que está construindo riqueza com inteligência, estratégia e visão de longo prazo.
               </p>
             </div>
-            <div className="mx-auto w-full max-w-sm space-y-2">
-              <Button 
-                size="lg" 
-                className="w-full"
-                onClick={() => window.open('https://wa.me/5511977486383?text=Quero%20contratar%20uma%20mentoria%20completa%20e%20exclusiva%20com%20você%20mQm.', '_blank')}
+            <div className="mx-auto w-full max-w-sm">
+              <Button
+                size="lg"
+                className="w-full px-8 py-6 text-lg font-semibold"
+                onClick={() => window.open(LASTLINK_URL, '_blank')}
               >
-                {t('viewSubscriptions')}
+                Quero Entrar Agora
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
           </div>

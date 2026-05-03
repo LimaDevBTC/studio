@@ -27,7 +27,12 @@ export function usePublicCourses() {
       try {
         setLoading(true);
         setError(null);
-        
+
+        if (!db) {
+          setCourses([]);
+          return;
+        }
+
         const coursesCollection = collection(db, 'courses');
         const allCoursesQuery = query(coursesCollection);
         
