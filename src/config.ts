@@ -5,6 +5,9 @@ export const locales = ['en', 'es', 'pt'] as const;
 
 export const pathnames = {
   '/': '/',
+  '/comunidade': '/comunidade',
+  '/manual': '/manual',
+  '/mentoria': '/mentoria',
   '/login': {
     en: '/login',
     es: '/iniciar-sesion',

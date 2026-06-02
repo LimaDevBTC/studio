@@ -4,6 +4,30 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/index.html',
+        destination: '/pt',
+        permanent: true,
+      },
+      {
+        source: '/comunidade.html',
+        destination: '/pt/comunidade',
+        permanent: true,
+      },
+      {
+        source: '/manual.html',
+        destination: '/pt/manual',
+        permanent: true,
+      },
+      {
+        source: '/mentoria.html',
+        destination: '/pt/mentoria',
+        permanent: true,
+      },
+    ];
+  },
 
   typescript: {
     ignoreBuildErrors: true,
