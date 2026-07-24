@@ -1,11 +1,53 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { AuthProvider } from "@/hooks/use-auth";
 
+const SITE_URL = "https://www.mqmcrypto.com";
+const OG_TITLE = "Pare de perder dinheiro sendo liquidez do mercado. Acumule patrimônio de verdade.";
+const OG_DESCRIPTION =
+  "Comunidade MQM, Manual do Êxito e Mentoria Completa. Aprenda Bitcoin, autocustódia, P2P, DeFi e soberania financeira com o método MQM.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "MQM CRYPTO",
-  description: "A premium platform for crypto education.",
+  description: OG_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "MQM Crypto",
+    locale: "pt_BR",
+    url: "/",
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
+    images: [
+      {
+        url: "/marketing/mqm/social-preview.jpg",
+        width: 1200,
+        height: 630,
+        alt: "MQM Crypto",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
+    images: ["/marketing/mqm/social-preview.jpg"],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#050505",
 };
 
 export default function RootLayout({
