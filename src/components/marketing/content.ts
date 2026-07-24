@@ -153,6 +153,36 @@ export const products = {
   },
 } as const;
 
+export const walletPhases = [
+  {
+    phase: "FASE 1: ALOCAÇÃO INICIAL",
+    total: "$78,267.58",
+    today: "+$2,472.88 (+3.26%)",
+    crypto: "$48,278.56",
+    stable: "$29,989.02",
+    caption:
+      "Montagem estruturada das carteiras de Hold e Risco no fundo do poço, quando o mercado entrava em pânico (FUD).",
+  },
+  {
+    phase: "FASE 2: VALORIZAÇÃO TÁTICA",
+    total: "$87,722.70",
+    today: "+$2,580.58 (+3.03%)",
+    crypto: "$53,750.65",
+    stable: "$33,972.05",
+    caption:
+      "Aproveitando a alta exponencial com ativos de forte fundamento, protegendo a carteira de Hold no longo prazo.",
+  },
+  {
+    phase: "FASE 3: REALIZAÇÃO DE LUCROS",
+    total: "$102,289.34",
+    today: "+$1,920.86 (+1.91%)",
+    crypto: "$58,311.86",
+    stable: "$43,977.49",
+    caption:
+      "Realização ativa da carteira de Risco ao bater as metas estabelecidas, colocando lucros reais no bolso do investidor.",
+  },
+] as const;
+
 export const manualModules = [
   {
     image: "module-1.png",

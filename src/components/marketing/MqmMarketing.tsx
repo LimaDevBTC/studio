@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { assetPath, manualModules, marketingLinks, products } from "./content";
+import { assetPath, manualModules, marketingLinks, products, walletPhases } from "./content";
 import type { ProductKey } from "./content";
 import styles from "./MqmMarketing.module.css";
 
@@ -146,6 +146,55 @@ export function MarketingHome({ locale }: { locale: string }) {
         </nav>
       </header>
 
+      <section className={styles.manifesto} aria-label="Manifesto MQM">
+        <p className={styles.manifestoKicker}>O método MQM</p>
+        <h2 className={styles.manifestoTitle}>
+          Aqui você vai parar de perder dinheiro sendo{" "}
+          <span className={styles.manifestoLoss}>liquidez do mercado</span> e vai começar a acumular{" "}
+          <span className={styles.manifestoGain}>patrimônio de verdade!</span>
+        </h2>
+
+        <div className={styles.walletEvolution}>
+          <p className={styles.walletKicker}>A evolução da wallet</p>
+          <div className={styles.phaseGrid}>
+            {walletPhases.map((phase, index) => (
+              <article
+                className={styles.phaseCard}
+                style={{ animationDelay: `${index * 0.16}s` }}
+                aria-label={phase.phase}
+                key={phase.phase}
+              >
+                <p className={styles.phaseHead}>{phase.phase}</p>
+                <div className={styles.balanceCard}>
+                  <p className={styles.balanceLabel}>Total balance</p>
+                  <div className={styles.balanceRow}>
+                    <span className={styles.balanceValue}>{phase.total}</span>
+                    <span className={styles.livePill}>
+                      Live <span aria-hidden="true">✓</span>
+                    </span>
+                  </div>
+                  <p className={styles.balanceToday}>
+                    Today: <span>{phase.today}</span>
+                  </p>
+                  <div className={styles.balanceSplit}>
+                    <div className={styles.splitCol}>
+                      <span className={styles.splitLabel}>Crypto Assets</span>
+                      <span className={styles.splitValue}>{phase.crypto}</span>
+                    </div>
+                    <div className={[styles.splitCol, styles.splitRight].join(" ")}>
+                      <span className={styles.splitLabel}>Stablecoins</span>
+                      <span className={styles.splitValue}>{phase.stable}</span>
+                    </div>
+                  </div>
+                </div>
+                <p className={styles.phaseCaption}>{phase.caption}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <p className={styles.pathsKicker}>Escolha seu caminho</p>
       <section className={styles.productList} aria-label="Produtos MQM">
         {(["community", "manual", "mentorship"] as const).map((key) => {
           const product = products[key];
