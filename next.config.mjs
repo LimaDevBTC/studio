@@ -18,13 +18,28 @@ const nextConfig = {
       },
       {
         source: '/manual.html',
-        destination: '/pt/manual',
-        permanent: true,
+        destination: '/pt',
+        permanent: false,
       },
       {
         source: '/mentoria.html',
-        destination: '/pt/mentoria',
-        permanent: true,
+        destination: '/pt',
+        permanent: false,
+      },
+      {
+        source: '/poolparty.html',
+        destination: '/pt/poolparty',
+        permanent: false,
+      },
+      {
+        source: '/pt/manual',
+        destination: '/pt',
+        permanent: false,
+      },
+      {
+        source: '/pt/mentoria',
+        destination: '/pt',
+        permanent: false,
       },
     ];
   },

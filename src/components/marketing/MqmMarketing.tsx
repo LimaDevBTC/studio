@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { assetPath, manualModules, marketingLinks, products, walletPhases } from "./content";
+import { assetPath, marketingLinks, products } from "./content";
 import type { ProductKey } from "./content";
 import styles from "./MqmMarketing.module.css";
 
@@ -92,59 +92,23 @@ function ProductHero({ locale, productKey }: { locale: string; productKey: Produ
           )}
         </h1>
         <p className={styles.salesLead}>{product.heroLead}</p>
-        {productKey === "mentorship" ? (
-          <ProductCta href={product.ctaHref} label={product.ctaLabel} type="whatsapp" centered />
-        ) : (
-          <div className={styles.ctaRow}>
-            <a
-              className={[styles.btn, styles.checkoutBtn].join(" ")}
-              href={product.ctaHref}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {product.ctaLabel}
-              <span aria-hidden="true">↗</span>
-            </a>
-            <a className={[styles.btn, styles.secondaryBtn].join(" ")} href={localizedPath(locale, "/")}>
-              Voltar aos produtos
-            </a>
-          </div>
-        )}
+        <div className={styles.ctaRow}>
+          <a
+            className={[styles.btn, styles.checkoutBtn].join(" ")}
+            href={product.ctaHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {product.ctaLabel}
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a className={[styles.btn, styles.secondaryBtn].join(" ")} href={localizedPath(locale, "/")}>
+            Voltar aos produtos
+          </a>
+        </div>
       </div>
       <div className={styles.heroPhoto}>
         <img src={assetPath(product.heroImage)} alt={product.heroAlt} />
-      </div>
-    </section>
-  );
-}
-
-function ManualModules() {
-  const loop = [...manualModules, ...manualModules];
-
-  return (
-    <section className={styles.manualModules}>
-      <div className={styles.sectionInner}>
-        <p className={styles.miniKicker}>Por dentro do Manual</p>
-        <h2 className={styles.sectionTitle}>5 modulos para estudar cripto em ordem.</h2>
-        <p className={styles.sectionLead}>
-          Uma visao rapida da trilha do curso. Os cards rolam automaticamente para mostrar como o
-          Manual do Exito esta organizado.
-        </p>
-      </div>
-
-      <div className={styles.modulesRail} aria-label="Modulos do Manual do Exito">
-        <div className={styles.modulesTrack}>
-          {loop.map((module, index) => (
-            <article className={styles.moduleCard} aria-hidden={index >= manualModules.length} key={`${module.image}-${index}`}>
-              <div className={styles.moduleImage}>
-                <img src={assetPath(module.image)} alt={index < manualModules.length ? module.title : ""} />
-                {"locked" in module && module.locked ? <span className={styles.moduleClock}>◷</span> : null}
-              </div>
-              <h3>{module.title}</h3>
-              <p>{module.meta}</p>
-            </article>
-          ))}
-        </div>
       </div>
     </section>
   );
@@ -177,62 +141,55 @@ export function MarketingHome({ locale }: { locale: string }) {
           <span className={styles.manifestoLoss}>liquidez do mercado</span> e vai começar a acumular{" "}
           <span className={styles.manifestoGain}>patrimônio de verdade!</span>
         </h2>
-
-        <div className={styles.walletEvolution}>
-          <p className={styles.walletKicker}>A evolução da wallet</p>
-          <div className={styles.phaseGrid}>
-            {walletPhases.map((phase, index) => (
-              <article
-                className={styles.phaseCard}
-                style={{ animationDelay: `${index * 0.16}s` }}
-                aria-label={phase.phase}
-                key={phase.phase}
-              >
-                <p className={styles.phaseHead}>{phase.phase}</p>
-                <div className={styles.balanceCard}>
-                  <p className={styles.balanceLabel}>Total balance</p>
-                  <div className={styles.balanceRow}>
-                    <span className={styles.balanceValue}>{phase.total}</span>
-                    <span className={styles.livePill}>
-                      Live <span aria-hidden="true">✓</span>
-                    </span>
-                  </div>
-                  <p className={styles.balanceToday}>
-                    Today: <span>{phase.today}</span>
-                  </p>
-                  <div className={styles.balanceSplit}>
-                    <div className={styles.splitCol}>
-                      <span className={styles.splitLabel}>Crypto Assets</span>
-                      <span className={styles.splitValue}>{phase.crypto}</span>
-                    </div>
-                    <div className={[styles.splitCol, styles.splitRight].join(" ")}>
-                      <span className={styles.splitLabel}>Stablecoins</span>
-                      <span className={styles.splitValue}>{phase.stable}</span>
-                    </div>
-                  </div>
-                </div>
-                <p className={styles.phaseCaption}>{phase.caption}</p>
-              </article>
-            ))}
-          </div>
-        </div>
       </section>
 
       <p className={styles.pathsKicker}>Escolha seu caminho</p>
       <section className={styles.productList} aria-label="Produtos MQM">
-        {(["community", "manual", "mentorship"] as const).map((key) => {
-          const product = products[key];
-          return (
-            <a
-              className={styles.productCard}
-              href={localizedPath(locale, `/${product.slug}`)}
-              aria-label={`Abrir ${product.eyebrow}`}
-              key={product.slug}
-            >
-              <img className={styles.homeCardImage} src={assetPath(product.homeImage)} alt={product.homeAlt} />
-            </a>
-          );
-        })}
+        <a
+          className={styles.productCard}
+          href={localizedPath(locale, `/${products.community.slug}`)}
+          aria-label={`Abrir ${products.community.eyebrow}`}
+        >
+          <img
+            className={styles.homeCardImage}
+            src={assetPath(products.community.homeImage)}
+            alt={products.community.homeAlt}
+          />
+        </a>
+
+        <a
+          className={[styles.productCard, styles.productCardPoolparty].join(" ")}
+          href={localizedPath(locale, "/poolparty")}
+          aria-label="Abrir Pool Party"
+        >
+          <span className={styles.ppCardInner}>
+            <span className={styles.ppCardGlow} aria-hidden="true" />
+            <span className={styles.ppCardCopy}>
+              <span className={styles.ppCardNew}>🔥 Novo</span>
+              <span className={styles.ppCardTitle}>
+                Pool<br />
+                <span className={styles.ppPink}>Party</span>
+              </span>
+              <span className={styles.ppCardRule} aria-hidden="true" />
+              <span className={styles.ppCardSub}>Pools de Liquidez · DeFi</span>
+              <span className={styles.ppCardCta}>Saiba mais ›</span>
+            </span>
+            <img
+              className={styles.ppCardMascot}
+              src={assetPath("poolparty/poolparty.png")}
+              alt=""
+              aria-hidden="true"
+            />
+          </span>
+        </a>
+
+        <div className={[styles.productCard, styles.comingSoon].join(" ")} aria-label="A Virada - Em breve">
+          <img className={styles.homeCardImage} src={assetPath("home-virada.jpg")} alt="A Virada" />
+          <div className={styles.comingSoonOverlay}>
+            <span className={styles.comingSoonPill}>Em breve</span>
+            <span className={styles.comingSoonTitle}>A Virada</span>
+          </div>
+        </div>
       </section>
 
       <section className={styles.homeStory}>
@@ -316,14 +273,12 @@ export function MarketingProductPage({
           </div>
         </section>
 
-        {productKey === "manual" ? <ManualModules /> : null}
-
         <section className={[styles.sectionInner, styles.finalCta].join(" ")}>
           <h2 className={styles.sectionTitle}>{product.sections.finalTitle}</h2>
           <p className={styles.sectionLead}>{product.sections.finalLead}</p>
           <ProductCta
             href={product.ctaHref}
-            label={productKey === "manual" ? "Acessar o Manual do Exito" : product.ctaLabel}
+            label={product.ctaLabel}
             type={product.ctaType === "whatsapp" ? "whatsapp" : "checkout"}
             centered
           />
