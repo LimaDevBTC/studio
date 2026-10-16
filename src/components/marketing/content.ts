@@ -1,5 +1,8 @@
 export const marketingLinks = {
   communityCheckout: "https://lastlink.com/p/C9020FF58/checkout-payment/",
+  mentoriaWhatsapp:
+    "https://wa.me/5511977486383?text=Ol%C3%A1%20Marcelo%2C%20tenho%20interesse%20na%20Mentoria%20Personalizada!",
+  mqmp2p: "https://mqmp2p.com/",
   x: "https://x.com/mqmcrypto",
   youtube: "https://www.youtube.com/@mQmcrypto",
   instagram: "https://www.instagram.com/mqm_racional/",

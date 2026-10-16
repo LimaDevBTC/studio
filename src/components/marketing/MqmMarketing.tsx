@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { ArrowRight, Clock, ExternalLink, KeyRound, MessageCircle, UserCheck, Wallet } from "lucide-react";
 import { assetPath, marketingLinks, products } from "./content";
 import type { ProductKey } from "./content";
 import styles from "./MqmMarketing.module.css";
@@ -183,12 +184,89 @@ export function MarketingHome({ locale }: { locale: string }) {
           </span>
         </a>
 
-        <div className={[styles.productCard, styles.comingSoon].join(" ")} aria-label="A Virada - Em breve">
-          <img className={styles.homeCardImage} src={assetPath("home-virada.jpg")} alt="A Virada" />
-          <div className={styles.comingSoonOverlay}>
-            <span className={styles.comingSoonPill}>Em breve</span>
-            <span className={styles.comingSoonTitle}>A Virada</span>
-          </div>
+        <a
+          className={[styles.productCard, styles.productCardMentoria].join(" ")}
+          href={marketingLinks.mentoriaWhatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Mentoria Personalizada: falar com o MQM no WhatsApp"
+        >
+          <span className={styles.mtCardInner}>
+            <img className={styles.mtCardPhoto} src={assetPath("home-virada.jpg")} alt="" aria-hidden="true" />
+            <span className={styles.mtCardShade} aria-hidden="true" />
+            <span className={styles.mtCardCopy}>
+              <span className={styles.mtCardTag}>
+                <UserCheck aria-hidden="true" /> 1 a 1
+              </span>
+              <span className={styles.mtCardTitle}>
+                Mentoria<br />
+                <span className={styles.mtGold}>Personalizada</span>
+              </span>
+              <span className={styles.mtCardRule} aria-hidden="true" />
+              <span className={styles.mtCardSub}>Estratégia sob medida · Acompanhamento</span>
+              <span className={styles.mtCardCta}>
+                <MessageCircle aria-hidden="true" /> Falar no WhatsApp
+              </span>
+            </span>
+          </span>
+        </a>
+      </section>
+
+      <section className={styles.p2pFeature} aria-labelledby="p2p-title">
+        <span className={styles.p2pGrid} aria-hidden="true" />
+        <div className={styles.p2pCopy}>
+          <p className={styles.p2pPill}>
+            <span className={styles.p2pDot} aria-hidden="true" /> Compre cripto com PIX
+          </p>
+          <h2 className={styles.p2pTitle} id="p2p-title">
+            Pague um PIX. A cripto cai na sua <em>carteira</em>.
+          </h2>
+          <p className={styles.p2pLead}>
+            Você escolhe a moeda e a rede, paga do seu próprio banco e a entrega vai para o endereço que
+            você controla.
+          </p>
+          <ul className={styles.p2pTrust}>
+            <li>
+              <Wallet aria-hidden="true" /> Entrega na sua carteira
+            </li>
+            <li>
+              <KeyRound aria-hidden="true" /> As chaves continuam suas
+            </li>
+            <li>
+              <Clock aria-hidden="true" /> PIX 24 horas por dia
+            </li>
+          </ul>
+        </div>
+        <div className={styles.p2pSide}>
+          <ul className={styles.p2pRoutes} aria-label="O que dá para comprar">
+            <li>
+              <strong>
+                PIX <ArrowRight aria-hidden="true" /> USDT
+              </strong>
+              <span>Dólar digital na Polygon</span>
+            </li>
+            <li>
+              <strong>
+                PIX <ArrowRight aria-hidden="true" /> Bitcoin
+              </strong>
+              <span>Direto na sua carteira</span>
+            </li>
+            <li>
+              <strong>
+                PIX <ArrowRight aria-hidden="true" /> +1.400 moedas
+              </strong>
+              <span>Do Bitcoin ao altcoin pequeno</span>
+            </li>
+          </ul>
+          <a
+            className={[styles.btn, styles.checkoutBtn, styles.p2pBtn].join(" ")}
+            href={marketingLinks.mqmp2p}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Comprar cripto no MQMp2p <ExternalLink aria-hidden="true" />
+          </a>
+          <p className={styles.p2pDomain}>mqmp2p.com</p>
         </div>
       </section>
 
