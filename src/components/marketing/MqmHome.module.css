@@ -496,8 +496,8 @@
   grid-area: media;
   min-width: 0;
   width: 100%;
-  /* vertical: nunca mais alto que ~78% da tela */
-  max-width: min(520px, calc(78svh * 9 / 16));
+  /* vertical: nunca mais alto que ~70% da tela, para caber inteiro na primeira dobra */
+  max-width: min(520px, calc(70svh * 9 / 16));
   margin-inline: auto;
 }
 
@@ -1509,16 +1509,17 @@
   min-width: 0;
 }
 
-/* Foto pequena no fechamento. */
+/* Foto do fechamento: no celular abre o cartão, na largura inteira; no desktop ocupa a coluna direita. */
 .closingPortrait {
-  width: clamp(104px, 28vw, 132px);
+  order: -1;
+  width: 100%;
   height: auto;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 4 / 3;
   border: 1px solid rgba(255, 150, 90, 0.35);
-  border-radius: 18px;
+  border-radius: 22px;
   object-fit: cover;
-  object-position: 50% 18%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  object-position: 50% 14%;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
 }
 
 .closingTitle {
@@ -1856,10 +1857,22 @@
   }
 
   .closingCard {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1.25fr) minmax(240px, 0.75fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: stretch;
   }
 
+  .closingBody {
+    align-self: center;
+  }
+
+  /* acompanha a altura do texto: a foto vai do topo do título à base do botão */
   .closingPortrait {
-    width: clamp(150px, 16vw, 220px);
+    order: 0;
+    height: 100%;
+    min-height: 340px;
+    max-height: 560px;
+    aspect-ratio: auto;
+    object-position: 50% 12%;
   }
 }

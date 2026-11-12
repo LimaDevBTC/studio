@@ -315,7 +315,7 @@ function Closing({ locale }: { locale: string }) {
             alt={homeClosing.portraitAlt}
             width={1000}
             height={1000}
-            sizes="(min-width: 760px) 220px, 120px"
+            sizes="(min-width: 760px) 440px, 100vw"
           />
         </Reveal>
       </div>
