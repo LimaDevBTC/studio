@@ -100,8 +100,8 @@ export const homeAbout = {
     {
       icon: "bitcoin",
       stage: "Ponto de partida",
-      title: "Entender o Bitcoin",
-      text: "Os fundamentos do Bitcoin e o que significa, na prática, ter controle das próprias chaves.",
+      title: "Entender o Bitcoin e as criptomoedas",
+      text: "O que são, como funcionam e como usar no dia a dia, inclusive no cartão de crédito cripto. Um olhar que vai além da valorização.",
     },
     {
       icon: "key",
