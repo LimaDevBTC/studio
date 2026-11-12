@@ -553,17 +553,26 @@
   margin-top: 0.2em;
 }
 
+/* Texto e botão centralizados sob o vídeo. */
 .heroLead {
   max-width: 50ch;
-  margin: 0 0 30px;
+  margin: 0 auto 30px;
   font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  text-align: center;
+  text-wrap: balance;
 }
 
 .heroCta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 14px 22px;
+}
+
+/* O sobretítulo acompanha o eixo central do vídeo. */
+.heroTop .kicker {
+  justify-content: center;
 }
 
 .fadeIn {
@@ -1848,6 +1857,38 @@
   .media {
     aspect-ratio: var(--ratio-mobile, var(--ratio, 16 / 9));
     background-image: var(--poster-mobile, var(--poster, none));
+  }
+
+  /* Fechamento no celular: a foto sangra até as bordas do cartão e se dissolve no texto. */
+  .closingCard {
+    gap: 0;
+    padding: 0;
+  }
+
+  .closingPortrait {
+    aspect-ratio: 1 / 1;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    object-position: 50% 0;
+    -webkit-mask-image: linear-gradient(180deg, #000 50%, transparent 94%);
+    mask-image: linear-gradient(180deg, #000 50%, transparent 94%);
+  }
+
+  .closingBody {
+    position: relative;
+    margin-top: -17%;
+    padding: 0 24px 30px;
+  }
+
+  .closingTitle {
+    max-width: none;
+    margin-bottom: 28px;
+    font-size: clamp(1.7rem, 7.6vw, 2.5rem);
+  }
+
+  .closingBody > a {
+    width: 100%;
   }
 }
 
