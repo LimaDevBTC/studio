@@ -4,9 +4,9 @@ import "./globals.css";
 import { AuthProvider } from "@/hooks/use-auth";
 
 const SITE_URL = "https://www.mqmcrypto.com";
-const OG_TITLE = "Pare de perder dinheiro sendo liquidez do mercado. Acumule patrimônio de verdade.";
+const OG_TITLE = "MQM Crypto | Educação sobre Bitcoin, autocustódia e comunidade";
 const OG_DESCRIPTION =
-  "Comunidade MQM, Manual do Êxito e Mentoria Completa. Aprenda Bitcoin, autocustódia, P2P, DeFi e soberania financeira com o método MQM.";
+  "Educação sobre Bitcoin, cripto e autocustódia com Marcelo de Queiroz. Conheça a história por trás do MQM, a Comunidade MQM e a mentoria personalizada.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -57,11 +57,11 @@ export default function RootLayout({
 }>) {
   return (
     // The lang attribute will be set in [locale]/layout.tsx
-    <html suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=PT+Sans:wght@400;700&family=Outfit:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=PT+Sans:wght@400;700&family=Outfit:wght@400;500;600;700;800&family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col bg-background">
         <script
