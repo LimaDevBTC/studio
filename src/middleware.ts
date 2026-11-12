@@ -8,7 +8,7 @@ const PLATFORM_PATH_REGEX =
   /^\/(?:[a-z]{2}\/)?(login|iniciar-sesion|signup|cadastro|registro|dashboard|admin|create-admin|test-payment|whatsapp|contact)(?:\/|$)/i;
 
 const intlMiddleware = createIntlMiddleware({
-  defaultLocale: 'en',
+  defaultLocale: 'pt',
   locales,
   pathnames,
 });
